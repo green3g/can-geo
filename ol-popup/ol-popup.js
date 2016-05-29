@@ -6,9 +6,9 @@ import CanMap from 'can/map/';
 import './olPopup.css!';
 
 /**
- * @constructor components/ol-popup.ViewModel ViewModel
- * @parent components/ol-popup
- * @group components/ol-popup.ViewModel.props Properties
+ * @constructor ol-popup.ViewModel ViewModel
+ * @parent ol-popup
+ * @group ol-popup.ViewModel.props Properties
  *
  * @description A `<ol-popup />` component's ViewModel
  */
@@ -19,8 +19,8 @@ export const ViewModel = CanMap.extend({
   define: {
     /**
      * Whether or not the current state of this popup should be a modal dialog instead of a map overlay popup. This can be changed dynamically
-     * @property {Boolean} components/ol-popup.ViewModel.props.modal
-     * @parent components/ol-popup.ViewModel.props
+     * @property {Boolean} ol-popup.ViewModel.props.modal
+     * @parent ol-popup.ViewModel.props
      */
     modal: {
       type: 'boolean',

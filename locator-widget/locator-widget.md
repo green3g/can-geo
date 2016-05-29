@@ -1,6 +1,6 @@
 <!--
 
-@module {can.Component} components/locator-widget <locator-widget />
+@module {can.Component} locator-widget <locator-widget />
 @parent geocola.components
 
 -->
@@ -10,4 +10,4 @@
 
 ## Demo
 
-@demo components/locator-widget/demo.html 500
+@demo locator-widget/demo.html 500

@@ -1,6 +1,6 @@
 <!--
 
-@module {can.Component} components/print-widget <print-widget />
+@module {can.Component} print-widget <print-widget />
 @parent geocola.components
 
 -->
@@ -8,7 +8,7 @@
 # Description
 A simple print widget that allows the user to select various layouts and print settings before creating an openlayers printout.
 
-<img src="static/img/components/print-widget.png" />
+<img src="static/img/print-widget.png" />
 
 # Usage
 

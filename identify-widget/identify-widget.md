@@ -1,6 +1,6 @@
 <!--
 
-@module {can.Component} components/identify-widget <identify-widget />
+@module {can.Component} identify-widget <identify-widget />
 @parent geocola.components
 -->
 
@@ -18,4 +18,4 @@ This component may be placed inside an `ol-popup` component, but it doesn't have
 </ol-popup>
 ```
 
-<img src="static/img/components/identify-widget.png" />
+<img src="static/img/identify-widget.png" />

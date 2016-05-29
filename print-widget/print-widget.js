@@ -4,9 +4,9 @@ import CanMap from 'can/map/';
 import template from './print.stache!';
 
 /**
- * @constructor components/print-widget.ViewModel ViewModel
- * @parent components/print-widget
- * @group components/print-widget.ViewModel.props Properties
+ * @constructor print-widget.ViewModel ViewModel
+ * @parent print-widget
+ * @group print-widget.ViewModel.props Properties
  *
  * @description A `<print-widget />` component's ViewModel
  */
@@ -16,16 +16,16 @@ export const ViewModel = CanMap.extend({
    */
   define: {
     /**
-     * @property {String} components/print-widget.ViewModel.mapTitle mapTitle
-     * @parent components/print-widget.ViewModel.props
+     * @property {String} print-widget.ViewModel.mapTitle mapTitle
+     * @parent print-widget.ViewModel.props
      * The ol-map node selector
      */
     mapNode: {
       type: 'string'
     },
     /**
-     * @property {String} components/print-widget.ViewModel.mapTitle mapTitle
-     * @parent components/print-widget.ViewModel.props
+     * @property {String} print-widget.ViewModel.mapTitle mapTitle
+     * @parent print-widget.ViewModel.props
      *
      * The default map title to send to the print service.
      */
@@ -35,8 +35,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * The default layout to select from the print widget
-     * @property {String}  components/print-widget.ViewModel.selectedLayout selectedLayout
-     * @parent components/print-widget.ViewModel.props
+     * @property {String}  print-widget.ViewModel.selectedLayout selectedLayout
+     * @parent print-widget.ViewModel.props
      */
     selectedLayout: {
       type: 'string',
@@ -44,8 +44,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * The default dpi to select from the print widget
-     * @property {Number}  components/print-widget.ViewModel.selectedDpi selectedDpi
-     * @parent components/print-widget.ViewModel.props
+     * @property {Number}  print-widget.ViewModel.selectedDpi selectedDpi
+     * @parent print-widget.ViewModel.props
      */
     selectedDpi: {
       type: 'number',
@@ -53,16 +53,16 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * The current list of print results in the widget
-     * @property {Array<guides.types.PrintResult>} components/print-widget.ViewModel.printResults printResults
-     * @parent components/print-widget.ViewModel.props
+     * @property {Array<guides.types.PrintResult>} print-widget.ViewModel.printResults printResults
+     * @parent print-widget.ViewModel.props
      */
     printResults: {
       value: []
     },
     /**
      * The print provider to use for printing
-     * @property {providers.printProvider} components/print-widget.ViewModel.provider provider
-     * @parent components/print-widget.ViewModel.props
+     * @property {providers.printProvider} print-widget.ViewModel.provider provider
+     * @parent print-widget.ViewModel.props
      */
     provider: {
       value: null

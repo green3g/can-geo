@@ -1,6 +1,6 @@
 <!--
 
-@module {can.Component} components/ol-popup <ol-popup />
+@module {can.Component} ol-popup <ol-popup />
 @parent geocola.components
 
 -->

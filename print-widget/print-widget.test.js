@@ -6,7 +6,7 @@ import ol from 'openlayers';
 import $ from 'jquery';
 var vm, map;
 q.config.testTimeout = 10000;
-q.module('components/print-widget/model', {
+q.module('print-widget/model', {
   beforeEach: function() {
     vm = new ViewModel({
       printUrl: 'http://localhost/geoserver/pdf/info.json',

@@ -77,7 +77,7 @@ test('onMapClick', function(assert) {
   assert.ok(clicked, 'clicked should now be okay');
 });
 
-q.module('components/ol-map/view', {});
+q.module('ol-map/view', {});
 test('insert map into dom with defaults', function(assert) {
   $('#qunit-fixture').html(can.stache('<ol-map />'), {});
   assert.ok($('.ol-viewport').length, 'the ol viewport should be created');

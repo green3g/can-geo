@@ -10,9 +10,9 @@ import './locator.css!';
 import icon from './icon';
 
 /**
- * @constructor components/locator-widget.ViewModel ViewModel
- * @parent components/locator-widget
- * @group components/locator-widget.ViewModel.props Properties
+ * @constructor locator-widget.ViewModel ViewModel
+ * @parent locator-widget
+ * @group locator-widget.ViewModel.props Properties
  *
  * @description A `<locator-widget />` component's ViewModel
  */
@@ -20,8 +20,8 @@ export const ViewModel = CanMap.extend({
   define: {
     /**
     * The default address value for the textbox.
-     * @property {String} components/locator-widget.ViewModel.props.addressValue
-     * @parent components/locator-widget.ViewModel.props
+     * @property {String} locator-widget.ViewModel.props.addressValue
+     * @parent locator-widget.ViewModel.props
      */
     addressValue: {
       value: null,
@@ -29,8 +29,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
     * the url to geocode to for find and suggest endpoints
-     * @property {String} components/locator-widget.ViewModel.props.url
-     * @parent components/locator-widget.ViewModel.props
+     * @property {String} locator-widget.ViewModel.props.url
+     * @parent locator-widget.ViewModel.props
      */
     url: {
       value: null,
@@ -38,8 +38,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
     * The default level of zoom to apply if using an ol-map. The default is `18`
-     * @property {Number} components/locator-widget.ViewModel.props.zoomLevel
-     * @parent components/locator-widget.ViewModel.props
+     * @property {Number} locator-widget.ViewModel.props.zoomLevel
+     * @parent locator-widget.ViewModel.props
      */
     zoomLevel: {
       value: 18,
@@ -47,8 +47,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * whether or not to navigate the map
-     * @property {Boolean} components/locator-widget.ViewModel.props.navigate
-     * @parent components/locator-widget.ViewModel.props
+     * @property {Boolean} locator-widget.ViewModel.props.navigate
+     * @parent locator-widget.ViewModel.props
      */
     navigate: {
       type: 'boolean',
@@ -56,31 +56,31 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * a geocoder service provider
-     * @property {providers.locationProvider} components/locator-widget.ViewModel.props.provider
+     * @property {providers.locationProvider} locator-widget.ViewModel.props.provider
      * @link providers.locationProvider Location Providers
-     * @parent components/locator-widget.ViewModel.props
+     * @parent locator-widget.ViewModel.props
      */
     provider: {},
     /**
-     * @property {Array<providers.locationProvider.types.suggestionsObject>} components/locator-widget.ViewModel.props.suggestions
+     * @property {Array<providers.locationProvider.types.suggestionsObject>} locator-widget.ViewModel.props.suggestions
      * current suggestions in the widget
-     * @parent components/locator-widget.ViewModel.props
+     * @parent locator-widget.ViewModel.props
      */
     suggestions: {
       Value: List
     },
     /**
      * the current location found by the widget
-     * @property {Object} components/locator-widget.ViewModel.props.location
-     * @parent components/locator-widget.ViewModel.props
+     * @property {Object} locator-widget.ViewModel.props.location
+     * @parent locator-widget.ViewModel.props
      */
     location: {
       Value: CanMap
     },
     /**
      * A deferred representing the current _loading state
-     * @property {can.Deferred} components/locator-widget.ViewModel.props._loading
-     * @parent components/locator-widget.ViewModel.props
+     * @property {can.Deferred} locator-widget.ViewModel.props._loading
+     * @parent locator-widget.ViewModel.props
      */
     _loading: {
       value: function(){

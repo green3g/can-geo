@@ -1,6 +1,6 @@
 <!--
 
-@module {can.Component} components/measure-widget <measure-widget />
+@module {can.Component} measure-widget <measure-widget />
 @parent geocola.components
 
 -->
@@ -9,7 +9,7 @@
 
 A measurement toolbar that adds interaction and vectors/overlays to the map.
 
-<img src="static/img/components/measure-widget.png" />
+<img src="static/img/measure-widget.png" />
 
 ## Usage:
 

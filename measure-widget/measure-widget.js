@@ -10,9 +10,9 @@ import measurements from './modules/measurements';
 import overlayManager from './modules/overlayManager';
 
 /**
- * @constructor components/measure-widget.ViewModel ViewModel
- * @parent components/measure-widget
- * @group components/measure-widget.ViewModel.props Properties
+ * @constructor measure-widget.ViewModel ViewModel
+ * @parent measure-widget
+ * @group measure-widget.ViewModel.props Properties
  *
  * @description A `<measure-widget />` component's ViewModel
  */
@@ -21,16 +21,16 @@ export const ViewModel = CanMap.extend({
     /**
      * The selector to the `ol-map` component
      * @signature `{String}` `map-node="#map"`
-     * @property {String} components/measure-widget.ViewModel.props.mapNode
-     * @parent components/measure-widget.ViewModel.props
+     * @property {String} measure-widget.ViewModel.props.mapNode
+     * @parent measure-widget.ViewModel.props
      */
     mapNode: {
       type: 'string'
     },
     /**
      * The name of the click handler key to use. The default is `'measure'`.
-     * @property {String} components/measure-widget.ViewModel.props.clickHandler
-     * @parent components/measure-widget.ViewModel.props
+     * @property {String} measure-widget.ViewModel.props.clickHandler
+     * @parent measure-widget.ViewModel.props
      */
     clickHandler: {
       type: 'string',
@@ -38,16 +38,16 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * An array of measurement objects to use. These are configureable in `./modules/measurements`
-     * @property {Array<measurementObjects>} components/measure-widget.ViewModel.props.measurements
-     * @parent components/measure-widget.ViewModel.props
+     * @property {Array<measurementObjects>} measure-widget.ViewModel.props.measurements
+     * @parent measure-widget.ViewModel.props
      */
     measurements: {
       value: measurements
     },
     /**
      * The current value in the units dropdown
-     * @property {String} components/measure-widget.ViewModel.props.unitsDropdown
-     * @parent components/measure-widget.ViewModel.props
+     * @property {String} measure-widget.ViewModel.props.unitsDropdown
+     * @parent measure-widget.ViewModel.props
      */
     unitsDropdown: {
       value: '',
@@ -55,8 +55,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * Should labels be added to the map drawings by default
-     * @property {Boolean} components/measure-widget.ViewModel.props.addLabels
-     * @parent components/measure-widget.ViewModel.props
+     * @property {Boolean} measure-widget.ViewModel.props.addLabels
+     * @parent measure-widget.ViewModel.props
      */
     addLabels: {
       value: true,

@@ -1,6 +1,6 @@
 <!--
 
-@module components/layer-control <layer-control />
+@module layer-control <layer-control />
 @parent geocola.components
 @group layer-control.props Properties
 
@@ -10,7 +10,7 @@
 
 A layer controller to handle layer visibility and perform additional layer functions.
 
-<img src="static/img/components/print-widget.png" />
+<img src="static/img/print-widget.png" />
 
 ## Usage
 

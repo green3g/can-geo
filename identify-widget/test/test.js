@@ -2,19 +2,19 @@
 import testrunner from 'steal-qunit';
 import can from 'can';
 
-import 'components/ol-map/';
-import 'components/ol-popup/';
-import 'components/identify-widget/';
-import 'components/ol-layer/ol-layer-tilewms';
+import 'ol-map/';
+import 'ol-popup/';
+import 'identify-widget/';
+import 'ol-layer/ol-layer-tilewms';
 
-import template from 'components/ol-map/test/mapTemplate.stache!';
-import {ViewModel} from 'components/identify-widget/';
+import template from 'ol-map/test/mapTemplate.stache!';
+import {ViewModel} from 'identify-widget/';
 import IdentifyResult from './identify-result';
 
 var vm, mapModel, popupModel, FeatureCollection, coordinate;
 var clickKey = 'mykey';
 var Coord = [-10566654.790142762, 5439870.428999424];
-testrunner.module('components/identify-widget/identifyViewModel', {
+testrunner.module('identify-widget/identifyViewModel', {
   beforeEach: function() {
     FeatureCollection = can.extend({}, IdentifyResult);
     coordinate = [Coord[0], Coord[1]];

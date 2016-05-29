@@ -13,9 +13,9 @@ const controlTemplates = {
   'TileWMS': '<layer-control-tilewms {layer}="." />'
 };
 /**
- * @constructor components/layer-control.ViewModel ViewModel
- * @parent components/layer-control
- * @group components/layer-control.ViewModel.props Properties
+ * @constructor layer-control.ViewModel ViewModel
+ * @parent layer-control
+ * @group layer-control.ViewModel.props Properties
  *
  * @description A `<layer-control />` component's ViewModel
  */
@@ -23,24 +23,24 @@ export const ViewModel = CanMap.extend({
   define: {
     /**
      * An internal list of layers used by the template
-     * @property {Array<geocola.types.ControlLayerObject>} components/layer-control.ViewModel.props._layers
-     * @parent components/layer-control.ViewModel.props
+     * @property {Array<geocola.types.ControlLayerObject>} layer-control.ViewModel.props._layers
+     * @parent layer-control.ViewModel.props
      */
     _layers: {
       Value: List
     },
     /**
      * The dom node selector referencing an ol-map component
-     * @property {String} components/layer-control.ViewModel.props.mapNode
-     * @parent components/layer-control.ViewModel.props
+     * @property {String} layer-control.ViewModel.props.mapNode
+     * @parent layer-control.ViewModel.props
      */
     mapNode: {
       type: 'string'
     },
     /**
      * The openlayers map. Instead of providing a reference to ol-map component, you can provide a `ol.Map` object directly.
-     * @property {ol.Map} components/layer-control.ViewModel.props.map
-     * @parent components/layer-control.ViewModel.props
+     * @property {ol.Map} layer-control.ViewModel.props.map
+     * @parent layer-control.ViewModel.props
      */
     map: {
       type: '*',

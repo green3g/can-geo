@@ -13,9 +13,9 @@ import 'geocola-crud/property-table/';
 import { parseFieldArray, mapToFields } from 'geocola-crud/util/field';
 
 /**
- * @constructor components/identify-widget.ViewModel ViewModel
- * @parent components/identify-widget
- * @group components/identify-widget.ViewModel.props Properties
+ * @constructor identify-widget.ViewModel ViewModel
+ * @parent identify-widget
+ * @group identify-widget.ViewModel.props Properties
  *
  * @description A `<identify-widget />` component's ViewModel
  */
@@ -26,17 +26,17 @@ export const ViewModel = CanMap.extend({
   define: {
     /**
      * The selector for the `ol-map` map node.
-     * @parent components/identify-widget.ViewModel.props
+     * @parent identify-widget.ViewModel.props
      * @signature `{String}` `map-node="#map"`
-     * @property {String} components/identify-widget.ViewModel.props.mapNode
+     * @property {String} identify-widget.ViewModel.props.mapNode
      */
     mapNode: {
       type: 'string'
     },
     /**
      * The selector for the `ol-popup` dom node. If this widget is placed inside an ol-popup, it this property must be provided so the identify widget can correctly center the popup on the feature.
-     * @property {String} components/identify-widget.ViewModel.props.popupNode
-     * @parent components/identify-widget.ViewModel.props
+     * @property {String} identify-widget.ViewModel.props.popupNode
+     * @parent identify-widget.ViewModel.props
      * @signature `{String}` `popup-node="#identify-popup"`
      */
     popupNode: {
@@ -44,9 +44,9 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * The max number of features to return for each layer. The default is 10.
-     * @parent components/identify-widget.ViewModel.props
+     * @parent identify-widget.ViewModel.props
      * @signature `{Number}` `max-feature-count="10"`
-     * @property {Number} components/identify-widget.ViewModel.props.maxFeatureCount
+     * @property {Number} identify-widget.ViewModel.props.maxFeatureCount
      */
     maxFeatureCount: {
       type: 'number',
@@ -54,9 +54,9 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * Buffer distance in pixels around the map click. The default is 10.
-     * @parent components/identify-widget.ViewModel.props
+     * @parent identify-widget.ViewModel.props
      * @signature `{Number}` `feature-buffer="10"`
-     * @property {Number} components/identify-widget.ViewModel.props.featureBuffer
+     * @property {Number} identify-widget.ViewModel.props.featureBuffer
      */
     featureBuffer: {
       type: 'number',
@@ -64,16 +64,16 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * Layer configuration properties
-     * @parent components/identify-widget.ViewModel.props
-     * @property {geocola.types.LayerPropertiesObject} components/identify-widget.ViewModel.props.layerProperties
+     * @parent identify-widget.ViewModel.props
+     * @property {geocola.types.LayerPropertiesObject} identify-widget.ViewModel.props.layerProperties
      */
     layerProperties: {
       Value: CanMap
     },
     /**
      * The map click key to assign to this widget. When the map is clicked, and this key is the set as the current map click, it will trigger an identify.
-     * @parent components/identify-widget.ViewModel.props
-     * @property {Object} components/identify-widget.ViewModel.props.mapClickKey
+     * @parent identify-widget.ViewModel.props
+     * @property {Object} identify-widget.ViewModel.props.mapClickKey
      */
     mapClickKey: {
       type: 'string',
@@ -81,16 +81,16 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * The list of features that have been identified
-     * @parent components/identify-widget.ViewModel.props
-     * @property {Array<ol.Feature>} components/identify-widget.ViewModel.props._features
+     * @parent identify-widget.ViewModel.props
+     * @property {Array<ol.Feature>} identify-widget.ViewModel.props._features
      */
     _features: {
       Value: List
     },
     /**
      * Whether or not all identifies have completed. This is used internally by the template.
-     * @parent components/identify-widget.ViewModel.props
-     * @property {can.Deferred} components/identify-widget.ViewModel.props._loading
+     * @parent identify-widget.ViewModel.props
+     * @property {can.Deferred} identify-widget.ViewModel.props._loading
      */
     _loading: {
       value: function() {
@@ -101,16 +101,16 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * A list of pending identify deferreds
-     * @parent components/identify-widget.ViewModel.props
-     * @property {Array<can.Deferred>} components/identify-widget.ViewModel.props._deferreds
+     * @parent identify-widget.ViewModel.props
+     * @property {Array<can.Deferred>} identify-widget.ViewModel.props._deferreds
      */
     _deferreds: {
       Value: List,
     },
     /**
      * The currently selected feature index
-     * @parent components/identify-widget.ViewModel.props
-     * @property {Number} components/identify-widget.ViewModel.props._activeFeatureIndex
+     * @parent identify-widget.ViewModel.props
+     * @property {Number} identify-widget.ViewModel.props._activeFeatureIndex
      */
     _activeFeatureIndex: {
       value: 0,
@@ -118,8 +118,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * If the feature list has one or more features after the selected feature, this will be true. This is used by the template to enable/disable the forward and back buttons.
-     * @parent components/identify-widget.ViewModel.props
-     * @property {Boolean} components/identify-widget.ViewModel.props._hasNextFeature
+     * @parent identify-widget.ViewModel.props
+     * @property {Boolean} identify-widget.ViewModel.props._hasNextFeature
      */
     _hasNextFeature: {
       get: function() {
@@ -129,8 +129,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * If the feature list has one or more features before the selected feature, this will be true. This is used by the template to enable/disable the forward and back buttons.
-     * @parent components/identify-widget.ViewModel.props
-     * @property {Boolean} components/identify-widget.ViewModel.props._hasPreviousFeature
+     * @parent identify-widget.ViewModel.props
+     * @property {Boolean} identify-widget.ViewModel.props._hasPreviousFeature
      */
     _hasPreviousFeature: {
       get: function() {
@@ -139,8 +139,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * A virtual property that returns an object consisting of the formatted fields, values, and layer properties.
-     * @parent components/identify-widget.ViewModel.props
-     * @property {can.Map} components/identify-widget.ViewModel.props._activeFeature
+     * @parent identify-widget.ViewModel.props
+     * @property {can.Map} identify-widget.ViewModel.props._activeFeature
      */
     _activeFeature: {
       get: function() {

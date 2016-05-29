@@ -1,6 +1,6 @@
 <!--
 
-@module {can.Component} components/ol-map <ol-map />
+@module {can.Component} ol-map <ol-map />
 @parent geocola.components
 
 -->
@@ -20,4 +20,4 @@ A openlayers map component that provides a wrapper for `ol.Map` along with addit
 
 ## Demo
 
-@demo components/ol-map/demo.html 500
+@demo ol-map/demo.html 500
