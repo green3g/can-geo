@@ -1,7 +1,7 @@
 
 import can from 'can';
 import Print from './PrintProvider';
-import color from 'util/color';
+import color from '../../util/color';
 
 function parseUrl(url) {
   var anchor = document.createElement("a");
