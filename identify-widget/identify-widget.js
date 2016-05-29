@@ -10,7 +10,7 @@ import template from './template.stache!';
 import './styles.css!';
 
 import 'geocola-crud/property-table/';
-import { parseFieldArray, mapToFields } from '../../util/field';
+import { parseFieldArray, mapToFields } from 'geocola-crud/util/field';
 
 /**
  * @constructor components/identify-widget.ViewModel ViewModel
