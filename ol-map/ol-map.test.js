@@ -1,11 +1,10 @@
 /*jshint esnext: true */
-import testrunner from 'steal-qunit';
+import q from 'steal-qunit';
 import ol from 'openlayers';
 import can from 'can';
 
-import {ViewModel} from 'components/ol-map/';
-import 'components/ol-map/';
-import template from './mapTemplate.stache!';
+import {ViewModel} from './ol-map';
+import template from './test/mapTemplate.stache!';
 
 var view = new ol.View({
   center: [20, 20],
@@ -16,7 +15,7 @@ var vm;
 var clicked = false;
 var selector = '#maptest2';
 
-testrunner.module('components/ol-map/model', {
+q.module('ol-map.ViewModel', {
   beforeEach: function() {
     can.$('#qunit-fixture').append(can.view(template, {
 
@@ -78,7 +77,7 @@ test('onMapClick', function(assert) {
   assert.ok(clicked, 'clicked should now be okay');
 });
 
-testrunner.module('components/ol-map/view', {});
+q.module('components/ol-map/view', {});
 test('insert map into dom with defaults', function(assert) {
   $('#qunit-fixture').html(can.stache('<ol-map />'), {});
   assert.ok($('.ol-viewport').length, 'the ol viewport should be created');

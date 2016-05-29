@@ -29,10 +29,12 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "can": "^2.3.23",
+    "font-awesome": "^4.6.3",
     "geocola-crud": "git+https://github.com/geocola/geocola-crud.git",
     "geocola-ui": "git+https://github.com/geocola/geocola-ui.git",
     "jquery": "^2.2.3",
-    "steal": "^0.16.4"
+    "openlayers": "^3.16.0",
+    "steal": "^0.16.17"
   },
   "main": "index",
   "system": {
@@ -41,13 +43,21 @@
       "index"
     ],
     "npmIgnore": [
+      "openlayers",
       "documentjs",
       "jshint",
       "steal-tools",
       "testee"
     ],
     "paths": {
-      "bootstrap": "node_modules/bootstrap/dist/js/bootstrap.min.js"
+      "bootstrap": "node_modules/bootstrap/dist/js/bootstrap.min.js",
+      "openlayers": "node_modules/openlayers/dist/ol-debug.js"
+    },
+    "meta": {
+      "openlayers": {
+        "format": "global",
+        "exports": "ol"
+      }
     },
     "shim": {
       "jquery": {

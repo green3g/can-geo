@@ -1,14 +1,14 @@
 /*jshint esnext: true */
-import testrunner from 'steal-qunit';
-import Model from 'components/print-widget/model/printViewModel';
+import q from 'steal-qunit';
+import ViewModel from './print-widget';
 import can from 'can';
 import ol from 'openlayers';
 import $ from 'jquery';
 var vm, map;
-testrunner.config.testTimeout = 10000;
-testrunner.module('components/print-widget/model', {
+q.config.testTimeout = 10000;
+q.module('components/print-widget/model', {
   beforeEach: function() {
-    vm = new Model({
+    vm = new ViewModel({
       printUrl: 'http://localhost/geoserver/pdf/info.json',
     });
     $('#qunit-fixture').append('<div id="map" />');
