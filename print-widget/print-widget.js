@@ -1,7 +1,7 @@
 import can from 'can/util/library';
 import Component from 'can/component/';
+import CanMap from 'can/map/';
 import template from './print.stache!';
-import widgetModel from '../widget-model';
 
 /**
  * @constructor components/print-widget.ViewModel ViewModel
@@ -10,7 +10,7 @@ import widgetModel from '../widget-model';
  *
  * @description A `<print-widget />` component's ViewModel
  */
-export const ViewModel = widgetModel.extend({
+export const ViewModel = CanMap.extend({
   /**
    * @prototype
    */

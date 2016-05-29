@@ -1,12 +1,12 @@
 import can from 'can/util/library';
 import List from 'can/list/';
 import CanMap from 'can/map/';
+import CanEvent from 'can/event/';
 import 'can/map/define/';
 import Component from 'can/component/';
 
 import template from './locator.stache!';
 import './locator.css!';
-import widgetModel from '../widget-model';
 import icon from './icon';
 
 /**
@@ -16,7 +16,7 @@ import icon from './icon';
  *
  * @description A `<locator-widget />` component's ViewModel
  */
-export const ViewModel = widgetModel.extend({
+export const ViewModel = CanMap.extend({
   define: {
     /**
     * The default address value for the textbox.
@@ -253,6 +253,8 @@ export const ViewModel = widgetModel.extend({
     }));
   }
 });
+
+can.extend(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
   viewModel: ViewModel,

@@ -1,9 +1,9 @@
 import can from 'can/util/library';
 import CanMap from 'can/map/';
+import CanEvent from 'can/event/';
 import 'can/map/define/';
 import Component from 'can/component/';
 import ol from 'openlayers';
-import widgetModel from '../widget-model';
 import template from './olMap.stache!';
 import './olMap.css!';
 
@@ -16,7 +16,7 @@ import Factory from './LayerFactory';
  *
  * @description A `<ol-map />` component's ViewModel
  */
-export const ViewModel = widgetModel.extend({
+export const ViewModel = CanMap.extend({
   /**
    * @prototype
    */
@@ -292,6 +292,8 @@ export const ViewModel = widgetModel.extend({
     this.dispatch('resize', this.attr('mapObject').getSize());
   }
 });
+
+can.extend(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
   tag: 'ol-map',

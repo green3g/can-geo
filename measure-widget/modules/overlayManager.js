@@ -1,16 +1,14 @@
-/*jshint esnext: true*/
 import can from 'can';
 import ol from 'openlayers';
 import conversion from './conversion';
 import helpOverlayTemplate from './helpOverlay.stache!';
 import measureOverlayTemplate from './measureOverlay.stache!';
-import widgetModel from 'components/widget-model';
+import CanMap from 'can/map/';
 
-export default widgetModel.extend({
+export default CanMap.extend({
   helpMessage: null,
   useGeodisic: true,
   init: function() {
-    widgetModel.prototype.init.call(this, arguments);
     this.attr('measureOverlays', []);
     this.initVectorLayer();
     this.initHelpOverlay();

@@ -1,8 +1,9 @@
 import can from 'can/util/library';
 import Component from 'can/component/';
+import CanEvent from 'can/event/';
 import template from './olPopup.stache!';
+import CanMap from 'can/map/';
 import './olPopup.css!';
-import widgetModel from '../widget-model';
 
 /**
  * @constructor components/ol-popup.ViewModel ViewModel
@@ -11,7 +12,7 @@ import widgetModel from '../widget-model';
  *
  * @description A `<ol-popup />` component's ViewModel
  */
-export const ViewModel = widgetModel.extend({
+export const ViewModel = CanMap.extend({
   /**
    * @prototype
    */
@@ -96,6 +97,8 @@ export const ViewModel = widgetModel.extend({
     this.showPopup(event.coordinate);
   }
 });
+
+can.extend(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
   tag: 'ol-popup',
