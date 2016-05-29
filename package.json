@@ -31,7 +31,7 @@
     "can": "^2.3.23",
     "geocola-ui": "git+https://github.com/geocola/geocola-ui.git",
     "jquery": "^2.2.3",
-    "steal": "^0.16.4",
+    "steal": "^0.16.4"
   },
   "main": "index",
   "system": {
