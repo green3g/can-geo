@@ -29,6 +29,7 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "can": "^2.3.23",
+    "geocola-crud": "git+https://github.com/geocola/geocola-crud.git",
     "geocola-ui": "git+https://github.com/geocola/geocola-ui.git",
     "jquery": "^2.2.3",
     "steal": "^0.16.4"

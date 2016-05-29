@@ -9,7 +9,7 @@ import featureTemplate from './featureTemplate.stache!';
 import template from './template.stache!';
 import './styles.css!';
 
-import '../property-table/';
+import 'geocola-crud/property-table/';
 import { parseFieldArray, mapToFields } from '../../util/field';
 
 /**
