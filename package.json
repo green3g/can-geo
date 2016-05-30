@@ -19,22 +19,22 @@
   "author": "roemhildtg",
   "license": "MIT",
   "devDependencies": {
-    "documentjs": "^0.4.2",
+    "documentjs": "^0.4.x",
     "jshint": "latest",
-    "npm-watch": "^0.1.4",
-    "steal-qunit": "^0.1.1",
-    "steal-tools": "^0.16.2",
-    "testee": "^0.2.5"
+    "npm-watch": "^0.1.x",
+    "steal-qunit": "^0.1.x",
+    "steal-tools": "^0.16.x",
+    "testee": "^0.2.x"
   },
   "dependencies": {
-    "bootstrap": "^3.3.6",
-    "can": "^2.3.23",
-    "font-awesome": "^4.6.3",
+    "bootstrap": "^3.3.x",
+    "can": "^2.3.x",
+    "font-awesome": "^4.6.x",
     "geocola-crud": "git+https://github.com/geocola/geocola-crud.git",
     "geocola-ui": "git+https://github.com/geocola/geocola-ui.git",
-    "jquery": "^2.2.3",
-    "openlayers": "^3.16.0",
-    "steal": "^0.16.17"
+    "jquery": "^2.2.x",
+    "openlayers": "^3.16.x",
+    "steal": "^0.16.x"
   },
   "main": "index",
   "system": {
