@@ -110,3 +110,10 @@ test('map event setZoom', assert => {
     done();
   }, 100);
 });
+
+//
+// test('map destroy', assert => {
+//   vm.initMap(element[0]);
+//   can.$('#qunit-fixture').remove();
+//   assert.notOk(vm.attr('mapObject'), 'map shouldnt exist after removing the element');
+// });

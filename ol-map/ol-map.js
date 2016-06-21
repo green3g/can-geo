@@ -230,6 +230,10 @@ export const ViewModel = CanMap.extend({
       });
     });
     return map;
+  },
+  removeMap(){
+    this.attr('mapObject').setTarget(null);
+    this.attr('mapObject', null);
   }
 });
 
@@ -239,7 +243,10 @@ export default Component.extend({
   template: template,
   events: {
     inserted() {
-      this.scope.initMap(this.element.find('.ol-map-container')[0]);
+      this.viewModel.initMap(this.element.find('.ol-map-container')[0]);
+    },
+    removed() {
+      this.viewModel.removeMap();
     }
   }
 });

@@ -1,5 +1,12 @@
-# geocola-map
+<!--
+@page geocola Home
+@group geocola.components Components
+@group geocola.providers Providers
+@group geocola.types Type Definitions
+-->
 
-[![Build Status](https://travis-ci.org/geocola/geocola-map.svg?branch=master)](https://travis-ci.org/geocola/geocola-map)
+# can-geo
 
-Mapping components used by geocola
+[![Build Status](https://travis-ci.org/roemhildtg/can-geo.svg?branch=master)](https://travis-ci.org/roemhildtg/geocola-map)
+
+Web mapping web components
