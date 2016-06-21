@@ -7,7 +7,6 @@ import Component from 'can/component/';
 import ol from 'openlayers';
 import template from './olMap.stache!';
 import './olMap.css!';
-import pubsub from 'pubsub-js';
 
 import Factory from './LayerFactory';
 
