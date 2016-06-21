@@ -12,8 +12,7 @@ A openlayers map component that provides a wrapper for `ol.Map` along with addit
 ## Usage
 
 ```html
-<ol-map id="main-map" {map-options}="mapOptions">
-  <child-components />
+<ol-map id="main-map" x="-90" y="45">
 </ol-map>`
 ```
 

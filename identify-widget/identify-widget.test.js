@@ -1,34 +1,25 @@
-/*jshint esnext: true */
-import testrunner from 'steal-qunit';
-import can from 'can';
 
-import 'ol-map/';
-import 'ol-popup/';
-import 'identify-widget/';
-import 'ol-layer/ol-layer-tilewms';
+import q from 'steal-qunit';
+import can from 'can';
 
 import template from 'ol-map/test/mapTemplate.stache!';
 import {ViewModel} from 'identify-widget/';
-import IdentifyResult from './identify-result';
+import IdentifyResult from './test/identify-result';
 
 var vm, mapModel, popupModel, FeatureCollection, coordinate;
 var clickKey = 'mykey';
 var Coord = [-10566654.790142762, 5439870.428999424];
-testrunner.module('identify-widget/identifyViewModel', {
+q.module('identify-widget.ViewModel', {
   beforeEach: function() {
+
     FeatureCollection = can.extend({}, IdentifyResult);
     coordinate = [Coord[0], Coord[1]];
-    //render our map template
-    can.$('#qunit-fixture').append(can.view(template, {}));
-
-    mapModel = can.$('ol-map').viewModel();
-    mapModel.attr('defaultClick', clickKey);
-    popupModel = can.$('ol-popup').viewModel();
 
     //create a new viewModel for testing
     vm = new ViewModel({
-      mapClickKey: clickKey
+      mapNode: clickKey
     });
+
   },
   afterEach: function(assert) {
     vm = mapModel = popupModel = null;
