@@ -1,97 +1,112 @@
 /*jshint esnext: true */
 import q from 'steal-qunit';
-import ol from 'openlayers';
 import can from 'can';
 
-import {ViewModel} from './ol-map';
+import { ViewModel } from './ol-map';
 import template from './test/mapTemplate.stache!';
 
-var view = new ol.View({
+var view = {
   center: [20, 20],
   zoom: 11
-});
+};
 
-var vm;
-var clicked = false;
-var selector = '#maptest2';
+let vm, element;
+
 
 q.module('ol-map.ViewModel', {
-  beforeEach: function() {
-    can.$('#qunit-fixture').append(can.view(template, {
-
-    }));
-    can.$('#qunit-fixture').append('<div id="maptest2"></div>');
+  beforeEach() {
+    element = can.$('#qunit-fixture').append('<div id="map-node" />');
     vm = new ViewModel({
+
     });
-    var test = function(event) {
-      clicked = true;
-      return event;
-    };
-    var test2 = function(event) {
-      clicked = true;
-      return event;
-    };
-    vm.addClickHandler('test', test);
-    vm.addClickHandler('test2', test2);
   },
-  afterEach: function(assert) {
+  afterEach() {
     vm = null;
+    element = null;
   }
 });
-test('initMap with defaults', function(assert) {
-  vm.on('ready', function(event, map, viewModel) {
-    assert.equal(map.getView().getProjection().getCode(),
-      'EPSG:3857', 'Projection should be default');
-    assert.deepEqual(map.getView().getCenter(), [0, 0], 'center should be default');
-    assert.equal(map.getView().getZoom(), 1, 'zoom should be default');
+
+/**
+ * Determines whether a points values are close enough to account for rounding
+ * differences
+ * @param  {Array<Number>} p The point to check
+ * @param  {Array<Number>} p1 The point to compare with
+ * @return {Boolean} whether or not the poitn is close to its other point
+ */
+function areCloseEnough(p, p2) {
+  return p[0] > p2[0] - 1 && p[0] < p2[0] + 1 &&
+    p[1] > p2[1] - 1 && p[1] < p2[1] + 1;
+}
+
+test('initMap with defaults', (assert) => {
+  vm.initMap(element[0]);
+  let map = vm.attr('mapObject');
+  let view = map.getView();
+
+  assert.equal(map.getLayers().getArray().length, 1, 'one layer should be added by default');
+
+  let center = view.getCenter();
+  assert.ok(areCloseEnough(center, [0, 0]), 'the default center should be about 0,0');
+});
+
+test('initMap with a coordinate', assert => {
+  vm.attr({
+    x: 10,
+    y: 10
   });
-  vm.initMap($(selector)[0]);
-  assert.ok(vm.attr('mapObject'), 'map should be okay');
-});
-test('addClickHandler', function(assert) {
-  assert.equal( vm.attr('currentClick'),'test', 'current click handler should be test');
-  assert.equal( vm.attr('defaultClick'),'test', 'default click handler should be test');
+  vm.initMap(element[0]);
+  let map = vm.attr('mapObject');
+  let view = map.getView();
+  assert.deepEqual(view.getCenter(), ol.proj.transform([10, 10], 'EPSG:4326', 'EPSG:3857'), 'coordinates passed in should be projected correctly');
 });
 
-test('removeClickHandler', function(assert) {
-  vm.removeClickHandler('test2');
-  assert.notOk(vm.attr('clickHandlers.test2'), 'test2 handler should not exist');
+test('initMap with custom layers', assert => {
+  vm.attr('mapOptions.layers', [{
+    type: 'TileWMS',
+    sourceOptions: {
+      url: 'http://map.ices.dk/geoserver/ext_ref/wms',
+      params: {
+        LAYERS: 'ext_ref:bluemarble_world',
+      }
+    }
+  }, {
+    type: 'TileWMS',
+    sourceOptions: {
+      url: 'http://demo.opengeo.org/geoserver/topp/wms',
+      params: {
+        LAYERS: 'topp:states'
+      }
+    }
+  }]);
+
+  vm.initMap(element[0]);
+
+  assert.equal(vm.attr('mapObject').getLayers().getArray().length, 2, 'two layers should be added to the map');
 });
 
-test('setCurrentClickHandler', function(assert) {
-  vm.setCurrentClickHandler('test2');
-  assert.equal(vm.attr('currentClick'), 'test2', 'current Click should be test2');
+test('map event setCenter', assert => {
+  let done = assert.async();
+  vm.initMap(element[0]);
+
+  let expected = [-90, 45];
+  vm.attr('mapObject').getView().setCenter(ol.proj.transform(expected, 'EPSG:4326', 'EPSG:3857'));
+
+  //view.setCenter must be async or something because this doesn't work
+  //unless its wrapped in setTimeout
+  setTimeout(() => {
+    assert.ok(areCloseEnough([vm.attr('x'), vm.attr('y')], expected), 'the coordinates should approximately match the map objects center');
+    done();
+  }, 100);
 });
 
-test('setDefaultClickHandler', function(assert) {
-  vm.setCurrentClickHandler('test2');
-  vm.setDefaultClickHandler();
-  assert.equal(vm.attr('currentClick'), 'test', 'current click should be default of test');
-});
+test('map event setZoom', assert => {
+  let done = assert.async();
+  vm.initMap(element[0]);
 
-test('onMapClick', function(assert) {
-  assert.notOk(clicked, 'clicked should not yet be okay');
-  var result = vm.onMapClick({
-    testEvent: "hello"
-  });
-  assert.ok(clicked, 'clicked should now be okay');
-});
+  vm.attr('mapObject').getView().setZoom(15);
 
-q.module('ol-map/view', {});
-test('insert map into dom with defaults', function(assert) {
-  $('#qunit-fixture').html(can.stache('<ol-map />'), {});
-  assert.ok($('.ol-viewport').length, 'the ol viewport should be created');
-  assert.ok($('.ol-map-container').attr('id'), 'the ol container should have an id');
-  var map = $('ol-map').scope().attr('mapObject');
-  assert.equal(map.getView().getZoom(), 1, 'zoom should be default');
-  assert.deepEqual(map.getView().getCenter(), [0, 0], 'center should be default');
-});
-
-test('insert map into dom with values', function(assert) {
-  $('#qunit-fixture').html(can.stache('<ol-map x="10" y="10" zoom="8" ' +
-    'projection="EPSG:3857"></ol-map>'));
-  assert.ok($('.ol-viewport').length, 'the ol viewport should be created');
-  var map = $('ol-map').scope().attr('mapObject');
-  assert.equal(map.getView().getZoom(), 8, 'zoom should be overridden');
-  assert.deepEqual(map.getView().getCenter(), [10, 10], 'center should be overridden');
+  setTimeout(() => {
+    assert.equal(vm.attr('zoom'), 15, 'zoom should be set on the viewModel');
+    done();
+  }, 100);
 });

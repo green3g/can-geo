@@ -1,18 +1,44 @@
 import can from 'can/util/library';
 import CanMap from 'can/map/';
+import List from 'can/list/';
 import CanEvent from 'can/event/';
 import 'can/map/define/';
 import Component from 'can/component/';
 import ol from 'openlayers';
 import template from './olMap.stache!';
 import './olMap.css!';
+import pubsub from 'pubsub-js';
 
 import Factory from './LayerFactory';
+
+export const ViewOptions = CanMap.extend({
+  projection: 'EPSG:3857',
+  minZoom: undefined,
+  maxZoom: undefined,
+  rotation: 0,
+  extent: undefined
+});
+
+export const MapOptions = CanMap.extend({
+  define: {
+    layers: {
+      value: function() {
+        return [{
+          type: 'OSM'
+        }];
+      }
+    },
+    view: {
+      Value: ViewOptions
+    }
+  }
+});
 
 /**
  * @constructor ol-map.ViewModel ViewModel
  * @parent ol-map
  * @group ol-map.ViewModel.props Properties
+ * @group ol-map.ViewModel.topics Topics
  *
  * @description A `<ol-map />` component's ViewModel
  */
@@ -29,7 +55,7 @@ export const ViewModel = CanMap.extend({
      */
     projection: {
       type: 'string',
-      value: 'EPSG:3857'
+      value: 'EPSG:4326'
     },
     /**
      * The starting x coordinate of the map view. The default is 0.
@@ -39,7 +65,18 @@ export const ViewModel = CanMap.extend({
      */
     x: {
       type: 'number',
-      value: 0
+      value: 0,
+      set(x) {
+        if (this.attr('mapObject')) {
+          let view = this.attr('mapObject').getView();
+          let coords = ol.proj.transform([x, this.attr('y')], this.attr('projection'), view.getProjection());
+          let currentX = coords[0];
+          if (currentX !== x) {
+            view.setCenter(coords);
+          }
+        }
+        return x;
+      }
     },
     /**
      *
@@ -50,7 +87,18 @@ export const ViewModel = CanMap.extend({
      */
     y: {
       type: 'number',
-      value: 0
+      value: 0,
+      set(y) {
+        if (this.attr('mapObject')) {
+          let view = this.attr('mapObject').getView();
+          let coords = ol.proj.transform([this.attr('x'), y], this.attr('projection'), view.getProjection());
+          let currentY = view.getCenter()[1];
+          if (coords[1] !== currentY) {
+            view.setCenter(coords);
+          }
+        }
+        return y;
+      }
     },
     /**
      * The starting zoom level of the map view. The default is 1.
@@ -62,24 +110,16 @@ export const ViewModel = CanMap.extend({
      */
     zoom: {
       type: 'number',
-      value: 1
-    },
-    /**
-     * The default name of the map click handler to use. If not supplied, it
-     * will be set to the first one added.
-     * @property {String} ol-map.ViewModel.props.defaultClick
-     * @parent ol-map.ViewModel.props
-     */
-    defaultClick: {
-      type: 'string'
-    },
-    /**
-     * The array of current click handlers in the widget.
-     * @property {can.Map} ol-map.ViewModel.props.clickHandlers
-     * @parent ol-map.ViewModel.props
-     */
-    clickHandlers: {
-      Value: CanMap
+      value: 1,
+      set(zoom) {
+        if (this.attr('mapObject')) {
+          let view = this.attr('mapObject').getView();
+          if (view.getZoom() !== zoom) {
+            this.attr('mapObject').getView().setZoom(zoom);
+          }
+        }
+        return zoom;
+      }
     },
     /**
      * @description
@@ -97,7 +137,8 @@ export const ViewModel = CanMap.extend({
      * @parent ol-map.ViewModel.props
      */
     mapOptions: {
-      Value: CanMap
+      Type: MapOptions,
+      Value: MapOptions
     },
     /**
      * The ol.Map
@@ -105,16 +146,17 @@ export const ViewModel = CanMap.extend({
      * @parent ol-map.ViewModel.props
      */
     mapObject: {
+      type: '*',
       value: null
     }
   },
   /**
-   * @description
+   * @function initMap
    * Initializes the map
    * @signature
    * @param  {domElement} element The dom element to place the map
    */
-  initMap: function(element) {
+  initMap(element) {
     this.attr('mapOptions.layers', this.getLayers(this.attr('mapOptions.layers')));
     this.attr('mapOptions.view', this.getView(this.attr('mapOptions.view')));
 
@@ -123,51 +165,46 @@ export const ViewModel = CanMap.extend({
         new ol.control.OverviewMap(),
         new ol.control.FullScreen()
       ]),
-      target: element,
+      target: element
     }, this.attr('mapOptions').attr());
     if (this.attr('mapOptions')) {
-      options = can.extend(options, this.attr('mapOptions'));
+      options = can.extend(options, this.attr('mapOptions').attr());
     }
-    //create the map, resolve the deferred
+    //create the map
     this.attr('mapObject', this.createMap(options));
-    this.attr('deferred').resolve(this.attr('mapObject'));
-  },
-  getLayers: function(layerConf){
-    var layers = [];
-    layerConf.reverse().forEach(function(l){
-      layers.push(Factory.getLayer(l));
-    });
-    return new ol.Collection(layers);
-  },
-  getView: function(viewConf){
-    var projection = ol.proj.get(this.attr('projection'));
-    return new ol.View(can.extend({
-      zoom: this.attr('zoom'),
-      projection: projection,
-      center: [this.attr('x'), this.attr('y')]
-    }, viewConf));
   },
   /**
-   * @description
-   * Returns a promise resolved when this widget's map is ready
-   * @signature
-   * @return {promise} A promise that is resolved with the `ol.map` object when the map is ready
+   * Creates new ol layers from the provided paramters using the Layer Factory.
+   * Layers are added to the map in the order of first to last, with the last appearing
+   * on the bottom.
+   * @param  {Array<object>} layerConf The array of layer properties to pass to the factory
+   * @return {ol.Collection<ol.Layer>} The assembled layers in the correct order
    */
-  ready: function() {
-    return this.attr('deferred').promise();
+  getLayers(layerConf) {
+    return new ol.Collection(
+      layerConf.reverse().map(function(l) {
+        return Factory.getLayer(l);
+      }));
   },
   /**
-   * @description
-   * adds a layer to the `ol.map` when it is ready
-   *
-   * @signature
-   * @param  {ol.layer} layer the layer object to add
+   * creates a new ol.View object from the provided paramters.
+   * If a view object exists in the mapOptions, the view object's properties
+   * will override the defaults including x and y properties set on this viewModel
+   * @param  {[type]} viewConf [description]
+   * @return {[type]}          [description]
    */
-  addLayer: function(layer) {
-    this.ready().then(function(map) {
-      var layers = map.getLayers();
-      layers.insertAt(0, layer);
-    });
+  getView(viewConf) {
+
+    //transform the coordinates if necessary
+    let center = ol.proj.transform([this.attr('x'), this.attr('y')], this.attr('projection'), this.attr('mapOptions.view.projection'));
+
+    //create the view
+    return new ol.View(
+      can.extend({
+        zoom: this.attr('zoom'),
+        center: center
+      }, viewConf.attr())
+    );
   },
   /**
    * @description
@@ -176,131 +213,32 @@ export const ViewModel = CanMap.extend({
    * @param  {object} options `ol.map` constructor options
    * @return {ol.map}         The map object that is now set up
    */
-  createMap: function(options) {
-    var map = new ol.Map(options);
-    map.on('click', this.onMapClick.bind(this));
-    map.on('change:size', this.onResize.bind(this));
+  createMap(options) {
+    let map = new ol.Map(options);
+    let view = map.getView();
+    map.on('moveend', event => {
+      let view = event.target.getView();
+
+      //project to components projection
+      let center = ol.proj.transform(view.getCenter(), view.getProjection(), this.attr('projection'));
+
+      //export the properties
+      this.attr({
+        x: center[0],
+        y: center[1],
+        zoom: view.getZoom()
+      });
+    });
     return map;
-  },
-  /**
-   * @description
-   * A function to easily access the map
-   * @signature
-   * @return {ol.map} The map object
-   */
-  getMap: function() {
-    return this.attr('mapObject');
-  },
-  /**
-   *  @description
-   * Adds a new click handler to the managed click
-   * handlers in this widget.If the click handler exists,
-   * a warning will be logged.If this is the first click
-   * handler added, it will automatically be set as the default.
-   *
-   * @signature
-   * @param {string} name - the name of the handler
-   * @param {function(event)} handler - the handler funciton that is passed the `ol.event`
-   * for the map click
-   */
-  addClickHandler: function(name, handler) {
-    if (this.attr('clickHandlers.' + name)) {
-      console.warn('click handler already exists for key ' + name);
-      return;
-    }
-    if (typeof handler === 'function') {
-      this.attr(['clickHandlers', name].join('.'), handler);
-      if (!this.attr('defaultClick')) {
-        this.attr('defaultClick', name);
-      }
-      if (!this.attr('currentClick')) {
-        this.attr('currentClick', this.attr('defaultClick'));
-      }
-    }
-    return this;
-  },
-  /**
-   * @description
-   * Removes a click handler
-   *
-   * @signature
-   * @param  {String} name The name of the click handler to remove
-   * @return {this}      `this` object
-   */
-  removeClickHandler: function(name) {
-    this.removeAttr('clickHandlers.' + name);
-    if (this.attr('defaultClick') === name) {
-      this.attr('defaultClick', null);
-    }
-    if (this.attr('currentClick') === name) {
-      this.setDefaultClickHandler();
-    }
-    return this;
-  },
-  resize: function() {
-    this.attr('mapObject').updateSize();
-  },
-  /**
-   * @description
-   * Sets the current click handler to the key provided if it exists
-   * @signature
-   * @param  {String} newCurrent The new current click handler to set
-   * @return {this}            `this` object
-   */
-  setCurrentClickHandler: function(newCurrent) {
-    if (this.attr('clickHandlers.' + newCurrent)) {
-      this.attr('currentClick', newCurrent);
-    }
-    return this;
-  },
-  /**
-   * @description
-   * Returns the current click handler to the default click handler
-   * @signature
-   * @return {this} this object
-   */
-  setDefaultClickHandler: function() {
-    this.attr('currentClick', this.attr('defaultClick'));
-    return this;
-  },
-  /**
-   * @description
-   * The map click handler that delegates which function should be called.
-   * This is the only map click handler that gets assigned to the `map.on('click')`
-   * Once the current click is evaluated as a function, it calls it and returns
-   * the value (if any)
-   * @signature
-   * @param  {Event} evt The ol map click event
-   * @return {*} The return value of the current click handler
-   */
-  onMapClick: function(evt) {
-    if (!this.attr('currentClick')) {
-      console.warn('no mapclick defined');
-      return;
-    }
-    var path = 'clickHandlers.' + this.attr('currentClick');
-    return this.attr(path)(evt);
-  },
-  /**
-   * @description
-   * Dispatches resize event when the map is resized
-   * @signature
-   * @param  {Event} event The openlayers map resize event
-   *
-   */
-  onResize: function(event) {
-    this.dispatch('resize', this.attr('mapObject').getSize());
   }
 });
-
-can.extend(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
   tag: 'ol-map',
   viewModel: ViewModel,
   template: template,
   events: {
-    inserted: function() {
+    inserted() {
       this.scope.initMap(this.element.find('.ol-map-container')[0]);
     }
   }
