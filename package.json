@@ -47,7 +47,8 @@
       "documentjs",
       "jshint",
       "steal-tools",
-      "testee"
+      "testee",
+      "npm-watch"
     ],
     "paths": {
       "bootstrap": "node_modules/bootstrap/dist/js/bootstrap.min.js",
