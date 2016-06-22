@@ -1,4 +1,4 @@
-/*jshint esnext: true */
+
 import CanMap from 'can/map/';
 import Component from 'can/component/';
 import List from 'can/list/';
@@ -9,8 +9,8 @@ import featureTemplate from './featureTemplate.stache!';
 import template from './template.stache!';
 import './styles.css!';
 
-import 'geocola-crud/property-table/';
-import { parseFieldArray, mapToFields } from 'geocola-crud/util/field';
+import 'can-crud/property-table/';
+import { parseFieldArray } from 'can-crud/util/field';
 
 /**
  * @constructor identify-widget.ViewModel ViewModel
@@ -25,22 +25,32 @@ export const ViewModel = CanMap.extend({
    */
   define: {
     /**
-     * The selector for the `ol-map` map node.
+     * The map topic to use for publishing and subscribing to map interractions.
+     * Example (`map` is the topicKey here): `map/onClick`, `map/setCenter`
      * @parent identify-widget.ViewModel.props
-     * @signature `{String}` `map-node="#map"`
-     * @property {String} identify-widget.ViewModel.props.mapNode
+     * @property {String} identify-widget.ViewModel.props.topicKey
      */
-    mapNode: {
-      type: 'string'
+    topicKey: {
+      type: 'string',
+      value: 'map'
     },
     /**
-     * The selector for the `ol-popup` dom node. If this widget is placed inside an ol-popup, it this property must be provided so the identify widget can correctly center the popup on the feature.
-     * @property {String} identify-widget.ViewModel.props.popupNode
-     * @parent identify-widget.ViewModel.props
-     * @signature `{String}` `popup-node="#identify-popup"`
+     * The key of the map click that needs to fire for this widget to perform
+     * its identify function. Leave this blank to always perform identify, even if
+     * another widget is interacting with the map click.
+     * @property {String} identify-widget.ViewModel.props.mapClickKey
      */
-    popupNode: {
-      type: 'string'
+    mapKey: {
+      type: 'string',
+      value: null
+    },
+    /**
+     * The popup topic to use for publishing and subscribing to popup interractions
+     * @type {Object}
+     */
+    popupTopic: {
+      type: 'string',
+      value: null
     },
     /**
      * The max number of features to return for each layer. The default is 10.
@@ -71,15 +81,6 @@ export const ViewModel = CanMap.extend({
       Value: CanMap
     },
     /**
-     * The map click key to assign to this widget. When the map is clicked, and this key is the set as the current map click, it will trigger an identify.
-     * @parent identify-widget.ViewModel.props
-     * @property {Object} identify-widget.ViewModel.props.mapClickKey
-     */
-    mapClickKey: {
-      type: 'string',
-      value: 'identify'
-    },
-    /**
      * The list of features that have been identified
      * @parent identify-widget.ViewModel.props
      * @property {Array<ol.Feature>} identify-widget.ViewModel.props._features
@@ -93,10 +94,8 @@ export const ViewModel = CanMap.extend({
      * @property {can.Deferred} identify-widget.ViewModel.props._loading
      */
     _loading: {
-      value: function() {
-        var d = can.Deferred();
-        d.resolve();
-        return d;
+      get() {
+        return Promise.all(this.attr('_deferreds'));
       }
     },
     /**
@@ -105,7 +104,7 @@ export const ViewModel = CanMap.extend({
      * @property {Array<can.Deferred>} identify-widget.ViewModel.props._deferreds
      */
     _deferreds: {
-      Value: List,
+      Value: List
     },
     /**
      * The currently selected feature index
@@ -122,7 +121,7 @@ export const ViewModel = CanMap.extend({
      * @property {Boolean} identify-widget.ViewModel.props._hasNextFeature
      */
     _hasNextFeature: {
-      get: function() {
+      get() {
         return this.attr('_activeFeatureIndex') < this.attr('_features').length - 1;
 
       }
@@ -133,7 +132,7 @@ export const ViewModel = CanMap.extend({
      * @property {Boolean} identify-widget.ViewModel.props._hasPreviousFeature
      */
     _hasPreviousFeature: {
-      get: function() {
+      get() {
         return this.attr('_activeFeatureIndex') > 0;
       }
     },
@@ -143,7 +142,7 @@ export const ViewModel = CanMap.extend({
      * @property {can.Map} identify-widget.ViewModel.props._activeFeature
      */
     _activeFeature: {
-      get: function() {
+      get() {
         //if no _features, return null
         if (!this.attr('_features').length) {
           //update Map layer
@@ -177,15 +176,6 @@ export const ViewModel = CanMap.extend({
           template = this.attr([layerProperties, 'template'].join('.'));
         }
 
-        //show popup if used
-        if (this.attr('popupModel')) {
-          //there seems to be a bug when loading geojson features
-          var extent = feature
-            .getGeometry()
-            .getExtent();
-          this.attr('popupModel').centerPopup(ol.extent.getCenter(extent));
-        }
-
         let fields = this.attr([layerProperties, 'fields'].join('.')) || CanMap.keys(new CanMap(feature.getProperties()));
         return {
           //raw ol.feature
@@ -206,21 +196,11 @@ export const ViewModel = CanMap.extend({
     },
   },
   /**
-   * Initializes this widget by finding the map and popup if provided and setting up the map click handler
-   * @signature
-   * @param  {Object} models A object consisting of the map and popup viewModels
+   * Initializes this widget by subscribing to the necessary topics
    */
-  initWidget: function(models) {
-    this.attr('mapModel', models.map);
-    this.attr('popupModel', models.popup);
-    if (!this.attr('popupModel') && this.attr('mapModel')) {
-      this.attr('mapModel').addClickHandler(this.attr('mapClickKey'), this.identify.bind(this));
-    }
-
-    if (this.attr('popupModel')) {
-      this.attr('popupModel').on('show', this.identify.bind(this));
-      this.attr('popupModel').on('hide', this.clearFeatures.bind(this));
-    }
+  init() {
+    pubsub.subscribe(this.attr('mapTopic') + '/click', this.identify.bind(this));
+    pubsub.subscribe(this.attr('popupTopic') + '/center', this.identify.bind(this));
   },
   /**
    * Queries the available map wms layers and updates the loading status
@@ -229,7 +209,7 @@ export const ViewModel = CanMap.extend({
    * @param  {Array<Number>} coordinate Optional coordinate array to identify at
    * @return {Promise} A promise that is resolved when all of the identifies have finished loading
    */
-  identify: function(event, coordinate) {
+  identify(event, coordinate) {
     if (!coordinate) {
       coordinate = event;
     }
@@ -268,7 +248,7 @@ export const ViewModel = CanMap.extend({
    * @param  {Number} resolved The current number of resolved promises
    * @param  {Number} total  The total number of promises
    */
-  updateLoading: function(resolved, total) {
+  updateLoading(resolved, total) {
     if (resolved === total) {
       this.attr('_loading').resolve(this.attr('_features'));
     }
@@ -280,7 +260,7 @@ export const ViewModel = CanMap.extend({
    * @param  {Array<Number>} coordinate The current identify coordinate
    * @return {Array<String>}            Array of GetFeatureInfo urls
    */
-  getQueryURLsRecursive: function(layers, coordinate) {
+  getQueryURLsRecursive(layers, coordinate) {
     var self = this;
     var urls = [];
     layers.forEach(function(layer) {
@@ -304,7 +284,7 @@ export const ViewModel = CanMap.extend({
    * @param  {Array<Number>} coordinate The coordinate pair to identify at
    * @return {String}            The url to query for identify results
    */
-  getQueryURL: function(layer, coordinate) {
+  getQueryURL(layer, coordinate) {
     if (layer.getSource && layer.getVisible()) {
       var source = layer.getSource();
       if (source && typeof source.getGetFeatureInfoUrl !== 'undefined') {
@@ -328,7 +308,7 @@ export const ViewModel = CanMap.extend({
    * @param  {String} url The url to query
    * @return {Deferred}     The deferred that is resolved to the raw wms feature data
    */
-  getFeatureInfo: function(url) {
+  getFeatureInfo(url) {
     return can.ajax({
       url: url,
       dataType: 'json',
@@ -341,15 +321,14 @@ export const ViewModel = CanMap.extend({
    * @param  {Object} collection A GeoJSON feature collection
    * @param  {Array<Number>} coordinate The coordinate pair where the mouse click occurred
    */
-  addFeatures: function(collection, coordinate) {
+  addFeatures(collection, coordinate) {
     if (collection.features.length) {
       var features = [];
-      var self = this;
-      collection.features.forEach(function(feature, index) {
+      collection.features.forEach((feature, index) => {
         //if this layer should be excluded, skip it
         //path to exclude is this.layerproperties.layerName.excludeIdentify
         var layer = feature.id.split('.')[0];
-        var exclude = self.attr(['layerProperties', layer, 'excludeIdentify'].join('.'));
+        var exclude = this.attr(['layerProperties', layer, 'excludeIdentify'].join('.'));
         if (!exclude) {
           //otherwise, add the crs to each feature
           feature.crs = collection.crs;
@@ -378,7 +357,7 @@ export const ViewModel = CanMap.extend({
    * @param  {Object } collection Raw GeoJSON object
    * @return {ol.Collection<ol.Feature>}            The collection of openlayers features
    */
-  getFeaturesFromJson: function(collection) {
+  getFeaturesFromJson(collection) {
     var proj = this.attr('mapModel').getMap().getView().getProjection();
     var gjson = new ol.format.GeoJSON();
     var features = gjson.readFeatures(collection, {
@@ -392,7 +371,7 @@ export const ViewModel = CanMap.extend({
    * @signature
    * @return {can.Map} This object
    */
-  gotoNext: function() {
+  gotoNext() {
     if (this.attr('_hasNextFeature')) {
       this.attr('_activeFeatureIndex', this.attr('_activeFeatureIndex') + 1);
     }
@@ -403,7 +382,7 @@ export const ViewModel = CanMap.extend({
    * @signature
    * @return {can.Map} This object
    */
-  gotoPrevious: function() {
+  gotoPrevious() {
     if (this.attr('_hasPreviousFeature')) {
       this.attr('_activeFeatureIndex', this.attr('_activeFeatureIndex') - 1);
     }
@@ -413,9 +392,9 @@ export const ViewModel = CanMap.extend({
    * clears the features in this widget
    * @signature
    */
-  clearFeatures: function() {
+  clearFeatures() {
     if (this.attr('_loading').state() === 'pending') {
-      this.attr('_deferreds').forEach(function(d) {
+      this.attr('_deferreds').forEach((d) => {
         if (d.state() === 'pending') {
           d.abort();
         }
@@ -430,7 +409,7 @@ export const ViewModel = CanMap.extend({
    * @signature
    * @param  {ol.Feature} feature The feature
    */
-  updateSelectedFeature: function(feature) {
+  updateSelectedFeature(feature) {
     if (!feature) {
       if (this.attr('layer')) {
         this.attr('layer').getSource().clear();
@@ -461,16 +440,15 @@ export const ViewModel = CanMap.extend({
    * @signature
    * @param  {Object} object An object containing a feature property
    */
-  zoomToFeature: function(object) {
+  zoomToFeature(object) {
     var extent = object.feature
       .getGeometry()
       .getExtent();
 
     if (this.attr('popupModel')) {
-      var self = this;
-      var key = this.attr('mapModel.mapObject').on('postrender', function() {
-        self.attr('popupModel').centerPopup(ol.extent.getCenter(extent));
-        self.attr('mapModel.mapObject').unByKey(key);
+      var key = this.attr('mapModel.mapObject').on('postrender', () => {
+        this.attr('popupModel').centerPopup(ol.extent.getCenter(extent));
+        this.attr('mapModel.mapObject').unByKey(key);
       });
     }
 
@@ -481,7 +459,7 @@ export const ViewModel = CanMap.extend({
    * @signature
    * @param  {Array<Number>} extent The extent to zoom the map to
    */
-  animateZoomToExtent: function(extent) {
+  animateZoomToExtent(extent) {
     var map = this.attr('mapModel.mapObject');
     var duration = 750;
     var pan = ol.animation.pan({
@@ -501,7 +479,7 @@ export const ViewModel = CanMap.extend({
    * @signature
    * @param  {Error} e The error
    */
-  error: function(e) {
+  error(e) {
     this.attr('hasErrors', true);
     console.warn('Could not perform ajax request: ', e);
   },
@@ -511,7 +489,7 @@ export const ViewModel = CanMap.extend({
    * @param  {ol.feature[]} features The array of features to search through
    * @return {Number}          The index value of the closest feature
    */
-  getClosestFeatureIndex: function(features, coord) {
+  getClosestFeatureIndex(features, coord) {
     if (features.length === 0) {
       return 0;
     }
@@ -537,7 +515,7 @@ export const ViewModel = CanMap.extend({
    * @param  {Number[]} c2 The second xy coordinate
    * @return {Number}    The distance between the two points
    */
-  getDistance: function(c1, c2) {
+  getDistance(c1, c2) {
     return Math.sqrt(
       Math.pow((c1[0] - c2[0]), 2) +
       Math.pow((c1[1] - c2[1]), 2)
@@ -548,20 +526,5 @@ export const ViewModel = CanMap.extend({
 export default Component.extend({
   tag: 'identify-widget',
   template: template,
-  viewModel: ViewModel,
-  events: {
-    inserted: function() {
-      var map, popup;
-      if (this.viewModel.attr('mapNode')) {
-        map = can.$(this.viewModel.attr('mapNode')).viewModel();
-      }
-      if (this.viewModel.attr('popupNode')) {
-        popup = can.$(this.viewModel.attr('popupNode')).viewModel();
-      }
-      this.viewModel.initWidget({
-        map: map,
-        popup: popup
-      });
-    }
-  }
+  viewModel: ViewModel
 });
