@@ -4,9 +4,11 @@ import List from 'can/list/';
 import CanEvent from 'can/event/';
 import 'can/map/define/';
 import Component from 'can/component/';
-import ol from 'openlayers';
 import template from './olMap.stache!';
 import './olMap.css!';
+
+import ol from 'openlayers';
+import 'node_modules/openlayers/dist/ol.css!';
 
 import Factory from './LayerFactory';
 

@@ -5,6 +5,10 @@ import helpOverlayTemplate from './helpOverlay.stache!';
 import measureOverlayTemplate from './measureOverlay.stache!';
 import CanMap from 'can/map/';
 
+/**
+ * @module OlManager
+ * A measure overlay manager for openlayers 3 maps
+ */
 export default CanMap.extend({
   helpMessage: null,
   useGeodisic: true,

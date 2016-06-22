@@ -1,0 +1,49 @@
+<div id="app"></div>
+
+<script type="text/stache" id="demo-html">
+  <ol-map {^map-object}="myMap" /> {{#if overlayManager}}
+  <measure-widget {overlay-manager}="overlayManager" /> {{/if}}
+</script>
+
+<style type="text/css">
+  measure-widget {
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 45%;
+    background: #fff;
+    padding: 10px;
+  }
+  </style>
+
+  <script src="../node_modules/steal/steal.js" id="demo-source"> import can from 'can/view/';
+  import CanMap from 'can/map/';
+  import 'can/map/define/';
+  import 'can/util/library';
+  import 'measure-widget/';
+  import 'ol-map/';
+  import 'bootstrap/dist/css/bootstrap.min.css';
+  import 'bootstrap/dist/css/bootstrap-theme.min.css';
+  import 'font-awesome/css/font-awesome.min.css';
+  import OverlayManager from 'measure-widget/contrib/OlManager';
+  let map=new CanMap( {
+    define: {
+      myMap: {
+        set(map) {
+          if (map) {
+            this.attr('overlayManager', new OverlayManager( {
+              map: map
+            }
+            ));
+          }
+          return map;
+        }
+      }
+      , overlayManager: {}
+    }
+  }
+
+  );
+  var renderer=can.view('demo-html');
+  can.$('#app').html(renderer(map));
+  </script>
