@@ -66,6 +66,9 @@ export const ViewModel = CanMap.extend({
       type: 'number',
       value: 0,
       set(x) {
+        if (isNaN(x)) {
+          return 0;
+        }
         if (this.attr('mapObject')) {
           let view = this.attr('mapObject').getView();
           let coords = ol.proj.transform([x, this.attr('y')], this.attr('projection'), view.getProjection());
@@ -88,6 +91,9 @@ export const ViewModel = CanMap.extend({
       type: 'number',
       value: 0,
       set(y) {
+        if (isNaN(y)) {
+          return 0;
+        }
         if (this.attr('mapObject')) {
           let view = this.attr('mapObject').getView();
           let coords = ol.proj.transform([this.attr('x'), y], this.attr('projection'), view.getProjection());
@@ -230,7 +236,7 @@ export const ViewModel = CanMap.extend({
     });
     return map;
   },
-  removeMap(){
+  removeMap() {
     this.attr('mapObject').setTarget(null);
     this.attr('mapObject', null);
   }
