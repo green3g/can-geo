@@ -1,4 +1,3 @@
-
 import CanMap from 'can/map/';
 import Component from 'can/component/';
 import List from 'can/list/';
@@ -24,34 +23,6 @@ export const ViewModel = CanMap.extend({
    * @prototype
    */
   define: {
-    /**
-     * The map topic to use for publishing and subscribing to map interractions.
-     * Example (`map` is the topicKey here): `map/onClick`, `map/setCenter`
-     * @parent identify-widget.ViewModel.props
-     * @property {String} identify-widget.ViewModel.props.topicKey
-     */
-    topicKey: {
-      type: 'string',
-      value: 'map'
-    },
-    /**
-     * The key of the map click that needs to fire for this widget to perform
-     * its identify function. Leave this blank to always perform identify, even if
-     * another widget is interacting with the map click.
-     * @property {String} identify-widget.ViewModel.props.mapClickKey
-     */
-    mapKey: {
-      type: 'string',
-      value: null
-    },
-    /**
-     * The popup topic to use for publishing and subscribing to popup interractions
-     * @type {Object}
-     */
-    popupTopic: {
-      type: 'string',
-      value: null
-    },
     /**
      * The max number of features to return for each layer. The default is 10.
      * @parent identify-widget.ViewModel.props
@@ -194,13 +165,17 @@ export const ViewModel = CanMap.extend({
         };
       }
     },
-  },
-  /**
-   * Initializes this widget by subscribing to the necessary topics
-   */
-  init() {
-    pubsub.subscribe(this.attr('mapTopic') + '/click', this.identify.bind(this));
-    pubsub.subscribe(this.attr('popupTopic') + '/center', this.identify.bind(this));
+    map: {
+      type: '*',
+      set(map) {
+        if (map) {
+          map.on('click', event => {
+            this.identify(event.coordinate);
+          });
+        }
+        return map;
+      }
+    }
   },
   /**
    * Queries the available map wms layers and updates the loading status
@@ -216,42 +191,27 @@ export const ViewModel = CanMap.extend({
     this.clearFeatures();
     var self = this;
     this.attr('hasError', null);
-    var layers = this.attr('mapModel').getMap().getLayers();
+    var layers = this.attr('map').getLayers();
     var urls = this.getQueryURLsRecursive(layers, coordinate);
     var deferreds = [];
-    this.attr('_loading', can.Deferred());
     urls.forEach(function(url) {
       var def = self.getFeatureInfo(url);
       deferreds.push(def);
     });
-    if (!deferreds.length) {
-      this.attr('_loading').resolve([]);
-    }
     var resolved = 0;
     deferreds.forEach(function(d) {
       d.then(function(json) {
         self.addFeatures(json, coordinate);
         resolved++;
-        self.updateLoading(resolved, deferreds.length);
+        // self.updateLoading(resolved, deferreds.length);
       }).fail(function(e) {
         self.error(e);
         resolved++;
-        self.updateLoading(resolved, deferreds.length);
+        // self.updateLoading(resolved, deferreds.length);
       });
     });
     this.attr('_deferreds', deferreds);
-    return this.attr('_loading').promise();
-  },
-  /**
-   * Updates the loading status after each identify promise is resolved
-   * @signature
-   * @param  {Number} resolved The current number of resolved promises
-   * @param  {Number} total  The total number of promises
-   */
-  updateLoading(resolved, total) {
-    if (resolved === total) {
-      this.attr('_loading').resolve(this.attr('_features'));
-    }
+    return this.attr('_loading');
   },
   /**
    * Recursively queries wms layers for identify results. Recursion is used to drill into group layers
@@ -288,7 +248,7 @@ export const ViewModel = CanMap.extend({
     if (layer.getSource && layer.getVisible()) {
       var source = layer.getSource();
       if (source && typeof source.getGetFeatureInfoUrl !== 'undefined') {
-        var map = this.attr('mapModel').getMap();
+        var map = this.attr('map');
         var view = map.getView();
         return source.getGetFeatureInfoUrl(
           coordinate,
@@ -358,7 +318,7 @@ export const ViewModel = CanMap.extend({
    * @return {ol.Collection<ol.Feature>}            The collection of openlayers features
    */
   getFeaturesFromJson(collection) {
-    var proj = this.attr('mapModel').getMap().getView().getProjection();
+    var proj = this.attr('map').getView().getProjection();
     var gjson = new ol.format.GeoJSON();
     var features = gjson.readFeatures(collection, {
       dataProjection: gjson.readProjection(collection),
@@ -393,13 +353,11 @@ export const ViewModel = CanMap.extend({
    * @signature
    */
   clearFeatures() {
-    if (this.attr('_loading').state() === 'pending') {
-      this.attr('_deferreds').forEach((d) => {
-        if (d.state() === 'pending') {
-          d.abort();
-        }
-      });
-    }
+    this.attr('_deferreds').forEach((d) => {
+      if (d.state() === 'pending') {
+        d.abort();
+      }
+    });
     this.attr('_features').replace([]);
     this.updateSelectedFeature(null);
     this.attr('_activeFeatureIndex', 0);
@@ -433,7 +391,7 @@ export const ViewModel = CanMap.extend({
       excludeControl: true
     });
     this.attr('layer', layer);
-    this.attr('mapModel.mapObject').addLayer(layer);
+    this.attr('map').addLayer(layer);
   },
   /**
    * Zooms the map to a feature
@@ -446,9 +404,9 @@ export const ViewModel = CanMap.extend({
       .getExtent();
 
     if (this.attr('popupModel')) {
-      var key = this.attr('mapModel.mapObject').on('postrender', () => {
+      var key = this.attr('map').on('postrender', () => {
         this.attr('popupModel').centerPopup(ol.extent.getCenter(extent));
-        this.attr('mapModel.mapObject').unByKey(key);
+        this.attr('map').unByKey(key);
       });
     }
 
@@ -460,7 +418,7 @@ export const ViewModel = CanMap.extend({
    * @param  {Array<Number>} extent The extent to zoom the map to
    */
   animateZoomToExtent(extent) {
-    var map = this.attr('mapModel.mapObject');
+    var map = this.attr('map');
     var duration = 750;
     var pan = ol.animation.pan({
       duration: duration,
