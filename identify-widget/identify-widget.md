@@ -18,4 +18,6 @@ This component may be placed inside an `ol-popup` component, but it doesn't have
 </ol-popup>
 ```
 
-<img src="static/img/identify-widget.png" />
+## Example
+
+@demo identify-widget/demo.html 500

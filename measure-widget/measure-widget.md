@@ -16,3 +16,7 @@ A measurement toolbar that adds interaction and vectors/overlays to the map.
 ```html
 <measurement-widget map-node="#ol-map-id" />
 ```
+
+## Example
+
+@demo measure-widget/demo.html 500

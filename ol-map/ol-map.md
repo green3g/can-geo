@@ -16,7 +16,6 @@ A openlayers map component that provides a wrapper for `ol.Map` along with addit
 </ol-map>`
 ```
 
-
 ## Demo
 
 @demo ol-map/demo.html 500
