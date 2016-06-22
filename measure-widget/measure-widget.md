@@ -9,8 +9,6 @@
 
 A measurement toolbar that adds interaction and vectors/overlays to the map.
 
-<img src="static/img/measure-widget.png" />
-
 ## Usage:
 
 ```html
