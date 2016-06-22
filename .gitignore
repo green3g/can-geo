@@ -13,6 +13,8 @@ node_modules/*
 !node_modules/openlayers
 !node_modules/steal
 !node_modules/steal-qunit
+!node_modules/qunitjs
+
 
 #custom apps and modules
 custom/
