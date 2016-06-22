@@ -30,37 +30,24 @@ export const ViewModel = CanMap.extend({
       Value: List
     },
     /**
-     * The dom node selector referencing an ol-map component
-     * @property {String} layer-control.ViewModel.props.mapNode
-     * @parent layer-control.ViewModel.props
-     */
-    mapNode: {
-      type: 'string'
-    },
-    /**
      * The openlayers map. Instead of providing a reference to ol-map component, you can provide a `ol.Map` object directly.
      * @property {ol.Map} layer-control.ViewModel.props.map
      * @parent layer-control.ViewModel.props
      */
     map: {
       type: '*',
-      value: null
+      value: null,
+      set(map) {
+        if (this.attr('_layers')) {
+          if (map) {
+            this.addLayers(map.getLayers());
+          } else {
+            this.attr('_layers').replace([]);
+          }
+        }
+        return map;
+      }
     }
-  },
-  /**
-   * @prototype
-   */
-  init: function() {
-    if (this.attr('map')) {
-      this.initControl(this.attr('map'));
-    }
-  },
-  /**
-   * Initializes the layer control once the map is ready
-   * @param  {ol.Map} map The openlayers map object
-   */
-  initControl: function(map) {
-    this.addLayers(map.getLayers());
   },
   /**
    * Calls `addLayer` for each layer currently in the collection and binds to the add/remove events of the collection

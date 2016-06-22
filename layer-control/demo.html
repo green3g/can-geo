@@ -1,0 +1,50 @@
+<div id="app"></div>
+
+<script type="text/stache" id="demo-html">
+  <ol-map {^map-object}="myMap" {map-options}="options" />
+  <layer-control {map}="myMap" />
+</script>
+
+<style type="text/css">
+  layer-control {
+    border-radius: 5px;
+    position: absolute;
+    top: 30%;
+    right: 0;
+    background: #fff;
+    padding: 10px;
+  }
+</style>
+
+<script src="../node_modules/steal/steal.js" id="demo-source">
+  import can from 'can/view/';
+  import CanMap from 'can/map/';
+  import 'can/map/define/';
+  import 'can/util/library';
+  import 'layer-control/';
+  import 'layer-control/layer-components/Default';
+  import 'layer-control/layer-components/TileWMS';
+  import 'ol-map/';
+  import 'bootstrap/dist/css/bootstrap.min.css';
+  import 'bootstrap/dist/css/bootstrap-theme.min.css';
+  import 'font-awesome/css/font-awesome.min.css';
+
+  let map = new CanMap({
+    options: {
+      //http://openlayers.org/en/v3.0.0/examples/wms-tiled.js
+      layers: [{
+        type: 'TileWMS',
+        extent: [-13884991, 2870341, -7455066, 6338219],
+        sourceOptions: {
+          url: 'http://demo.opengeo.org/geoserver/wms',
+          params: { 'LAYERS': 'topp:states', 'TILED': true },
+          serverType: 'geoserver'
+        }
+      }, {
+        type: 'OSM'
+      }]
+    }
+  });
+  var renderer = can.view('demo-html');
+  can.$('#app').html(renderer(map));
+</script>
