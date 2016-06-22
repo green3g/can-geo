@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!--####################################################################
+	THIS IS A GENERATED FILE -- ANY CHANGES MADE WILL BE OVERWRITTEN
+
+	INSTEAD CHANGE:
+	source: providers/location/Location-Providers.js
+	@function providers/location/LocationProvider.prototype.getLocation
+######################################################################## -->
+
+<!--[if lt IE 7]>
+<html class="no-js ie lt-ie9 lt-ie8 lt-ie7" lang="en">
+<![endif]-->
+<!--[if IE 7]>
+<html class="no-js ie lt-ie9 lt-ie8" lang="en">
+<![endif]-->
+<!--[if IE 8]>
+<html class="no-js ie lt-ie9" lang="en">
+<![endif]-->
+<!--[if IE 9]>
+<html class="no-js ie ie9" lang="en">
+<![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>Home  - providers/location/LocationProvider.prototype.getLocation</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+	
+	<link rel="stylesheet" type="text/css" href="./static/bundles/static.css">
+	
+	<!--[if lt IE 9]>
+   <script type="text/javascript" src="static/html5shiv.js"></script>
+    <!--<![endif]-->
+</head>
+
+<body class="docs">
+	
+	<header>
+		<nav class="container">
+
+			<div class="logo-menu">
+				<a class="brand" href="./index.html">Home</a>
+			</div>
+
+			<div class="pull-right">
+				<div class="bitovi-menu">
+					<a href="#" class="bitovi icon-bits"></a>
+					<ul class="dropdown-menu">
+						<li><a href="https://github.com/roemhildtg/geocola">Github</a></li>
+						<li><a href="https://github.com/roemhildtg/geocola/test">Tests</a></li>
+						<li><a href="http://roemhildtg.github.io/geocola/index-dev.html">Viewer App</a></li>
+            <li><a href="http://roemhildtg.github.io/geocola/index.html">Production Viewer App</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	
+
+	
+<div class="container api">
+
+	
+	<nav class="sidebar">
+		
+		<ul class="api cascading primary-grouping"> 
+	
+		
+		<li class="search-container active parent">
+			<a class="sidebar-title" href="index.html" data-search="Home">
+				Home
+			</a>
+			
+		</li>
+		
+		
+			
+			<li class="search-container active">
+			<a class="sidebar-title" href="providers__location__LocationProvider.html" data-search="Location Provider">
+				Location Provider
+			</a>
+			
+	<ul>
+		
+			
+				
+					<li class="heading search-container">
+						<span>prototype</span>
+						
+	<ul>
+		
+			
+				
+				
+				<li class="search-container">
+					<a class="function" href="providers__location__LocationProvider.prototype.cancelPending.html" data-search="providers/location/LocationProvider.prototype.cancelPending">
+						cancelPending
+					</a>
+				</li>
+				
+			
+			
+		
+			
+				
+				
+				<li class="search-container active ">
+					<a class="function" href="providers__location__LocationProvider.prototype.getLocation.html" data-search="providers/location/LocationProvider.prototype.getLocation">
+						getLocation
+					</a>
+				</li>
+				
+			
+			
+		
+			
+				
+				
+				<li class="search-container">
+					<a class="function" href="providers__location__LocationProvider.prototype.getSuggestions.html" data-search="providers/location/LocationProvider.prototype.getSuggestions">
+						getSuggestions
+					</a>
+				</li>
+				
+			
+			
+		
+	</ul>
+
+					</li>
+				
+				
+			
+			
+		
+			
+				
+					<li class="heading search-container">
+						<span>Location Providers</span>
+						
+	<ul>
+		
+			
+				
+				
+				<li class="search-container">
+					<a class="constructor" href="providers__location__EsriGeocoder.html" data-search="EsriGeocoder">
+						EsriGeocoder
+					</a>
+				</li>
+				
+			
+			
+		
+	</ul>
+
+					</li>
+				
+				
+			
+			
+		
+			
+				
+					<li class="heading search-container">
+						<span>Types</span>
+						
+	<ul>
+		
+			
+				
+				
+				<li class="search-container">
+					<a class="typedef" href="locationProvider.types.locationObject.html" data-search="LocationObject">
+						LocationObject
+					</a>
+				</li>
+				
+			
+			
+		
+			
+				
+				
+				<li class="search-container">
+					<a class="typedef" href="locationProvider.types.suggestionsObject.html" data-search="SuggestionsObject">
+						SuggestionsObject
+					</a>
+				</li>
+				
+			
+			
+		
+	</ul>
+
+					</li>
+				
+				
+			
+			
+		
+	</ul>
+
+		</li>
+			
+		
+	
+</ul>
+	</nav>
+	
+	
+	
+	<article class="content docs">
+	
+	
+		
+		<section class="title">
+			<div class="heading">
+<h1>getLocation</h1>
+	<ul class="tags">
+		<li>function</li>
+	</ul>
+	
+	
+</div>
+
+<div class="sub-heading">
+	
+	
+	<span class="inherits">&nbsp;</span>
+</div>
+
+<ul class="links">
+	
+		<li><a href="locationProvider.types.locationObject">locationObject</a></li>
+	
+	
+	
+	
+</ul>
+<br />
+
+		</section>
+		
+		
+		
+		<section class="contents">
+		</section>
+		
+		
+		
+
+		
+		<section class="description">
+			<p>Retrieves the coordinates for a known location. This location is a fully qualified address or place name returned from the <code>getSuggestions</code> query.</p>
+
+		</section>
+		
+
+		
+			
+				<section class="signature">
+					<h2 id="sig_">function(knownLocation)
+</h2>
+<div class="signature-wrapper">
+
+
+	<h3>Parameters</h3>
+
+	<ol class="parameters">
+		
+		<li class="parameter">
+			<h4>knownLocation
+				<code>{String}</code></h4>
+			<div class="description">
+				<p>The location name</p>
+
+			</div>
+			
+			
+			
+		</li>
+		
+	</ol>
+
+
+	<h3>Returns</h3>
+	<div class="returns">
+		<h4><code>{Promise}</code></h4>
+		<div class="description">
+			<p>A promise that is resolved to the {locationObject}</p>
+
+		</div>
+		
+		
+	</div>
+	
+
+
+
+
+
+</div>
+
+				</section>
+			
+		
+		
+		
+		
+
+		
+		
+
+		
+
+		
+	
+	
+	</article>
+	
+	
+
+</div>
+
+
+
+
+
+	
+	<footer>
+		<nav class="container">
+			<a class="brand javascriptmvc" href="index.html"></a>
+		</nav>
+	</footer>
+	
+
+	<script type="text/javascript">
+		var docObject = {"type":"function","name":"providers/location/LocationProvider.prototype.getLocation","parent":"providers/location/LocationProvider.prototype","src":"providers/location/Location-Providers.js","line":42,"codeLine":49,"description":"Retrieves the coordinates for a known location. This location is a fully qualified address or place name returned from the `getSuggestions` query.","links":[{"href":"locationProvider.types.locationObject","title":"locationObject"}],"signatures":[{"description":"","params":[{"types":[{"type":"String"}],"name":"knownLocation","description":"The location name"}],"returns":{"types":[{"type":"Promise"}],"description":"A promise that is resolved to the {locationObject}"}}],"static":"/home/gregg/public_html/geocola-map/guides/site/static","templates":"/home/gregg/public_html/geocola-map/guides/site/templates","glob":{"ignore":"{docs,dist,node_modules}/**/*","pattern":"**/*.{md,js}","cwd":"/home/gregg/public_html/geocola-map"},"dest":"/home/gregg/public_html/geocola-map/docs","watch":true,"debug":true,"generators":["html"],"docConfigDest":"../documentjs.json","project":{}};
+	</script>
+
+	
+		<script>
+		  steal = {
+		    instantiated: {
+		      "bundles/static.css!$css" : null
+		    }
+		  }
+		</script>
+		<script type='text/javascript'
+				data-main="static"
+				data-config="./static/config.js"
+				src="./static/steal.production.js"
+	    		bundles-path="bundles"></script>
+	
+</body>
+
+</html>

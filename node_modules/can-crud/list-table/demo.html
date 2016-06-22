@@ -1,0 +1,56 @@
+<script type="text/stache" id="demo-html">
+  <h1>List Table Demo</h1>
+  <list-table {objects}="data" (hello)="sayHello" {buttons}="buttons" (sort)="setSort" />
+</script>
+<script src="../node_modules/steal/steal.js" main="@empty" id="demo-source">
+  import 'bootstrap/dist/css/bootstrap.min.css!';
+  import 'bootstrap/dist/css/bootstrap-theme.min.css!';
+  import 'font-awesome/css/font-awesome.min.css';
+  import 'list-table/';
+
+  import can from 'can/view/';
+  import 'can/map/define/';
+  //sorting plugin
+  import 'can/list/sort/';
+
+  var frag = can.view('demo-html', new can.Map({
+    buttons: [{
+      iconClass: 'fa fa-smile-o',
+      eventName: 'hello',
+      title: 'Say Hello'
+    }],
+    data: new can.List([{
+      name: 'Peter',
+      age: 16
+    }, {
+      name: 'Phillip',
+      age: 26
+    }, {
+      name: 'Todd',
+      age: 150
+    }, {
+      name: 'Andy',
+      age: 10
+    }, {
+      name: 'Andy',
+      age: 24
+    }]),
+    sayHello(a, b, c, obj) {
+      alert(obj.attr('name') + ' says hello!');
+    },
+    setSort(a, b, c, sortInfo) {
+      let field = sortInfo.attr('fieldName');
+      this.attr('data').sort((a, b) => {
+        return sortInfo.attr('type') === 'asc' ?
+          //if ascending
+          (a.attr(field) === b.attr(field) ? 0 :
+            a.attr(field) > b.attr(field) ? 1 : -1) :
+          //if descending
+          (a.attr(field) === b.attr(field) ? 0 :
+            a.attr(field) > b.attr(field) ? -1 : 1);
+      });
+    }
+  }), {});
+
+  can.$('body').append(frag);
+</script>

@@ -1,11 +1,19 @@
 # Dependency directory
-node_modules/
+node_modules/*
+!node_modules/bootstrap
+!node_modules/can
+!node_modules/font-awesome
+!node_modules/can-crud
+!node_modules/can-ui
+!node_modules/jquery
+!node_modules/openlayers/dist
+!node_modules/steal
+!node_modules/steal-qunit
 
 #custom apps and modules
 custom/
 
 #docs and build output
 dist/
-docs/
 
 .directory
