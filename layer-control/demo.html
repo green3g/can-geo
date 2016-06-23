@@ -1,11 +1,19 @@
 <div id="app"></div>
 
 <script type="text/stache" id="demo-html">
-  <ol-map {^map-object}="myMap" {map-options}="options" />
+  <button id="addLayer" ($click)="addLayer" type="button">Add New Layer</button>
+  <ol-map {^map-object}="myMap" {map-options}="mapOptions" />
   <layer-control {map}="myMap" />
 </script>
 
 <style type="text/css">
+  #addLayer {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 45%;
+  }
+
   layer-control {
     border-radius: 5px;
     position: absolute;
@@ -29,21 +37,62 @@
   import 'bootstrap/dist/css/bootstrap-theme.min.css';
   import 'font-awesome/css/font-awesome.min.css';
 
-  let map = new CanMap({
-    options: {
+  import LayerFactory from 'ol-map/LayerFactory';
+  import ol from 'openlayers';
+
+  let AppViewModel = CanMap.extend({
+    addLayer() {
+      //for kicks and giggles lets create a cool new layer
+      //with our layer factory
+      let layer = LayerFactory.getLayer({
+        type: 'ImageVector',
+        options: {
+          title: 'Alabama Vector',
+        },
+        sourceOptions: {
+          source: new ol.source.Vector({
+            projection: 'EPSG:3857',
+            format: new ol.format.GeoJSON(),
+            url: 'https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/AL.geo.json'
+          }),
+          style: new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: 'rgba(255, 255, 255, 0.6)'
+            }),
+            stroke: new ol.style.Stroke({
+              color: '#319FD3',
+              width: 1
+            })
+          })
+        }
+      });
+
+      this.attr('myMap').addLayer(layer);
+    }
+  });
+
+
+  let map = new AppViewModel({
+    mapOptions: {
       //http://openlayers.org/en/v3.0.0/examples/wms-tiled.js
       layers: [{
         type: 'TileWMS',
-        extent: [-13884991, 2870341, -7455066, 6338219],
+        options: {
+          extent: [-13884991, 2870341, -7455066, 6338219],
+          title: 'USA Layer'
+        },
         sourceOptions: {
           url: 'http://demo.opengeo.org/geoserver/wms',
           params: { 'LAYERS': 'topp:states', 'TILED': true },
           serverType: 'geoserver'
         }
       }, {
-        type: 'OSM'
+        type: 'OSM',
+        options: {
+          title: 'Open Street Map'
+        }
       }]
-    }
+    },
   });
   var renderer = can.view('demo-html');
   can.$('#app').html(renderer(map));

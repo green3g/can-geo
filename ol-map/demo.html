@@ -1,9 +1,27 @@
 <div id="app"></div>
 
 <script type="text/stache" id="demo-html">
+  <div id="history">
+    <button ($click)="back()" type="button">Back</button>
+    <button ($click)="forward()" type="button">Forword</button>
+  </div>
+
   <ol-map {(x)}="x" {(y)}="y" {(zoom)}="zoom">
   </ol-map>
 </script>
+
+<style type="text/css">
+  #history {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 40%;
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+  }
+</style>
+
 <script src="../node_modules/steal/steal.js" main="@empty" id="demo-source">
   import 'ol-map/';
 
@@ -11,17 +29,25 @@
   import 'can/util/library';
   import 'can/route/';
 
-  let renderer = can.stache('demo-html');
+  let renderer = can.view('demo-html');
 
-  let map = new can.Map({
+  let AppViewModel = can.Map.extend({
     x: -90,
     y: 45,
-    zoom: 11
+    zoom: 11,
+    back(){
+      window.history.back();
+    },
+    forward(){
+      window.history.forward();
+    }
   });
 
-  can.route.map(map);
+  let app = new AppViewModel();
+
+  can.route.map(app);
   can.route(':x/:y/:zoom');
   can.route.ready();
 
-  can.$('#app').html(renderer(map));
+  can.$('#app').html(renderer(app));
 </script>
