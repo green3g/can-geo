@@ -122,7 +122,7 @@ export const ViewModel = CanMap.extend({
         if (this.attr('mapObject')) {
           let view = this.attr('mapObject').getView();
           if (view.getZoom() !== zoom) {
-            this.attr('mapObject').getView().setZoom(zoom);
+            view.setZoom(zoom);
           }
         }
         return zoom;

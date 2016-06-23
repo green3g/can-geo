@@ -30,7 +30,7 @@ export default {
       }
       //get the layer class name
       //different from our short name
-      //For example, layer type TileWMS and OSM both use type 'Tile'
+      //For example, layer type TileWMS and ImageWMS both use type 'Tile'
       var type = layerClass[options.type];
 
       //the user custom constructor options
