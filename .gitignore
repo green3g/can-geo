@@ -10,10 +10,12 @@ node_modules/*
 !node_modules/can-crud
 !node_modules/can-ui
 !node_modules/jquery
-!node_modules/openlayers
 !node_modules/steal
 !node_modules/steal-qunit
 !node_modules/qunitjs
+!node_modules/openlayers
+node_modules/openlayers/*
+!node_modules/openlayers/dist
 
 
 #custom apps and modules
