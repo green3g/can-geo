@@ -3,7 +3,7 @@
 import CanMap from 'can/map/';
 /**
  * @module {can.Map} providers/location/LocationProvider Location Provider
- * @parent geocola.providers
+ * @parent geo.providers
  *
  * @description
  * A location provider is the basic lower level api that connects

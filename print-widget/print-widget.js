@@ -18,14 +18,6 @@ export const ViewModel = CanMap.extend({
     /**
      * @property {String} print-widget.ViewModel.mapTitle mapTitle
      * @parent print-widget.ViewModel.props
-     * The ol-map node selector
-     */
-    mapNode: {
-      type: 'string'
-    },
-    /**
-     * @property {String} print-widget.ViewModel.mapTitle mapTitle
-     * @parent print-widget.ViewModel.props
      *
      * The default map title to send to the print service.
      */
@@ -66,31 +58,28 @@ export const ViewModel = CanMap.extend({
      */
     provider: {
       value: null
+    },
+    /**
+     * [printOptions description]
+     * @type {Object}
+     */
+    printOptions: {
+      set(val) {
+        can.$('print-widget select').trigger('change');
+        return val;
+      },
+      get(lastSetValue, setAttr) {
+        if (this.attr('provider')) {
+          this.attr('provider').getCapabilities().then(setAttr);
+        }
+      }
     }
   },
   /**
-   * Initializes the map property and calls `loadCapabilities` on the provider
-   * @signature
-   * @param  {can.Map} mapViewModel The ol-map view model
-   */
-  initMap: function(mapViewModel) {
-    var self = this;
-    mapViewModel.ready().then(function(map) {
-      self.attr('map', map);
-      self.attr('provider').loadCapabilities()
-        .then(self.handlePrintInfo.bind(self));
-    });
-  },
-  /**
-   * Called when the provider resolves the `loadCapabilities` deferred to handle the refresh of the select inputs
-   */
-  handlePrintInfo: function() {
-    can.$('.print-widget select').trigger('change');
-  },
-  /**
+   * @function printButtonClick
    * Called when the print button is clicked to activate the provider's `print` method.
    */
-  printButtonClick: function() {
+  printButtonClick() {
     if (this.attr('provider') && !this.attr('printing')) {
       this.attr('printing', true);
       this.attr('provider').print({
@@ -102,13 +91,15 @@ export const ViewModel = CanMap.extend({
     }
   },
   /**
+   * @function clearButtonClick
    * Click handler for when the clear button is clicked. Empties out the current list of `printResults`
    * @return {[type]} [description]
    */
-  clearButtonClick: function() {
+  clearButtonClick() {
     this.attr('printResults').replace([]);
   },
   /**
+   * @function handlePrintout
    * Hanlder for when the print deferred returned by the provider resolves to update add the print result to the list of results
    * @param  {PrintResult} results The result of the printout
    */
@@ -123,7 +114,7 @@ export default Component.extend({
   viewModel: ViewModel,
   template: template,
   events: {
-    inserted: function() {
+    inserted() {
       var mapViewModel = can.$(this.viewModel.attr('mapNode')).viewModel();
       this.viewModel.initMap(mapViewModel);
     }

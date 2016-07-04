@@ -1,7 +1,7 @@
 <!--
 
 @module {can.Component} measure-widget <measure-widget />
-@parent geocola.components
+@parent geo.components
 
 -->
 

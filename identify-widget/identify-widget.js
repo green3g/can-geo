@@ -25,9 +25,9 @@ export const ViewModel = CanMap.extend({
   define: {
     /**
      * The max number of features to return for each layer. The default is 10.
-     * @parent identify-widget.ViewModel.props
      * @signature `{Number}` `max-feature-count="10"`
      * @property {Number} identify-widget.ViewModel.props.maxFeatureCount
+     * @parent identify-widget.ViewModel.props
      */
     maxFeatureCount: {
       type: 'number',
@@ -35,9 +35,9 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * Buffer distance in pixels around the map click. The default is 10.
-     * @parent identify-widget.ViewModel.props
      * @signature `{Number}` `feature-buffer="10"`
      * @property {Number} identify-widget.ViewModel.props.featureBuffer
+     * @parent identify-widget.ViewModel.props
      */
     featureBuffer: {
       type: 'number',
@@ -45,24 +45,24 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * Layer configuration properties
+     * @property {geo.types.LayerPropertiesObject} identify-widget.ViewModel.props.layerProperties
      * @parent identify-widget.ViewModel.props
-     * @property {geocola.types.LayerPropertiesObject} identify-widget.ViewModel.props.layerProperties
      */
     layerProperties: {
       Value: CanMap
     },
     /**
      * The list of features that have been identified
-     * @parent identify-widget.ViewModel.props
      * @property {Array<ol.Feature>} identify-widget.ViewModel.props._features
+     * @parent identify-widget.ViewModel.props
      */
     _features: {
       Value: List
     },
     /**
      * Whether or not all identifies have completed. This is used internally by the template.
-     * @parent identify-widget.ViewModel.props
      * @property {can.Deferred} identify-widget.ViewModel.props._loading
+     * @parent identify-widget.ViewModel.props
      */
     _loading: {
       get() {
@@ -71,16 +71,16 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * A list of pending identify deferreds
-     * @parent identify-widget.ViewModel.props
      * @property {Array<can.Deferred>} identify-widget.ViewModel.props._deferreds
+     * @parent identify-widget.ViewModel.props
      */
     _deferreds: {
       Value: List
     },
     /**
      * The currently selected feature index
-     * @parent identify-widget.ViewModel.props
      * @property {Number} identify-widget.ViewModel.props._activeFeatureIndex
+     * @parent identify-widget.ViewModel.props
      */
     _activeFeatureIndex: {
       value: 0,
@@ -88,8 +88,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * If the feature list has one or more features after the selected feature, this will be true. This is used by the template to enable/disable the forward and back buttons.
-     * @parent identify-widget.ViewModel.props
      * @property {Boolean} identify-widget.ViewModel.props._hasNextFeature
+     * @parent identify-widget.ViewModel.props
      */
     _hasNextFeature: {
       get() {
@@ -99,8 +99,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * If the feature list has one or more features before the selected feature, this will be true. This is used by the template to enable/disable the forward and back buttons.
-     * @parent identify-widget.ViewModel.props
      * @property {Boolean} identify-widget.ViewModel.props._hasPreviousFeature
+     * @parent identify-widget.ViewModel.props
      */
     _hasPreviousFeature: {
       get() {
@@ -109,8 +109,8 @@ export const ViewModel = CanMap.extend({
     },
     /**
      * A virtual property that returns an object consisting of the formatted fields, values, and layer properties.
-     * @parent identify-widget.ViewModel.props
      * @property {can.Map} identify-widget.ViewModel.props._activeFeature
+     * @parent identify-widget.ViewModel.props
      */
     _activeFeature: {
       get() {
@@ -165,6 +165,13 @@ export const ViewModel = CanMap.extend({
         };
       }
     },
+    /**
+     * The map object to bind a click event handler. Note: this should be removed
+     * and put into a separate module. Idealy we could instead use this identify-widget
+     * simply to hold the results from any map click identify.
+     * @property {ol.Map} identify-widget.ViewModel.props.map
+     * @parent identify-widget.ViewModel.props
+     */
     map: {
       type: '*',
       set(map) {
@@ -178,6 +185,7 @@ export const ViewModel = CanMap.extend({
     }
   },
   /**
+   * @function identify
    * Queries the available map wms layers and updates the loading status
    * @signature
    * @param  {ol.events.Event} event The click event dispatched by the map
@@ -214,6 +222,7 @@ export const ViewModel = CanMap.extend({
     return this.attr('_loading');
   },
   /**
+   * @function getQueryURLsRecursive
    * Recursively queries wms layers for identify results. Recursion is used to drill into group layers
    * @signature
    * @param  {ol.Collection<ol.Layer>} layers     A collection (array) of layers
@@ -238,6 +247,7 @@ export const ViewModel = CanMap.extend({
     return urls;
   },
   /**
+   * @function getQueryURL
    * Creates a wms getGetFeatureInfo url
    * @signature
    * @param  {ol.layer} layer      The wms layer
@@ -263,6 +273,7 @@ export const ViewModel = CanMap.extend({
     }
   },
   /**
+   * @function getFeatureInfo
    * Queries the wms endpoint for identify results
    * @signature
    * @param  {String} url The url to query
@@ -276,6 +287,7 @@ export const ViewModel = CanMap.extend({
     });
   },
   /**
+   * @function addFeatures
    * Adds features to this widgets collection after a layer has been identified
    * @signature
    * @param  {Object} collection A GeoJSON feature collection
@@ -312,6 +324,7 @@ export const ViewModel = CanMap.extend({
     }
   },
   /**
+   * @function getFeaturesFromJson
    * Converts raw geojson into openlayers features
    * @signature
    * @param  {Object } collection Raw GeoJSON object
@@ -327,6 +340,7 @@ export const ViewModel = CanMap.extend({
     return features;
   },
   /**
+   * @function gotoNext
    * Navigates the identify widget to the next feature by incrementing the active feature index
    * @signature
    * @return {can.Map} This object
@@ -338,6 +352,7 @@ export const ViewModel = CanMap.extend({
     return this;
   },
   /**
+   * @function gotoPrevious
    * Navigates the identify widget to the previous feature by decrementing the active feature index
    * @signature
    * @return {can.Map} This object
@@ -349,6 +364,7 @@ export const ViewModel = CanMap.extend({
     return this;
   },
   /**
+   * @function clearFeatures
    * clears the features in this widget
    * @signature
    */
@@ -363,6 +379,7 @@ export const ViewModel = CanMap.extend({
     this.attr('_activeFeatureIndex', 0);
   },
   /**
+   * @function updateSelectedFeature
    * Updates the currently selected feature and replaces the table attributes and the vector layer with the new feature
    * @signature
    * @param  {ol.Feature} feature The feature
@@ -394,6 +411,7 @@ export const ViewModel = CanMap.extend({
     this.attr('map').addLayer(layer);
   },
   /**
+   * @function zoomToFeature
    * Zooms the map to a feature
    * @signature
    * @param  {Object} object An object containing a feature property
@@ -413,6 +431,7 @@ export const ViewModel = CanMap.extend({
     this.animateZoomToExtent(extent);
   },
   /**
+   * @function animateZoomToExtent
    * Zooms the map to an extent and creates the zoom animation
    * @signature
    * @param  {Array<Number>} extent The extent to zoom the map to
@@ -433,6 +452,7 @@ export const ViewModel = CanMap.extend({
       extent, map.getSize(), [50, 50, 50, 50]);
   },
   /**
+   * @function error
    * An error logging function for failed ajax requests
    * @signature
    * @param  {Error} e The error
@@ -442,6 +462,7 @@ export const ViewModel = CanMap.extend({
     console.warn('Could not perform ajax request: ', e);
   },
   /**
+   * @function getClosestFeatureIndex
    * finds the closest feature to the coordinate and returns that feature index
    * @signature
    * @param  {ol.feature[]} features The array of features to search through
@@ -465,6 +486,7 @@ export const ViewModel = CanMap.extend({
     return current;
   },
   /**
+   * @function getDistance
    * Gets the approximate distance value for two coordinates.
    * Not to be used for measuring as it uses a simple distance calculation
    * and does not take the earth's curvature into consideration

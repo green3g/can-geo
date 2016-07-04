@@ -20,10 +20,13 @@ const controlTemplates = {
  * @description A `<layer-control />` component's ViewModel
  */
 export const ViewModel = CanMap.extend({
+  /**
+   * @prototype
+   */
   define: {
     /**
      * An internal list of layers used by the template
-     * @property {Array<geocola.types.ControlLayerObject>} layer-control.ViewModel.props._layers
+     * @property {Array<geo.types.ControlLayerObject>} layer-control.ViewModel.props._layers
      * @parent layer-control.ViewModel.props
      */
     _layers: {

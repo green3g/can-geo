@@ -181,6 +181,7 @@ export const ViewModel = CanMap.extend({
     this.attr('mapObject', this.createMap(options));
   },
   /**
+   * @function getLayers
    * Creates new ol layers from the provided paramters using the Layer Factory.
    * Layers are added to the map in the order of first to last, with the last appearing
    * on the bottom.
@@ -194,6 +195,7 @@ export const ViewModel = CanMap.extend({
       }));
   },
   /**
+   * @function getView
    * creates a new ol.View object from the provided paramters.
    * If a view object exists in the mapOptions, the view object's properties
    * will override the defaults including x and y properties set on this viewModel
@@ -214,6 +216,7 @@ export const ViewModel = CanMap.extend({
     );
   },
   /**
+   * @function createmap
    * @description
    * Creates and initializes the map with the map options. Called internally.
    * @signature
@@ -238,6 +241,10 @@ export const ViewModel = CanMap.extend({
     });
     return map;
   },
+  /**
+   * @function removeMap
+   * Removes the map when this element is removed
+   */
   removeMap() {
     this.attr('mapObject').setTarget(null);
     this.attr('mapObject', null);

@@ -1,7 +1,7 @@
 <!--
 
 @module {can.Component} locator-widget <locator-widget />
-@parent geocola.components
+@parent geo.components
 
 -->
 

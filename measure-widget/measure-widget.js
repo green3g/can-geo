@@ -15,6 +15,9 @@ import measurements from './modules/measurements';
  * @description A `<measure-widget />` component's ViewModel
  */
 export const ViewModel = CanMap.extend({
+  /**
+   * @prototype
+   */
   define: {
     /**
      * An array of measurement objects to use. These are configureable in `./modules/measurements`

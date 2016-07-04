@@ -1,5 +1,5 @@
-@typedef {Object} geocola.types.ControlLayerObject ControlLayerObject
-@parent geocola.types
+@typedef {Object} geo.types.ControlLayerObject ControlLayerObject
+@parent geo.types
 @option {Boolean} exclude Whether or not to exclude from the layer control
 @option {String} title The layer title
 @option {Boolean} visible The layers visibility

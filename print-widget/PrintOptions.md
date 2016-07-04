@@ -1,6 +1,6 @@
 
-@typedef {Object} geocola.types.PrintOptions PrintOptions
-@parent geocola.types
+@typedef {Object} geo.types.PrintOptions PrintOptions
+@parent geo.types
 Required options sent to the print function of a print provider
 @option {ol.Map} map The openlayers map object to print
 @option {String} layout The layout to print the map to

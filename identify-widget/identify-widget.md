@@ -1,7 +1,7 @@
 <!--
 
 @module {can.Component} identify-widget <identify-widget />
-@parent geocola.components
+@parent geo.components
 -->
 
 ## Description

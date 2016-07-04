@@ -1,8 +1,9 @@
 /*jshint esnext:true */
 import CanMap from 'can/map/';
+import List from 'can/list/';
 /**
  * @module {can.Map} providers/print/printProvider Print Provider
- * @parent geocola.providers
+ * @parent geo.providers
  * @description
  * A print provider is the basic lower level api that connects
  * the print widget to a print service. It provides a standard set of properties and methods that the print widget can use to connect to any print generator service.
@@ -20,7 +21,7 @@ export default CanMap.extend({
      * @property {Number} printProvider.props.dpi
      */
     dpis: {
-      Value: can.List
+      Value: List
     },
     /**
      * A list of layout strings
@@ -28,7 +29,7 @@ export default CanMap.extend({
      * @property {Array<String>} printProvider.props.layouts
      */
     layouts: {
-      Value: can.List
+      Value: List
     },
     /**
      * A list of layout scales
@@ -36,7 +37,7 @@ export default CanMap.extend({
      * @property {Array<Number>} printProvider.props.scales
      */
     scales: {
-      Value: can.List
+      Value: List
     },
     /**
      * A list of output file formats
@@ -44,7 +45,7 @@ export default CanMap.extend({
      * @property {Array<String>} printProvider.props.outputFormats
      */
     outputFormats: {
-      Value: can.List
+      Value: List
     }
   },
   /**

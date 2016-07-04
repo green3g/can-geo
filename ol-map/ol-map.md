@@ -1,7 +1,7 @@
 <!--
 
 @module {can.Component} ol-map <ol-map />
-@parent geocola.components
+@parent geo.components
 
 -->
 

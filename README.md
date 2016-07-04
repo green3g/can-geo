@@ -1,8 +1,8 @@
 <!--
-@page geocola Home
-@group geocola.components Components
-@group geocola.providers Providers
-@group geocola.types Type Definitions
+@page geo Home
+@group geo.components Components
+@group geo.providers Providers
+@group geo.types Type Definitions
 -->
 
 # can-geo

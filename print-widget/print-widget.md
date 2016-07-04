@@ -1,7 +1,7 @@
 <!--
 
 @module {can.Component} print-widget <print-widget />
-@parent geocola.components
+@parent geo.components
 
 -->
 

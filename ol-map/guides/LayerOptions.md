@@ -1,5 +1,5 @@
-@typedef {Object} geocola.types.LayerOptions LayerOptions
-@parent geocola.types
+@typedef {Object} geo.types.LayerOptions LayerOptions
+@parent geo.types
 @option {String} type The openlayers layer class to use as the layer. Currently supported types are:
  - TileWMS
  - Group

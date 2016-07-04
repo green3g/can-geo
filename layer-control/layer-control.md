@@ -1,9 +1,7 @@
 <!--
 
 @module layer-control <layer-control />
-@parent geocola.components
-@group layer-control.props Properties
-
+@parent geo.components
 -->
 
 ## Description
