@@ -27,7 +27,7 @@
     "testee": "^0.2.x"
   },
   "dependencies": {
-    "bootstrap": "^3.3.x",
+    "bootstrap": "^3.3.7",
     "can": "^2.3.x",
     "font-awesome": "^4.6.x",
     "can-crud": "git+https://github.com/roemhildtg/can-crud.git",
