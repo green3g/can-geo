@@ -6,7 +6,8 @@ var layerClass = {
   Group: 'Group',
   OSM: 'Tile',
   ImageWMS: 'Image',
-  ImageVector: 'Image'
+  ImageVector: 'Image',
+  Vector: 'Vector'
 };
 
 var currentId = 0;
@@ -74,6 +75,12 @@ export default {
       var sourceOptions = options.sourceOptions ? options.sourceOptions : {};
       return {
         source: new ol.source.OSM(sourceOptions)
+      };
+    },
+    Vector(options) {
+      var sourceOptions = options.sourceOptions ? options.sourceOptions : {};
+      return {
+        source: new ol.source.Vector(sourceOptions)
       };
     }
 };
