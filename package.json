@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Web mapping web components built using CanJS",
   "repository": "https://github.com/roemhiltg/can-geo",
+  "main": "index.js",
   "watch": {
     "lint": "**/*.js",
     "test": "**/*.js"
@@ -35,39 +36,5 @@
     "jquery": "^2.2.x",
     "openlayers": "^3.16.x",
     "steal": "^0.16.x"
-  },
-  "main": "can-geo/index.js",
-  "system": {
-    "bundleAssets": true,
-    "bundle": [
-      "can-geo/index"
-    ],
-    "npmIgnore": [
-      "openlayers",
-      "documentjs",
-      "jshint",
-      "steal-tools",
-      "testee"
-    ],
-    "paths": {
-      "bootstrap": "node_modules/bootstrap/dist/js/bootstrap.min.js",
-      "openlayers": "node_modules/openlayers/dist/ol-debug.js"
-    },
-    "meta": {
-      "openlayers": {
-        "format": "global",
-        "exports": "ol"
-      }
-    },
-    "shim": {
-      "jquery": {
-        "exports": "jQuery"
-      },
-      "bootstrap": {
-        "deps": [
-          "jquery"
-        ]
-      }
-    }
   }
 }
