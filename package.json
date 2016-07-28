@@ -36,7 +36,7 @@
     "openlayers": "^3.16.x",
     "steal": "^0.16.x"
   },
-  "main": "index",
+  "main": "can-geo/index.js",
   "system": {
     "bundleAssets": true,
     "bundle": [
