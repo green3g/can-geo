@@ -40,7 +40,7 @@
   "system": {
     "bundleAssets": true,
     "bundle": [
-      "index"
+      "can-geo/index"
     ],
     "npmIgnore": [
       "openlayers",
