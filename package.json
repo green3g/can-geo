@@ -31,8 +31,8 @@
     "bootstrap": "^3.3.7",
     "can": "^2.3.x",
     "font-awesome": "^4.6.x",
-    "can-crud": "git+https://github.com/roemhildtg/can-crud.git",
-    "can-ui": "git+https://github.com/roemhildtg/can-ui.git",
+    "can-crud": "latest",
+    "can-ui": "latest",
     "jquery": "^2.2.x",
     "openlayers": "^3.16.x",
     "steal": "^0.16.x"
