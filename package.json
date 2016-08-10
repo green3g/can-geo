@@ -35,6 +35,6 @@
     "can-ui": "latest",
     "jquery": "^2.2.x",
     "openlayers": "^3.16.x",
-    "steal": "^0.16.x"
+    "steal": "^0.16.28"
   }
 }
