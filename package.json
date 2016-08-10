@@ -24,7 +24,7 @@
     "jshint": "latest",
     "npm-watch": "^0.1.x",
     "steal-qunit": "^0.1.x",
-    "steal-tools": "^0.16.x",
+    "steal-tools": "^0.16.6",
     "testee": "^0.2.x"
   },
   "dependencies": {
