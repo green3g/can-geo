@@ -49,7 +49,11 @@ export const ViewModel = CanMap.extend({
    */
   define: {
     /**
-     * Openlayers projection string to use for map. The default is `'EPSG:3857'`
+     * Openlayers projection string to use for the coordinates. of this viewModel.
+     * The default is `'EPSG:4326'` (latitude and longitude). This projection is not
+     * ecessarily the projection of the `view<ol.View>`property of the map.
+     * If the coordinate systems are different, they will be converted to the view
+     * projection before the map is panned.
      * @property {string} ol-map.ViewModel.props.projection
      * @parent ol-map.ViewModel.props
      * @signature `projection="EPSG:3857"` sets the projection value
@@ -68,16 +72,10 @@ export const ViewModel = CanMap.extend({
       type: 'number',
       value: 0,
       set(x) {
-        if (isNaN(x)) {
-          return 0;
-        }
-        if (this.attr('mapObject')) {
-          let view = this.attr('mapObject').getView();
-          let coords = ol.proj.transform([x, this.attr('y')], this.attr('projection'), view.getProjection());
-          let currentX = coords[0];
-          if (currentX !== x) {
-            view.setCenter(coords);
-          }
+        if (this.attr('x') !== x) {
+          setTimeout(() => {
+            this.animateViewChange(x, this.attr('y'), this.attr('zoom'));
+          }, 1);
         }
         return x;
       }
@@ -93,16 +91,10 @@ export const ViewModel = CanMap.extend({
       type: 'number',
       value: 0,
       set(y) {
-        if (isNaN(y)) {
-          return 0;
-        }
-        if (this.attr('mapObject')) {
-          let view = this.attr('mapObject').getView();
-          let coords = ol.proj.transform([this.attr('x'), y], this.attr('projection'), view.getProjection());
-          let currentY = view.getCenter()[1];
-          if (coords[1] !== currentY) {
-            view.setCenter(coords);
-          }
+        if (this.attr('y') !== y) {
+          setTimeout(() => {
+            this.animateViewChange(this.attr('x'), y, this.attr('zoom'));
+          }, 1);
         }
         return y;
       }
@@ -118,14 +110,13 @@ export const ViewModel = CanMap.extend({
     zoom: {
       type: 'number',
       value: 1,
-      set(zoom) {
-        if (this.attr('mapObject')) {
-          let view = this.attr('mapObject').getView();
-          if (view.getZoom() !== zoom) {
-            view.setZoom(zoom);
-          }
+      set(z) {
+        if (this.attr('zoom') !== z) {
+          setTimeout(() => {
+            this.animateViewChange(this.attr('x'), this.attr('y'), z);
+          }, 1);
         }
-        return zoom;
+        return z;
       }
     },
     /**
@@ -155,6 +146,10 @@ export const ViewModel = CanMap.extend({
     mapObject: {
       type: '*',
       value: null
+    },
+    animationDuration: {
+      type: 'number',
+      value: 750
     }
   },
   /**
@@ -178,7 +173,7 @@ export const ViewModel = CanMap.extend({
       options = can.extend(options, this.attr('mapOptions').attr());
     }
     //create the map
-    this.attr('mapObject', this.createMap(options));
+    this.attr('mapObject', this.getMap(options));
   },
   /**
    * @function getLayers
@@ -205,7 +200,10 @@ export const ViewModel = CanMap.extend({
   getView(viewConf) {
 
     //transform the coordinates if necessary
-    let center = ol.proj.transform([this.attr('x'), this.attr('y')], this.attr('projection'), this.attr('mapOptions.view.projection'));
+    let center = ol.proj.transform(
+      [this.attr('x'), this.attr('y')],
+      this.attr('projection'),
+      this.attr('mapOptions.view.projection'));
 
     //create the view
     return new ol.View(
@@ -216,22 +214,30 @@ export const ViewModel = CanMap.extend({
     );
   },
   /**
-   * @function createmap
+   * @function getMap
    * @description
    * Creates and initializes the map with the map options. Called internally.
    * @signature
    * @param  {object} options `ol.map` constructor options
    * @return {ol.map}         The map object that is now set up
    */
-  createMap(options) {
+  getMap(options) {
     let map = new ol.Map(options);
     let view = map.getView();
     map.on('moveend', event => {
       let view = event.target.getView();
-
       //project to components projection
-      let center = ol.proj.transform(view.getCenter(), view.getProjection(), this.attr('projection'));
+      let center = ol.proj.transform(
 
+        //coordinates
+        view.getCenter(),
+
+        //from projection
+        view.getProjection(),
+
+        //to projection
+        this.attr('projection')
+      );
       //export the properties
       this.attr({
         x: center[0],
@@ -248,6 +254,85 @@ export const ViewModel = CanMap.extend({
   removeMap() {
     this.attr('mapObject').setTarget(null);
     this.attr('mapObject', null);
+  },
+  /**
+   * returns the viewModels coordinates in the map view's coordinate system
+   * @return {Array<Number>} the transformed coordinates
+   */
+  getTransformedCoordinates(x, y) {
+    if (!this.attr('mapObject')) {
+      return;
+    }
+    let view = this.attr('mapObject').getView();
+    return ol.proj.transform(
+
+      //x,y or lon,lat coordinate pair
+      [x, y],
+
+      //from projection
+      this.attr('projection'),
+
+      //to projection
+      view.getProjection()
+    );
+  },
+  /**
+   * determines if the view needs to be changed and if so begins a
+   * can.batch process while asynchronously animating the view changes
+   * that are necessary
+   * @param {Number} x - the x coordinate to change the view to
+   * @param {Number} y - the y coordinate to change the view to
+   * @param {Number} z - the zoom level to change the view to
+   */
+  animateViewChange(x, y, z) {
+    //make sure map exists
+    if (!this.attr('mapObject')) {
+      return;
+    }
+    let map = this.attr('mapObject');
+    let view = map.getView();
+    let coords = this.getTransformedCoordinates(x, y);
+    let center = view.getCenter();
+    if (this.attr('animating')) {
+      return;
+    }
+
+
+    //do the animation
+    let zoom, pan;
+    //zoom animation
+
+    if (z !== view.getZoom()) {
+      zoom = ol.animation.zoom({
+        duration: this.attr('animationDuration'),
+        resolution: map.getView().getResolution()
+      });
+      //register animations
+      map.beforeRender(zoom);
+      view.setZoom(z);
+    }
+
+    //pan animation
+    //account for rounding differences
+    let difference = 0.0001;
+    if (Math.abs(center[0] - coords[0]) > difference ||
+      Math.abs(center[1] - coords[1] > difference)) {
+      pan = ol.animation.pan({
+        duration: this.attr('animationDuration'),
+        source: map.getView().getCenter()
+      });
+      //register animations
+      map.beforeRender(pan);
+      view.setCenter(coords);
+    }
+
+    if (zoom || pan) {
+      can.batch.start();
+
+      map.once('moveend', () => {
+        can.batch.stop();
+      });
+    }
   }
 });
 
