@@ -24,17 +24,17 @@
     "jshint": "latest",
     "npm-watch": "^0.1.x",
     "steal-qunit": "^0.1.x",
-    "steal-tools": "^0.16.x",
+    "steal-tools": "^1.0.0-beta.3",
     "testee": "^0.2.x"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
     "can": "^2.3.25",
-    "font-awesome": "^4.6.x",
     "can-crud": "latest",
     "can-ui": "latest",
+    "font-awesome": "^4.6.x",
     "jquery": "^2.2.x",
     "openlayers": "^3.16.x",
-    "steal": "^0.16.x"
+    "steal": "^1.0.0-beta.3"
   }
 }
