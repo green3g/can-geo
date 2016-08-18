@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "can": "^2.3.25",
+    "can": "^2.3.26",
     "can-crud": "latest",
     "can-ui": "latest",
     "font-awesome": "^4.6.x",
