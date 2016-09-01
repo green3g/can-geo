@@ -6,6 +6,7 @@ import Component from 'can/component/';
 import can from 'can/util/library';
 import template from './layercontrol.stache!';
 import './layercontrol.css!';
+import ol from 'openlayers';
 
 const controlTemplates = {
   'default': '<layer-control-default {layer}="." />',
@@ -41,12 +42,13 @@ export const ViewModel = CanMap.extend({
       type: '*',
       value: null,
       set(map) {
-        if (this.attr('_layers')) {
-          if (map) {
-            this.addLayers(map.getLayers());
-          } else {
-            this.attr('_layers').replace([]);
-          }
+        if (!this.attr('_layers')) {
+          return map;
+        }
+        if (map) {
+          this.addLayers(map.getLayers());
+        } else {
+          this.attr('_layers').replace([]);
         }
         return map;
       }
