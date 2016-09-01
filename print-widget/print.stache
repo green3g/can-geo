@@ -7,9 +7,9 @@
           <input type="text" class="form-control" name="mapTitle" can-value="mapTitle" placeholder="" />
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-default" can-click="printButtonClick">
+          <button type="button" class="btn btn-sm btn-default" ($click)="printButtonClick">
             <i class="fa fa-print"></i> Create Print</button>
-          <button type="button" class="btn btn-sm btn-default" can-click="clearButtonClick" {{^printResults}} disabled {{/printResults}}>
+          <button type="button" class="btn btn-sm btn-default" ($click)="clearButtonClick" {{^printResults}} disabled {{/printResults}}>
             <i class="fa fa-trash"></i> Clear Prints</button>
         </div>
       </form>

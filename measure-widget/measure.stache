@@ -1,11 +1,11 @@
 <div class="measure-widget">
   <div class="btn-group" role="group" aria-label="Measure Tools">
     {{#each measurements}}
-      <button type="button" title="{{label}}" data-toggle="tooltip" data-placement="bottom" can-click="activateMeasureTool" class="measure btn btn-default{{#if active}} btn-success{{/if}}">
+      <button type="button" title="{{label}}" data-toggle="tooltip" data-placement="bottom" ($click)="activateMeasureTool" class="measure btn btn-default{{#if active}} btn-success{{/if}}">
         <i class="{{iconClass}}" />
       </button>
     {{/each}}
-    <button type="button" title="Clear Measurements" data-toggle="tooltip" data-placement="bottom" can-click="clearMeasurements" class="measure btn btn-default">
+    <button type="button" title="Clear Measurements" data-toggle="tooltip" data-placement="bottom" ($click)="clearMeasurements" class="measure btn btn-default">
       <i class="fa fa-eraser" />
     </button>
     {{#each measurements}}

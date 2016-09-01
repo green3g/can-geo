@@ -8,7 +8,7 @@
       {{/unless}}
       {{#if addressValue}}
         <div class="input-group-addon">
-          <button type="button" title="Clear Address" can-click="clearAddress" class="btn">
+          <button type="button" title="Clear Address" ($click)="clearAddress" class="btn">
             <i class="fa fa-remove"></i>
           </button>
         </div>
