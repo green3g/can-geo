@@ -34,7 +34,7 @@
     "can-ui": "latest",
     "font-awesome": "^4.6.x",
     "jquery": "^2.2.x",
-    "openlayers": "^3.16.x",
+    "openlayers": "^3.18.1",
     "steal": "^1.0.0-beta.3"
   }
 }
