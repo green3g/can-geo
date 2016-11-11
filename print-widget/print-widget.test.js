@@ -1,7 +1,7 @@
 /*jshint esnext: true */
 import q from 'steal-qunit';
 import ViewModel from './print-widget';
-import can from 'can';
+import can 
 import ol from 'openlayers';
 import $ from 'jquery';
 var vm, map;

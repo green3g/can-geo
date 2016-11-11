@@ -1,6 +1,6 @@
 /*jshint esnext:true */
-import CanMap from 'can/map/';
-import List from 'can/list/';
+import DefineMap from 'can-define/map/map';
+import DefineList from 'can-define/list/list';
 /**
  * @module {can.Map} providers/print/printProvider Print Provider
  * @parent geo.providers
@@ -10,7 +10,7 @@ import List from 'can/list/';
  * @group printProvider.props Properties
  * @group printProvider.providers Print Providers
  */
-export default CanMap.extend({
+export default DefineMap.extend({
   /**
    * @prototype
    */
@@ -21,7 +21,7 @@ export default CanMap.extend({
      * @property {Number} printProvider.props.dpi
      */
     dpis: {
-      Value: List
+      Value: DefineList
     },
     /**
      * A list of layout strings
@@ -29,7 +29,7 @@ export default CanMap.extend({
      * @property {Array<String>} printProvider.props.layouts
      */
     layouts: {
-      Value: List
+      Value: DefineList
     },
     /**
      * A list of layout scales
@@ -37,7 +37,7 @@ export default CanMap.extend({
      * @property {Array<Number>} printProvider.props.scales
      */
     scales: {
-      Value: List
+      Value: DefineList
     },
     /**
      * A list of output file formats
@@ -45,7 +45,7 @@ export default CanMap.extend({
      * @property {Array<String>} printProvider.props.outputFormats
      */
     outputFormats: {
-      Value: List
+      Value: DefineList
     }
   },
   /**

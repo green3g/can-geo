@@ -1,8 +1,8 @@
-import can from 'can/util/library';
-import Component from 'can/component/';
-import CanEvent from 'can/event/';
+
+import Component from 'can-component';
+import CanEvent from 'can-event';
 import template from './olPopup.stache!';
-import CanMap from 'can/map/';
+import DefineMap from 'can-define/map/map';
 import './olPopup.css!';
 
 /**
@@ -12,7 +12,7 @@ import './olPopup.css!';
  *
  * @description A `<ol-popup />` component's ViewModel
  */
-export const ViewModel = CanMap.extend({
+export const ViewModel = DefineMap.extend({
   /**
    * @prototype
    */

@@ -1,5 +1,5 @@
 
-import can from 'can';
+import can 
 import Print from './PrintProvider';
 import color from '../../util/color';
 

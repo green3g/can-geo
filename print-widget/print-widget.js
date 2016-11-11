@@ -1,6 +1,6 @@
-import can from 'can/util/library';
-import Component from 'can/component/';
-import CanMap from 'can/map/';
+
+import Component from 'can-component';
+import DefineMap from 'can-define/map/map';
 import template from './print.stache!';
 
 /**
@@ -10,7 +10,7 @@ import template from './print.stache!';
  *
  * @description A `<print-widget />` component's ViewModel
  */
-export const ViewModel = CanMap.extend({
+export const ViewModel = DefineMap.extend({
   /**
    * @prototype
    */

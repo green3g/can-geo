@@ -1,7 +1,12 @@
-<ul class="list-group layer-control">
-  {{#each _layers}}
-  <li class="list-group-item">
-    {{{template}}}
+<ul class="menu list-group layer-control">
+  <li class="menu-header">
+    <span class="menu-header-text">
+      Layers
+    </span>
   </li>
+  {{#each layers}}
+    <li class="list-group-item menu-item">
+      {{>template}}
+    </li>
   {{/each}}
 </ul>

@@ -1,6 +1,6 @@
 /*jshint esnext:true */
 
-import CanMap from 'can/map/';
+import DefineMap from 'can-define/map/map';
 /**
  * @module {can.Map} providers/location/LocationProvider Location Provider
  * @parent geo.providers
@@ -27,7 +27,7 @@ import CanMap from 'can/map/';
  * @option {Object} response The raw response from the geocode server
  */
 
-CanMap.extend({
+DefineMap.extend({
   /**
    * @prototype
    */

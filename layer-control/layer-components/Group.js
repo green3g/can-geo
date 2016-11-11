@@ -1,64 +1,73 @@
-
-import can from 'can';
-
-import { ViewModel as baseViewModel } from '../layer-control';
-
+import {ViewModel as baseViewModel} from '../layer-control';
 import template from './Group.stache!';
+import Component from 'can-component';
 
-var ViewModel = baseViewModel.extend({
-  define:  {
-    /**
-     * [layers description]
-     * @property {Object}
-     */
-    layers: {
-      Value: can.List
-    },
+export const ViewModel = baseViewModel.extend({
     visible: {
-      type: 'boolean'
+        type: 'boolean'
     },
     collapsed: {
-      type: 'boolean',
-      value: true
+        type: 'boolean',
+        value: true
     },
     radioGroup: {
-      type: 'boolean',
-      value: false
+        type: 'boolean',
+        value: false
     },
-    radioVisible: {
-      type: 'string',
-      value: null
-    }
-  },
-  init: function() {
-    baseViewModel.prototype.init.apply(this, arguments);
-    this.attr('visible', this.attr('layer.layer').getVisible());
-    var layer = this.attr('layer.layer');
-    this.addLayers(layer.getLayers());
+    layer: {
+        type: '*',
+        set (layer) {
+            // initialize properties from the layer
+            this.set({
+                visible: layer.layer.getVisible(),
+                collapsed: !(layer.layer.get('collapsed') === false),
+                radioGroup: layer.layer.get('radioGroup')
+            });
+            this.initLayers(layer.layer.getLayers());
 
-    if (layer.get('radioGroup')) {
-      this.attr('radioGroup', true);
+            // set radio group 'basemap' visibility
+            if (this.radioGroup) {
+                const visibleLayers = [];
+                this.layers.forEach((l) => {
+                    if (l.visible) {
+                        visibleLayers.push(l);
+                    }
+                });
+
+                //check for no visible layers and set the first one visible
+                if (visibleLayers.length === 0) {
+                    this.setRadioVisible(this.layers[0]);
+
+                //check for multiple visible layers and set the first one visible
+                } else if (visibleLayers.length > 1) {
+                    visibleLayers.forEach((l, index) => {
+                        if (index) {
+                            this.setRadioVisible(l);
+                        }
+                    });
+                }
+            }
+            return layer;
+        }
+    },
+    toggleVisible: function () {
+        this.layer.layer.setVisible(!this.visible);
+        this.visible = !this.visible;
+    },
+    toggleCollapsed: function () {
+        this.collapsed = !this.collapsed;
+    },
+    setRadioVisible: function (selectedLayer) {
+        this.layers.forEach((layer) => {
+            const visible = selectedLayer.layer.get('id') === layer.layer.get('id');
+            layer.layer.setVisible(visible);
+            layer.visible = visible;
+        });
     }
-  },
-  toggleVisible: function(e) {
-    this.attr('layer.layer').setVisible(!this.attr('visible'));
-    this.attr('visible', !this.attr('visible'));
-  },
-  toggleCollapsed: function(e) {
-    this.attr('collapsed', !this.attr('collapsed'));
-  },
-  setRadioVisible: function(selectedLayer) {
-    this.attr('radioVisible', selectedLayer);
-    this.attr('layers').forEach(function(layer) {
-      var visible = selectedLayer.attr('layer').get('id') === layer.attr('layer').get('id');
-      layer.attr('layer').setVisible(visible);
-      layer.attr('visible', visible);
-    });
-  }
 });
 
-can.Component.extend({
-  tag: 'layer-control-group',
-  viewModel: ViewModel,
-  template: template
+Component.extend({
+    tag: 'layer-control-group',
+    viewModel: ViewModel,
+    view: template
 });

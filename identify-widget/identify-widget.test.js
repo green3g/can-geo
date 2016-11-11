@@ -1,6 +1,6 @@
 
 import q from 'steal-qunit';
-import can from 'can';
+import can 
 
 import template from 'ol-map/test/mapTemplate.stache!';
 import {ViewModel} from 'identify-widget/';

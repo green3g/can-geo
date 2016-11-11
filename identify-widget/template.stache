@@ -1,38 +1,32 @@
 <div class="identify-results">
-  {{#if _features}}
-    <ul class="pagination">
-      <li class="{{^_hasPreviousFeature}}disabled{{/_hasPreviousFeature}}">
-        <a href="#" aria-label="Previous" ($click)="gotoPrevious">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <li class="{{^_hasNextFeature}}disabled{{/_hasNextFeature}}">
-        <a href="#" aria-label="Next" ($click)="gotoNext">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-      {{#_activeFeature }}
-        <li><a href="#" ($click)="zoomToFeature"><i class="fa fa-search-plus"></i> {{title}}: {{index}}</a></li>
-      {{/_activeFeature}}
-      {{#if loading.isPending }}
-        <li><a href="#"><i class="fa fa-refresh fa-spin"></i></a></li>
-      {{/if}}
-    </ul>
+    {{#if features.length}}
+      {{^is features.length 1}}
+        <paginate-widget class="float-left" {(active-page-index)}="activeFeatureIndex" {pages}="features.length" hide-first hide-last hide-pages />
+        {{/is}}
+        {{#activeFeature }}
+            <button type="button" class="zoom-btn btn btn-primary float-right" href="#" ($click)="zoomToFeature"><i class="fa fa-search-plus"></i> {{title}}: {{index}}</a></li>
+        {{/activeFeature}}
+        {{#if loading.isPending }}
+            <li><a href="#"><i class="fa fa-refresh fa-spin"></i></a></li>
+        {{/if}}
 
-    <div class="identify-scroller">
-      {{#_activeFeature}} {{>featureTemplate}} {{/_activeFeature}}
-    </div>
-  {{/if}}
-
-  <div class="popup-alerts">
-    {{#if loading.isResolved}}
-      {{#if hasError}}
-        <div class="alert alert-warning" role="alert">
-          Warning, some of the layers did not load correctly.
+        <div class="identify-scroller">
+            {{#activeFeature}} {{>featureTemplate}} {{/activeFeature}}
         </div>
-      {{/if}}
-      {{^_features}}
-      <div class="alert alert-warning" role="alert">No features were identified</div>
-      {{/_features}}
     {{/if}}
-  </div>
+
+    <div class="popup-alerts">
+        {{#if loading.isResolved}}
+            {{#if hasError}}
+                <div class="alert alert-warning" role="alert">
+                    Warning, some of the layers did not load correctly.
+                </div>
+            {{/if}}
+            {{^features}}
+            <div class="alert alert-warning" role="alert">No features were identified</div>
+            {{/features}}
+          {{else}}
+            <!-- loading element -->
+            <div class="loading"></div>
+        {{/if}}
+    </div>

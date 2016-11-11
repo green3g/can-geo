@@ -1,9 +1,9 @@
-import can from 'can/util/library';
-import List from 'can/list/';
-import CanMap from 'can/map/';
-import CanEvent from 'can/event/';
-import 'can/map/define/';
-import Component from 'can/component/';
+
+import DefineList from 'can-define/list/list';
+import DefineMap from 'can-define/map/map';
+import CanEvent from 'can-event';
+
+import Component from 'can-component';
 
 import template from './locator.stache!';
 import './locator.css!';
@@ -16,7 +16,7 @@ import icon from './icon';
  *
  * @description A `<locator-widget />` component's ViewModel
  */
-export const ViewModel = CanMap.extend({
+export const ViewModel = DefineMap.extend({
   define: {
     /**
     * The default address value for the textbox.
@@ -67,7 +67,7 @@ export const ViewModel = CanMap.extend({
      * @parent locator-widget.ViewModel.props
      */
     suggestions: {
-      Value: List
+      Value: DefineList
     },
     /**
      * the current location found by the widget
@@ -75,14 +75,14 @@ export const ViewModel = CanMap.extend({
      * @parent locator-widget.ViewModel.props
      */
     location: {
-      Value: CanMap
+      Value: DefineMap
     },
     /**
-     * A deferred representing the current _loading state
-     * @property {can.Deferred} locator-widget.ViewModel.props._loading
+     * A deferred representing the current loading state
+     * @property {can.Deferred} locator-widget.ViewModel.props.loading
      * @parent locator-widget.ViewModel.props
      */
-    _loading: {
+    loading: {
       value: function(){
         return can.Deferred().resolve();
       }
@@ -138,8 +138,8 @@ export const ViewModel = CanMap.extend({
     if (address.length && address.length > 5) {
       var provider = this.attr('provider');
       provider.cancelPending();
-      this.attr('_loading', provider.getSuggestions(address, point));
-      this.attr('_loading').then(this.updateSuggestions.bind(this));
+      this.attr('loading', provider.getSuggestions(address, point));
+      this.attr('loading').then(this.updateSuggestions.bind(this));
     }
   },
   /**
@@ -149,8 +149,8 @@ export const ViewModel = CanMap.extend({
    */
   selectAddress: function(address) {
     this.attr('addressValue', address);
-    this.attr('_loading', this.attr('provider').getLocation(address));
-    this.attr('_loading').then(this.handleAddressLocated.bind(this));
+    this.attr('loading', this.attr('provider').getLocation(address));
+    this.attr('loading').then(this.handleAddressLocated.bind(this));
   },
   /**
    * @typedef {can.Event} locator-widget.events.addressCleared address-cleared

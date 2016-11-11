@@ -1,5 +1,5 @@
 /* jshint esnext:true */
-import can from 'can';
+import can 
 /**
  * @constructor providers/location/EsriGeocoder EsriGeocoder
  * @parent locationProvider.providers

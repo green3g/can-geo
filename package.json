@@ -20,7 +20,9 @@
   "author": "roemhildtg",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^7.1.0",
     "documentjs": "^0.4.x",
+    "eslint": "^3.9.1",
     "jshint": "latest",
     "npm-watch": "^0.1.x",
     "steal-qunit": "^0.1.x",
@@ -28,13 +30,33 @@
     "testee": "^0.2.x"
   },
   "dependencies": {
-    "bootstrap": "^3.3.7",
-    "can": "^2.3.25",
+    "animate.css": "^3.5.2",
+    "can-boot": "^0.1.0",
+    "can-component": "^3.0.2",
     "can-crud": "latest",
+    "can-define": "^1.0.4",
+    "can-event": "^3.0.1",
+    "can-getfeatureinfo": "^0.3.0",
+    "can-route": "^3.0.2",
+    "can-stache": "^3.0.6",
     "can-ui": "latest",
+    "can-util": "^3.0.10",
     "font-awesome": "^4.6.x",
-    "jquery": "^2.2.x",
-    "openlayers": "^3.16.x",
-    "steal": "^1.0.0-beta.3"
+    "openlayers": "^3.19.1",
+    "spectre-canjs": "^0.10.0",
+    "spectre.css": "^0.1.27",
+    "steal": "^1.0.0-rc.8",
+    "steal-stache": "^3.0.1"
+  },
+  "system": {
+    "paths": {
+      "openlayers": "node_modules/openlayers/dist/ol-debug.js"
+    },
+    "meta": {
+      "openlayers": {
+        "format": "global",
+        "exports": "ol"
+      }
+    }
   }
 }

@@ -1,25 +1,28 @@
 
-import can from 'can';
 import DefaultTemplate from './Default.stache!';
+import DefineMap from 'can-define/map/map';
+import Component from 'can-component';
 
-var DefaultViewModel = can.Map.extend({
-  init: function() {
-    var layer = this.attr('layer.layer');
-    this.attr('visible', layer.getVisible());
-    layer.on('change:visible', this.updateVisible.bind(this));
-  },
-  toggleVisible: function(e) {
-    this.attr('layer.layer').setVisible(!this.attr('visible'));
-  },
-  updateVisible: function(e){
-    this.attr('visible', e.target.getVisible());
-  }
+export const DefaultViewModel = DefineMap.extend('DefaultLayer', {
+    visible: 'boolean',
+    title: 'string',
+    init: function () {
+        const layer = this.layer.layer;
+        this.visible = layer.getVisible();
+        layer.on('change:visible', this.updateVisible.bind(this));
+    },
+    toggleVisible: function () {
+        this.layer.layer.setVisible(!this.visible);
+    },
+    updateVisible: function (e) {
+        this.visible = e.target.getVisible();
+    }
 });
 
-can.Component.extend({
-  tag: 'layer-control-default',
-  viewModel: DefaultViewModel,
-  template: DefaultTemplate
+Component.extend({
+    tag: 'layer-control-default',
+    viewModel: DefaultViewModel,
+    view: DefaultTemplate
 });
 
 export default DefaultViewModel;

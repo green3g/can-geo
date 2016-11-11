@@ -1,9 +1,0 @@
-.identify-scroller {
-  width:100%;
-  overflow-y:auto;
-  overflow-x: hidden;
-}
-
-.identify-results ul.pagination {
-  margin: 5px 0 0;
-}

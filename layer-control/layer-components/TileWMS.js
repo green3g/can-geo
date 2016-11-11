@@ -1,85 +1,83 @@
 
-import can from 'can';
+import Component from 'can-component';
 import baseViewModel from './Default';
 import template from './TileWMS.stache!';
+import DefineList from 'can-define/list/list';
 
-var ViewModel = baseViewModel.extend({
-  define: {
+const ViewModel = baseViewModel.extend({
     collapsed: {
-      type: 'boolean',
-      value: true
+        type: 'boolean',
+        value: true
     },
     defaultSublayerVisible: {
-      type: 'boolean',
-      value: true
+        type: 'boolean',
+        value: true
     },
-    legendUrl: {
-      get: function() {
-        var separator;
-        if (this.attr(''))
-          return;
-      }
-    }
-  },
-  init: function() {
-    baseViewModel.prototype.init.apply(this, arguments);
-    var source = this.attr('layer.layer').getSource();
-    var params = source.getParams();
-    var sublayers = (params.LAYERS || params.layers).split(',');
-    var sublayerObjects = [];
-    var defaultVisible = this.attr('defaultSublayerVisible');
-    sublayers.forEach(function(sublayer) {
-      sublayerObjects.push({
-        title: sublayer, //TODO: make configureable title options
-        id: sublayer,
-        visible: defaultVisible,
-        collapsed: true,
-        baseUrl: source.getUrls()[0],
-        toggleCollapsed: function(sublayer) {
-          sublayer.attr('collapsed', !sublayer.attr('collapsed'));
-        },
-        getLegendGraphicURL: function() {
-          var separator;
-          if (this.baseUrl.indexOf('?') > -1) {
-            separator = '';
-          } else {
-            separator = '?';
-          }
-          return [
-            this.baseUrl,
-            separator,
-            'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=40&LAYER=',
-            this.id
-          ].join('');
+    sublayers: {
+        Value: DefineList
+    },
+    init: function () {
+        baseViewModel.prototype.init.apply(this, arguments);
+        const source = this.layer.layer.getSource();
+        const params = source.getParams();
+        this.sublayers = (params.LAYERS || params.layers).split(',');
+        const sublayerObjects = [];
+        const defaultVisible = this.defaultSublayerVisible;
+        this.sublayers.forEach((sublayer) => {
+            sublayerObjects.push({
+                title: sublayer, //TODO: make configureable title options
+                id: sublayer,
+                visible: defaultVisible,
+                collapsed: true,
+                baseUrl: source.getUrls()[0],
+                toggleCollapsed: function (sublayer) {
+                    sublayer.collapsed = !sublayer.collapsed;
+                },
+                getLegendGraphicURL () {
+                    let separator;
+                    if (this.baseUrl.indexOf('?') > -1) {
+                        separator = '';
+                    } else {
+                        separator = '?';
+                    }
+                    return [
+                        this.baseUrl,
+                        separator,
+                        'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=40&LAYER=',
+                        this.id
+                    ].join('');
+                }
+            });
+        });
+        this.sublayers = sublayerObjects;
+        this.updateSublayerVisibility();
+    },
+    toggleCollapsed: function () {
+        this.collapsed = !this.collapsed;
+    },
+    setSublayerVisibility: function (sublayer) {
+        const visible = sublayer.visible;
+        sublayer.visible = !visible;
+        this.updateSublayerVisibility();
+    },
+    updateSublayerVisibility () {
+        const source = this.layer.layer.getSource();
+        const newLayersParam = this.sublayers.filter((s) => {
+            return s.visible;
+        }).map(function (s) {
+            return s.id;
+        }).join(',');
+        if (!newLayersParam) {
+            console.warn('No layers are visible, wms server may not respond correctly');
         }
-      });
-    });
-    this.attr('sublayers', sublayerObjects);
-    this.updateSublayerVisibility();
-  },
-  toggleCollapsed: function() {
-    this.attr('collapsed', !this.attr('collapsed'));
-  },
-  setSublayerVisibility: function(sublayer) {
-    var visible = sublayer.attr('visible');
-    sublayer.attr('visible', !visible);
-    this.updateSublayerVisibility();
-  },
-  updateSublayerVisibility: function() {
-    var source = this.attr('layer.layer').getSource();
-    var newLayersParam = this.attr('sublayers').filter(function(s) {
-      return s.visible;
-    }).map(function(s) {
-      return s.id;
-    }).join(',');
-    source.updateParams({
-      LAYERS: newLayersParam
-    });
-  }
+        source.updateParams({
+            LAYERS: newLayersParam
+        });
+    }
 });
 
-can.Component.extend({
-  tag: 'layer-control-tilewms',
-  viewModel: ViewModel,
-  template: template
+Component.extend({
+    tag: 'layer-control-tilewms',
+    viewModel: ViewModel,
+    view: template
 });

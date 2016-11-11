@@ -1,11 +1,11 @@
-import can from 'can/util/library';
-import List from 'can/list/';
-import CanMap from 'can/map/';
-import 'can/map/define/';
-import Component from 'can/component/';
+
+import DefineMap from 'can-define/map/map';
+
+import Component from 'can-component';
 import template from './measure.stache!';
 import './measure.css!';
 import measurements from './modules/measurements';
+import OverlayManager from './contrib/OlManager';
 
 /**
  * @constructor measure-widget.ViewModel ViewModel
@@ -14,18 +14,17 @@ import measurements from './modules/measurements';
  *
  * @description A `<measure-widget />` component's ViewModel
  */
-export const ViewModel = CanMap.extend({
+export const ViewModel = DefineMap.extend('MeasureWidget', {
   /**
    * @prototype
    */
-  define: {
     /**
      * An array of measurement objects to use. These are configureable in `./modules/measurements`
      * @property {Array<measurementObjects>} measure-widget.ViewModel.props.measurements
      * @parent measure-widget.ViewModel.props
      */
     measurements: {
-      value: measurements
+        value: measurements
     },
     /**
      * The current value in the units dropdown
@@ -33,8 +32,8 @@ export const ViewModel = CanMap.extend({
      * @parent measure-widget.ViewModel.props
      */
     unitsDropdown: {
-      value: '',
-      type: 'string'
+        value: '',
+        type: 'string'
     },
     /**
      * Should labels be added to the map drawings by default
@@ -42,71 +41,89 @@ export const ViewModel = CanMap.extend({
      * @parent measure-widget.ViewModel.props
      */
     addLabels: {
-      value: true,
-      type: 'boolean'
+        value: true,
+        type: 'boolean'
     },
     /**
      * The name of the click handler key to use. The default is `'measure'`.
      * @property {String} measure-widget.ViewModel.props.clickHandler
      * @parent measure-widget.ViewModel.props
      */
-    clickHandler: {},
-    overlayManger: {}
-  },
+    clickHandler: '*',
+    /**
+     * a map interaction handler object that has
+     * activate and deactivate methods
+     * @type {String}
+     */
+    overlayManger: {
+        type: '*',
+        value: null,
+        set (m) {
+            return m;
+        }
+    },
+    map: {
+        set (map) {
+            if (map) {
+                this.overlayManager = new OverlayManager({map: map});
+            }
+            return map;
+        }
+    },
   /**
    * This is the function called when a tool button is clicked. Activates a measure tool if is not already active. If it is already active, it deactivates the measure tool.
    * @signature
    * @param  {measureToolObject} measureTool The tool to activate
    */
-  activateMeasureTool: function(measureTool) {
-    //toggle the button
-    measureTool.attr('active', !measureTool.attr('active'));
-    if (measureTool.attr('active')) {
-      //unselect other buttons
-      this.measurements.each(function(measure) {
-        if (measure.attr('type') !== measureTool.attr('type')) {
-          measure.attr('active', false);
+    activateMeasureTool: function (measureTool) {
+        //toggle the button
+        measureTool.active = !measureTool.active;
+        if (measureTool.active) {
+            //unselect other buttons
+            this.measurements.each(function (measure) {
+                if (measure.type !== measureTool.type) {
+                    measure.active = false;
+                }
+            });
+            this.overlayManager.activate(measureTool);
+            this.unitsDropdown = measureTool.units[0].value;
+            this.overlayManager.changeUnits(this.unitsDropdown);
+        } else {
+            this.deactivateMeasureTool();
         }
-      });
-      this.attr('overlayManager').activate(measureTool);
-      this.attr('unitsDropdown', measureTool.attr('units')[0].attr('value'));
-      this.attr('overlayManager').changeUnits(this.attr('unitsDropdown'));
-    } else {
-      this.deactivateMeasureTool();
-    }
-  },
+    },
   /**
    * Calls methods to deactivate the measure widget
    * @signature
    */
-  deactivateMeasureTool: function() {
-    this.attr('overlayManager').deactivate();
-  },
+    deactivateMeasureTool: function () {
+        this.overlayManager.deactivate();
+    },
   /**
    * Calls methods to clear the overlay layers
    * @signature
    */
-  clearMeasurements: function() {
-    this.attr('overlayManager').clearMeasureOverlays();
-  },
+    clearMeasurements: function () {
+        this.overlayManager.clearMeasureOverlays();
+    },
   /**
    * Calls methods to update the units on the overlay layers
    * @signature
    */
-  changeUnits: function() {
-    this.attr('overlayManager').changeUnits(this.attr('unitsDropdown'));
-  },
+    changeUnits: function () {
+        this.overlayManager.changeUnits(this.unitsDropdown);
+    },
   /**
    * Calls methods to toggle labels on the overlay layers
    * @signature
    */
-  toggleLabels: function() {
-    this.attr('overlayManager.addLabels', !this.attr('overlayManager.addLabels'));
-  }
+    toggleLabels: function () {
+        this.overlayManager.addLabels = !this.overlayManager.addLabels;
+    }
 });
 
 export default Component.extend({
-  tag: 'measure-widget',
-  template: template,
-  viewModel: ViewModel
+    tag: 'measure-widget',
+    view: template,
+    viewModel: ViewModel
 });

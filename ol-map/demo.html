@@ -23,18 +23,19 @@
 </style>
 
 <script src="../node_modules/steal/steal.js" main="@empty" id="demo-source">
+
   import 'ol-map/';
 
-  import can from 'can/view/';
-  import 'can/util/library';
-  import 'can/route/';
+  import stache from 'can-stache';
+  import route from 'can-route';
+  import DefineMap from 'can-define/map/map';
 
-  let renderer = can.view('demo-html');
+  let renderer = stache.from('demo-html');
 
-  let AppViewModel = can.Map.extend({
-    x: -90,
-    y: 45,
-    zoom: 11,
+  let AppViewModel = DefineMap.extend('App', {
+    x: {type: 'number', value: -90},
+    y: {type: 'number', value: 45},
+    zoom: {type: 'number', value: 11},
     back(){
       window.history.back();
     },
@@ -45,9 +46,9 @@
 
   let app = new AppViewModel();
 
-  can.route.map(app);
-  can.route(':x/:y/:zoom');
-  can.route.ready();
+  route.data = app;
+  route('{x}/{y}/{zoom}');
+  route.ready();
 
-  can.$('#app').html(renderer(app));
+  document.body.appendChild(renderer(app));
 </script>

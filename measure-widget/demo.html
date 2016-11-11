@@ -1,8 +1,8 @@
-<div id="app"></div>
+
 
 <script type="text/stache" id="demo-html">
-  <ol-map {^map-object}="myMap" /> {{#if overlayManager}}
-  <measure-widget {overlay-manager}="overlayManager" /> {{/if}}
+    <ol-map {^map-object}="map" />
+    <measure-widget {map}="map" />
 </script>
 
 <style type="text/css">
@@ -16,34 +16,21 @@
   }
   </style>
 
-  <script src="../node_modules/steal/steal.js" id="demo-source"> import can from 'can/view/';
-  import CanMap from 'can/map/';
-  import 'can/map/define/';
-  import 'can/util/library';
+  <script src="../node_modules/steal/steal.js" id="demo-source" main="@loader">
+
+  import DefineMap from 'can-define/map/map';
   import 'measure-widget/';
   import 'ol-map/';
-  import 'bootstrap/dist/css/bootstrap.min.css';
-  import 'bootstrap/dist/css/bootstrap-theme.min.css';
   import 'font-awesome/css/font-awesome.min.css';
   import OverlayManager from 'measure-widget/contrib/OlManager';
-  let map=new CanMap( {
-    define: {
-      myMap: {
-        set(map) {
-          if (map) {
-            this.attr('overlayManager', new OverlayManager( {
-              map: map
-            }
-            ));
-          }
-          return map;
-        }
-      }
-      , overlayManager: {}
-    }
-  }
+  import stache from 'can-stache';
 
-  );
-  var renderer=can.view('demo-html');
-  can.$('#app').html(renderer(map));
+  let map = new DefineMap({
+    map: null
+  });
+
+  console.log(map);
+
+  var renderer = stache.from('demo-html');
+  document.body.appendChild(renderer(map));
   </script>
