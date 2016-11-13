@@ -1,5 +1,9 @@
-/* jshint esnext:true */
-import can 
+
+import DefineMap from 'can-define/map/map';
+import ajax from 'can-util/dom/ajax/ajax';
+import DefineList from 'can-define/list/list';
+import $ from 'jquery';
+
 /**
  * @constructor providers/location/EsriGeocoder EsriGeocoder
  * @parent locationProvider.providers
@@ -7,122 +11,128 @@ import can
  * @description
  * Provides abstraction for Esri's ArcGIS Online or ArcGIS for Server geocoders
  */
-export default can.Map.extend({
-  define: {
+export default DefineMap.extend('EsriGeocoder', {
     /**
      * The url of the esri geocoder
      * @property {String} EsriGeocoder.props.url
      * @parent EsriGeocoder.props
      */
-    url: {
-      type: 'string'
-    },
+    url: 'string',
     /**
      * The max number of locations to return. The default is 5.
      * @property {Number} EsriGeocoder.props.maxLocations
      * @parent EsriGeocoder.props
      */
     maxLocations: {
-      value: 5
+        type: 'number',
+        value: 5
     },
     /**
      * An optional point to send to the ArcGIS Geocoder to begin searching from.
      * @property {Number[]} EsriGeocoder.props.searchPoint
      * @parent EsriGeocoder.props
      */
-    searchPoint: {
-      value: null
+    searchPoint: DefineList,
+    searchText: 'string',
+    minSearchLength: {
+        type: 'number',
+        value: 5
+    },
+    deferred: '*',
+    suggestionPromise: {
+        get () {
+            if (!this.searchText || !(this.searchText.length > this.minSearchLength)) {
+                return null;
+            }
+            return new Promise((resolve, reject) => {
+                const promise = $.ajax({
+                    url: this.url + '/suggest',
+                    data: {
+                        f: 'json',
+                        text: this.searchText,
+                        location: this.searchPoint ? this.searchPoint.join(',') : '',
+                        maxLocations: this.maxLocations
+                    },
+                    dataType: 'json',
+                    method: 'GET'
+                });
+
+                // resolve the promise
+                promise.then((data) => {
+                    const returnData = {
+                        suggestions: data.suggestions.map((item) => {
+                            return item.text;
+                        }),
+                        response: data
+                    };
+                    resolve(returnData);
+                });
+
+                // reject if fail
+                promise.catch(reject);
+            });
+        }
+    },
+    suggestions: {
+        value: DefineList,
+        get (val) {
+            if (!this.suggestionPromise) {
+                val.replace([]);
+                return val;
+            }
+            this.suggestionPromise.then((data) => {
+                val.replace(data.suggestions);
+            });
+            return val;
+        }
+    },
+    searchAddress: {
+        type: 'string',
+        value: null
+    },
+    locationPromise: {
+        get (val) {
+            if (!this.searchAddress) {
+                return null;
+            }
+            return new Promise((resolve, reject) => {
+                const promise = $.ajax({
+                    url: this.url + '/findAddressCandidates',
+                    data: {
+                        f: 'json',
+                        singleLine: this.searchAddress
+                    },
+                    method: 'GET',
+                    dataType: 'json'
+                });
+
+                // resolve the promise
+                promise.then((data) => {
+                    const returnData = {
+                        items: data.candidates.map((item) => {
+                            return {
+                                x: item.location.x,
+                                y: item.location.y,
+                                address: item.address
+                            };
+                        }),
+                        response: data
+                    };
+                    resolve(returnData);
+                });
+
+                // reject if fail
+                promise.catch(reject);
+            });
+        }
+    },
+    location: {
+        Value: DefineMap,
+        get (val) {
+            this.locationPromise.then((data) => {
+                this.location = data.items[0];
+            });
+            return val;
+        }
     }
-  },
-  /**
-   * @prototype
-   */
-  /**
-   * query the url for suggestions
-   * @link suggestionsObject suggestionsObject
-   * @signature
-   * @param  {string} searchText text to search for suggestions
-   * @param  {float[]} point      x,y pair in latitude and longitude coordinates
-   * @return {promise}            a promise resolved once the query completes. resolved with {suggestionsObject} suggestions
-   */
-  getSuggestions: function(searchText, point) {
-    this.attr('deferred', can.Deferred());
-    this.attr('_deferred', can.ajax({
-      url: this.attr('url') + '/suggest',
-      data: {
-        f: 'json',
-        text: searchText,
-        location: point ? point.join(',') : this.attr('searchPoint') ? this.attr('searchPoint').join(',') : null,
-        maxLocations: this.attr('maxLocations')
-      },
-      dataType: 'json',
-      method: 'GET'
-    }));
-    this.attr('_deferred').then(this._resolveSuggestions.bind(this));
-    return this.attr('deferred').promise();
-  },
-  /**
-   * Retrieves the coordinates for a known location. This location is a fully qualified address or place name returned from the `getSuggestions` query.
-   * @link locationObject locationObject
-   * @signature
-   * @param  {String} knownLocation The location name
-   * @return {Promise} A promise that is resolved to the locationObject
-   */
-  getLocation: function(knownLocation) {
-    this.attr('deferred', can.Deferred());
-    this.attr('_deferred', can.ajax({
-      url: this.attr('url') + '/find',
-      data: {
-        f: 'json',
-        text: knownLocation
-      },
-      method: 'GET',
-      dataType: 'json'
-    }));
-    this.attr('_deferred').then(this._resolveLocation.bind(this));
-    return this.attr('deferred').promise();
-  },
-  /**
-   * A helper function to cancel any pending queries.
-   * @signature
-   *
-   */
-  cancelPending: function() {
-    var def = this.attr('deferred');
-    if (this.attr('_deferred') && this.attr('_deferred').state() === 'pending') {
-      def.reject();
-      this.attr('_deferred').abort();
-    }
-  },
-  /**
-   * A helper function which resolves the suggestions promise
-   * to a object containing suggestions.
-   * @link suggestionsObject suggestionsObject
-   * @signature
-   * @param  {object} results The raw Esri suggestions response
-   */
-  _resolveSuggestions: function(results) {
-    var suggestions = results.suggestions.map(function(sug) {
-      return sug.text;
-    });
-    this.attr('deferred').resolve({
-      suggestions: suggestions,
-      response: results
-    });
-  },
-  /**
-   * A helper function which resolves the location promise to a geographic location object.
-   * @link locationObject locationObject
-   * @signature
-   * @param  {object} results The raw geocode response from Esri
-   */
-  _resolveLocation: function(results) {
-    var location = results.locations[0];
-    this.attr('deferred').resolve({
-      location: location.name,
-      x: location.feature.geometry.x,
-      y: location.feature.geometry.y,
-      response: results
-    });
-  }
 });

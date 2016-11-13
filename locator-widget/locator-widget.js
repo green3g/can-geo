@@ -2,12 +2,14 @@
 import DefineList from 'can-define/list/list';
 import DefineMap from 'can-define/map/map';
 import CanEvent from 'can-event';
-
 import Component from 'can-component';
+import assign from 'can-util/js/assign/assign';
 
 import template from './locator.stache!';
-import './locator.css!';
+import './locator.less!';
 import icon from './icon';
+
+let id = 0;
 
 /**
  * @constructor locator-widget.ViewModel ViewModel
@@ -16,25 +18,15 @@ import icon from './icon';
  *
  * @description A `<locator-widget />` component's ViewModel
  */
-export const ViewModel = DefineMap.extend({
-  define: {
-    /**
-    * The default address value for the textbox.
-     * @property {String} locator-widget.ViewModel.props.addressValue
-     * @parent locator-widget.ViewModel.props
-     */
-    addressValue: {
-      value: null,
-      type: 'string'
-    },
+export const ViewModel = DefineMap.extend('LocatorWidget', {
     /**
     * the url to geocode to for find and suggest endpoints
      * @property {String} locator-widget.ViewModel.props.url
      * @parent locator-widget.ViewModel.props
      */
     url: {
-      value: null,
-      type: 'string'
+        value: null,
+        type: 'string'
     },
     /**
     * The default level of zoom to apply if using an ol-map. The default is `18`
@@ -42,8 +34,8 @@ export const ViewModel = DefineMap.extend({
      * @parent locator-widget.ViewModel.props
      */
     zoomLevel: {
-      value: 18,
-      type: 'number'
+        value: 18,
+        type: 'number'
     },
     /**
      * whether or not to navigate the map
@@ -51,8 +43,8 @@ export const ViewModel = DefineMap.extend({
      * @parent locator-widget.ViewModel.props
      */
     navigate: {
-      type: 'boolean',
-      value: true
+        type: 'boolean',
+        value: true
     },
     /**
      * a geocoder service provider
@@ -61,152 +53,94 @@ export const ViewModel = DefineMap.extend({
      * @parent locator-widget.ViewModel.props
      */
     provider: {},
-    /**
-     * @property {Array<providers.locationProvider.types.suggestionsObject>} locator-widget.ViewModel.props.suggestions
-     * current suggestions in the widget
-     * @parent locator-widget.ViewModel.props
-     */
-    suggestions: {
-      Value: DefineList
+    map: {
+        set (map) {
+            this.initVectorLayer();
+            return map;
+        }
     },
-    /**
-     * the current location found by the widget
-     * @property {Object} locator-widget.ViewModel.props.location
-     * @parent locator-widget.ViewModel.props
-     */
-    location: {
-      Value: DefineMap
+    locations: {
+        Value: DefineList
     },
-    /**
-     * A deferred representing the current loading state
-     * @property {can.Deferred} locator-widget.ViewModel.props.loading
-     * @parent locator-widget.ViewModel.props
-     */
-    loading: {
-      value: function(){
-        return can.Deferred().resolve();
-      }
-    }
-  },
+    disableMultiple: {
+        type: 'htmlbool',
+        value: false
+    },
   /**
    * @prototype
    */
-  /**
-   * Initilizes this widget when the item is inserted. Locates the ol-map component and binds to its ready event.
-   * @signature
-   * @param  {can.Map} mapViewModel The map viewModel
-   */
-  initMap: function(mapViewModel) {
-    mapViewModel.ready().then(this.onMapReady.bind(this));
-  },
   /**
    * When the map is ready, this is called internally to add a new vector layer to it and stores a reference to the map.
    * @signature
    * @param  {can.Map} map The map viewModel
    */
-  onMapReady: function(map) {
-    this.attr('map', map);
-    this.attr('vectorLayer', new ol.layer.Vector({
-      title: 'Location',
-      id: 'location' + this.attr('instanceId'),
-      source: new ol.source.Vector(),
-      style: new ol.style.Style({
-        image: new ol.style.Icon( /* @property {olx.style.IconOptions} */ ({
-          anchor: [0.5, 46],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'pixels',
-          opacity: 0.75,
-          src: icon
-        }))
-      })
-    }));
-  },
+    initVectorLayer () {
+        this.vectorLayer = new ol.layer.Vector({
+            title: 'Location',
+            id: 'location' + id++,
+            source: new ol.source.Vector(),
+            style: new ol.style.Style({
+                image: new ol.style.Icon(/* @property {olx.style.IconOptions} */ ({
+                    anchor: [0.5, 46],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'pixels',
+                    opacity: 0.75,
+                    src: icon
+                }))
+            })
+        });
+    },
+    refreshSuggestions (value) {
+        this.provider.searchText = value;
+    },
   /**
    * Called when the search text changes to retrieve suggestions
    * @param  {String} address The text string to search for suggestions
    */
-  searchAddressValue: function(address) {
-    this.clearSuggestions();
-    this.clearGraphics();
-    var self = this;
-    var point;
-    if (this.attr('map')) {
-      var view = this.attr('map').getView();
-      point = ol.proj.transform(view.getCenter(),
-        view.getProjection(), 'EPSG:4326');
-    }
-    if (address.length && address.length > 5) {
-      var provider = this.attr('provider');
-      provider.cancelPending();
-      this.attr('loading', provider.getSuggestions(address, point));
-      this.attr('loading').then(this.updateSuggestions.bind(this));
-    }
-  },
+    searchAddressValue (address) {
+        this.clearGraphics();
+        var point;
+        if (this.map) {
+            var view = this.map.getView();
+            point = ol.proj.transform(view.getCenter(),
+              view.getProjection(), 'EPSG:4326');
+            this.provider.searchPoint = point;
+        }
+    },
   /**
    * Called when one of the suggestions is clicked. This function kicks off the geocode by querying the provider with the qualified address or location name.
    * @signature
    * @param  {String} address The fully qualified address or string name
    */
-  selectAddress: function(address) {
-    this.attr('addressValue', address);
-    this.attr('loading', this.attr('provider').getLocation(address));
-    this.attr('loading').then(this.handleAddressLocated.bind(this));
-  },
-  /**
-   * @typedef {can.Event} locator-widget.events.addressCleared address-cleared
-   * @parent locator-widget.events
-   * An event dispatched when the the address is cleared using the clear button
-   */
-  /**
-   * Clears the suggestions, address value, and any graphics on the layer if it exists. Dispatches event `address-cleared`
-   * @signature
-   */
-  clearAddress: function() {
-    this.attr('addressValue', null);
-    this.clearSuggestions();
-    this.clearGraphics();
-    this.dispatch('address-cleared');
-  },
-  /**
-   * @typedef {can.Event} locator-widget.events.suggestionsFound suggestions-found
-   * @parent locator-widget.events
-   * An event dispatched when suggestions are found from the provider
-   * @option {Array.<String>} suggestions The suggestions that were found by the provider
-   */
-  /**
-   * Called internally to update the suggestions list when suggestions are found by the provider. Dispatches event `suggestions-found` with the array of suggestions
-   * @signature
-   * @param  {providers.locationProvider.types.suggestionsObject} results An array of string results
-   */
-  updateSuggestions: function(results) {
-    if (results.suggestions != this.attr('suggestions')) {
-      this.attr('suggestions').replace(results.suggestions);
-      this.dispatch('suggestions-found', [results.suggestions]);
-    }
-  },
-  /**
-   * @typedef {can.Event} locator-widget.events.suggestionsCleared suggestions-cleared
-   * @parent locator-widget.events
-   * An event dispatched when the the suggestions are cleared from the widget
-   */
-  /**
-   * Empties the list of suggestions-cleared
-   * @signature
-   */
-  clearSuggestions: function() {
-    this.attr('suggestions').replace([]);
-    this.dispatch('suggestions-cleared');
-  },
+    selectAddress: function (address) {
+        this.provider.set({
+            searchAddress: address,
+            searchText: ''
+        });
+        this.provider.locationPromise.then((data) => {
+            if (this.disableMultiple) {
+                this.locations.replace([data]);
+            } else {
+                this.locations.push(data);
+            }
+        });
+    },
+    removeLocation (l) {
+        const index = this.locations.indexOf(l);
+        if (index !== -1) {
+            this.locations.splice(index, 1);
+        }
+    },
   /**
    * Clears the graphics layer
    * @signature
    */
-  clearGraphics: function() {
-    if (this.attr('map')) {
-      this.attr('map').removeLayer(this.attr('vectorLayer'));
-      this.attr('vectorLayer').getSource().clear();
-    }
-  },
+    clearGraphics: function () {
+        if (this.map) {
+            this.map.removeLayer(this.vectorLayer);
+            this.vectorLayer.getSource().clear();
+        }
+    },
   /**
    * @typedef {can.Event} locator-widget.events.locationFound location-found
    * @parent locator-widget.events
@@ -218,54 +152,48 @@ export const ViewModel = DefineMap.extend({
    * @signature
    * @param  {providers.locationProvider.types.locationObject} location The location object
    */
-  handleAddressLocated: function(location) {
-    this.clearSuggestions();
-    this.attr('location', location);
-    this.dispatch('location-found', [location]);
-    if (this.attr('navigate') && this.attr('map')) {
-      this.navigateMap(location);
-    }
-  },
+    // handleAddressLocated: function (location) {
+    //     this.clearSuggestions();
+    //     this.location = location;
+    //     this.dispatch('location-found', [location]);
+    //     if (this.navigate && this.map) {
+    //         this.navigateMap(location);
+    //     }
+    // },
   /**
    * Pans the map to the location and adds a point to the graphics layer
    * @signature
    * @param  {providers.locationProvider.types.locationObject} location The location object
    */
-  navigateMap: function(location) {
-    var map = this.attr('map');
-    var coords = ol.proj.transform([location.x, location.y],
-      'EPSG:4326', map.getView().getProjection());
-    var duration = 750;
-    var pan = ol.animation.pan({
-      duration: duration,
-      source: map.getView().getCenter()
-    });
-    var zoom = ol.animation.zoom({
-      duration: duration,
-      resolution: map.getView().getResolution()
-    });
-    map.beforeRender(pan, zoom);
-    map.getView().setCenter(coords);
-    map.getView().setZoom(this.attr('zoomLevel'));
-    this.attr('map').addLayer(this.attr('vectorLayer'));
-    this.attr('vectorLayer').getSource().addFeature(new ol.Feature({
-      geometry: new ol.geom.Point(coords)
-    }));
-  }
+    navigateMap: function (location) {
+        var map = this.map;
+        var coords = ol.proj.transform([location.x, location.y],
+          'EPSG:4326', map.getView().getProjection());
+        var duration = 750;
+        var pan = ol.animation.pan({
+            duration: duration,
+            source: map.getView().getCenter()
+        });
+        var zoom = ol.animation.zoom({
+            duration: duration,
+            resolution: map.getView().getResolution()
+        });
+        map.beforeRender(pan, zoom);
+        map.getView().setCenter(coords);
+        map.getView().setZoom(this.zoomLevel);
+        this.map.addLayer(this.vectorLayer);
+        this.vectorLayer.getSource().addFeature(new ol.Feature({
+            geometry: new ol.geom.Point(coords)
+        }));
+    }
 });
 
-can.extend(ViewModel.prototype, CanEvent);
+assign(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
-  viewModel: ViewModel,
-  template: template,
-  tag: 'locator-widget',
-  events: {
-    inserted: function() {
-      if (this.viewModel.attr('mapNode')) {
-        var mapViewModel = can.$(this.viewModel.attr('mapNode')).viewModel();
-        this.viewModel.initMap(mapViewModel);
-      }
+    viewModel: ViewModel,
+    view: template,
+    tag: 'locator-widget',
+    events: {
     }
-  }
 });

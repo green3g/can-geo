@@ -1,21 +1,24 @@
 <script type="text/stache" id="demo-html">
-  <locator-widget {provider}="esri" />
+  <locator-widget {provider}="esri" {^locations}="locations" />
+  <ol-map {map-object}="*map" {{#if locations.length}}{x}="locations.0.items.0.x" {y}="locations.0.items.0.y"{{/if}} />
 
   <ul>
-    {{#each locations}}
-    <li> {{.}} </li>{{/each}}
+    {{#each locations as loc}}
+      <li> {{loc.items.0.address}} {{loc.items.0.x}}, {{loc.items.0.y}} </li>
+    {{/each}}
   </ul>
 </script>
 <script src="../node_modules/steal/steal.js" main="@empty" id="demo-source">
-  import 'bootstrap/dist/css/bootstrap.min.css!';
-  import 'bootstrap/dist/css/bootstrap-theme.min.css!';
   import 'font-awesome/css/font-awesome.min.css';
+  import 'spectre.css/dist/spectre.css';
   import 'locator-widget/';
+  import 'ol-map/';
   import EsriProvider from 'providers/location/EsriGeocoder';
 
-  import can from 'can/view/';
+  import stache from 'can-stache';
 
-  var frag = can.view('demo-html', {
+  var render = stache.from('demo-html');
+  var frag = render({
     esri: new EsriProvider({
       url: 'http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/'
     }),
@@ -25,5 +28,7 @@
     locations: []
   });
 
-  can.$('body').append(frag);
+  document.body.appendChild(frag);
+
+
 </script>

@@ -41,6 +41,7 @@
     "can-ui": "latest",
     "can-util": "^3.0.10",
     "font-awesome": "^4.6.x",
+    "jquery": "^3.1.1",
     "openlayers": "^3.19.1",
     "spectre-canjs": "^0.10.0",
     "spectre.css": "^0.1.27",
