@@ -21,7 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "documentjs": "^0.4.x",
-    "eslint": "^3.9.1",
+    "eslint": "^3.10.1",
     "jshint": "latest",
     "npm-watch": "^0.1.x",
     "steal-qunit": "^0.1.x",
