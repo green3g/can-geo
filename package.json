@@ -40,6 +40,7 @@
     "can-stache": "^3.0.6",
     "can-ui": "latest",
     "can-util": "^3.0.10",
+    "can-view-model": "^3.0.0",
     "font-awesome": "^4.6.x",
     "jquery": "^3.1.1",
     "openlayers": "^3.19.1",

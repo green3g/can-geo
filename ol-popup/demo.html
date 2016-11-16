@@ -1,0 +1,24 @@
+<div id="app"></div>
+
+<script type="text/stache" id="demo-html">
+  <ol-map>
+    <ol-popup active>
+      <p>A basic popup</p>
+      <button class="btn btn-primary" type="button" ($click)="set('active', false)">Hide</button>
+    </ol-popup>
+  </ol-map>
+</script>
+<script src="../node_modules/steal/steal.js" main="@empty" id="demo-source">
+
+  import 'ol-map/';
+  import 'ol-popup/';
+
+  import stache from 'can-stache';
+  import DefineMap from 'can-define/map/map';
+  import DefineList from 'can-define/list/list';
+
+  let renderer = stache.from('demo-html');
+
+
+  document.body.appendChild(renderer());
+</script>

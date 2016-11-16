@@ -2,6 +2,7 @@
 import DefineMap from 'can-define/map/map';
 import DefineList from 'can-define/list/list';
 import batch from 'can-event/batch/batch';
+import CanEvent from 'can-event';
 import Component from 'can-component';
 import assign from 'can-util/js/assign/assign';
 import template from './olMap.stache!';
@@ -219,6 +220,9 @@ export const ViewModel = DefineMap.extend('OlMap', {
    */
     getMap (options) {
         const map = new ol.Map(options);
+        map.on('click', (event) => {
+            this.dispatch('click', [event, this]);
+        });
         map.on('moveend', (event) => {
             const view = event.target.getView();
 
@@ -335,6 +339,8 @@ export const ViewModel = DefineMap.extend('OlMap', {
         }
     }
 });
+
+assign(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
     tag: 'ol-map',
