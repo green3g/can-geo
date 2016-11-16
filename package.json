@@ -23,7 +23,7 @@
     "documentjs": "^0.4.x",
     "eslint": "^3.10.1",
     "jshint": "latest",
-    "npm-watch": "^0.1.x",
+    "npm-watch": "^0.1.6",
     "steal-qunit": "^0.1.x",
     "steal-tools": "^1.0.0-beta.3",
     "testee": "^0.2.x"
