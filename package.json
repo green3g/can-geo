@@ -39,7 +39,7 @@
     "can-route": "^3.0.2",
     "can-stache": "^3.0.6",
     "can-ui": "latest",
-    "can-util": "^3.0.10",
+    "can-util": "^3.0.11",
     "font-awesome": "^4.6.x",
     "jquery": "^3.1.1",
     "openlayers": "^3.19.1",
