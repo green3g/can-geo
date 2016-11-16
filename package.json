@@ -21,9 +21,9 @@
   "license": "MIT",
   "devDependencies": {
     "documentjs": "^0.4.x",
-    "eslint": "^3.9.1",
+    "eslint": "^3.10.1",
     "jshint": "latest",
-    "npm-watch": "^0.1.x",
+    "npm-watch": "^0.1.6",
     "steal-qunit": "^0.1.x",
     "steal-tools": "^1.0.0-beta.3",
     "testee": "^0.2.x"
@@ -39,7 +39,7 @@
     "can-route": "^3.0.2",
     "can-stache": "^3.0.6",
     "can-ui": "latest",
-    "can-util": "^3.0.10",
+    "can-util": "^3.0.11",
     "can-view-model": "^3.0.0",
     "font-awesome": "^4.6.x",
     "jquery": "^3.1.1",
