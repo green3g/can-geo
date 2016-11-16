@@ -1,8 +1,8 @@
 
 
 <script type="text/stache" id="demo-html">
-    <ol-map {^map-object}="map" />
-    <measure-widget {map}="map" />
+    <ol-map {^map-object}="*map" />
+    <measure-widget {map}="*map" />
 </script>
 
 <style type="text/css">
@@ -22,7 +22,7 @@
   import 'measure-widget/';
   import 'ol-map/';
   import 'font-awesome/css/font-awesome.min.css';
-  import OverlayManager from 'measure-widget/contrib/OlManager';
+  import 'spectre.css/dist/spectre.css';
   import stache from 'can-stache';
 
   let map = new DefineMap({

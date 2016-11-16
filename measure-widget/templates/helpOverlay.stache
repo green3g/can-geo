@@ -1,0 +1,5 @@
+<div class="measure-tooltip help">
+  {{#if active}}
+  {{active.helpMessage}}
+  {{/if}}
+</div>
