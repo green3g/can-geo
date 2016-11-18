@@ -73,9 +73,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
         value: 0,
         set (x) {
             if (this.x !== x) {
-                setTimeout(() => {
-                    this.animateViewChange(x, this.y, this.zoom);
-                }, 1);
+                this.changeViewAsync();
             }
             return x;
         }
@@ -92,9 +90,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
         value: 0,
         set (y) {
             if (this.y !== y) {
-                setTimeout(() => {
-                    this.animateViewChange(this.x, y, this.zoom);
-                }, 1);
+                this.changeViewAsync();
             }
             return y;
         }
@@ -112,9 +108,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
         value: 1,
         set (z) {
             if (this.zoom !== z) {
-                setTimeout(() => {
-                    this.animateViewChange(this.x, this.y, z);
-                }, 1);
+                this.changeViewAsync();
             }
             return z;
         }
@@ -155,6 +149,10 @@ export const ViewModel = DefineMap.extend('OlMap', {
     animationDuration: {
         type: 'number',
         value: 750
+    },
+    animating: {
+        type: 'boolean',
+        value: false
     },
   /**
    * @function initMap
@@ -281,62 +279,73 @@ export const ViewModel = DefineMap.extend('OlMap', {
    * determines if the view needs to be changed and if so begins a
    * can.batch process while asynchronously animating the view changes
    * that are necessary
-   * @param {Number} x - the x coordinate to change the view to
-   * @param {Number} y - the y coordinate to change the view to
-   * @param {Number} z - the zoom level to change the view to
    */
-    animateViewChange (x, y, z) {
-
+    changeViewAsync () {
+        if (this.animating) {
+            return;
+        }
         //make sure map exists
         if (!this.mapObject) {
             return;
         }
-        const map = this.mapObject;
-        const view = map.getView();
-        const coords = this.getTransformedCoordinates(x, y);
-        const center = view.getCenter();
-        if (this.animating || !coords || !center) {
-            return;
-        }
+
         this.animating = true;
 
-        //do the animation
-        let zoom, pan;
-        //zoom animation
+        setTimeout(() => {
+            const x = this.x,
+                y = this.y,
+                z = this.zoom,
+                map = this.mapObject;
+            const view = map.getView();
+            const coords = this.getTransformedCoordinates(x, y);
+            const center = view.getCenter();
+            if (!coords || !center) {
+                console.warn('Coords or center not calculated correctly');
+                return;
+            }
 
-        if (z !== view.getZoom()) {
-            zoom = ol.animation.zoom({
-                duration: this.animationDuration,
-                resolution: map.getView().getResolution()
-            });
-            //register animations
-            map.beforeRender(zoom);
-            view.setZoom(z);
-        }
+            //do the animation
+            let zoom, pan;
 
-        //pan animation
-        //account for rounding differences
-        const difference = 0.0001;
-        if (Math.abs(center[0] - coords[0]) > difference ||
-          Math.abs(center[1] - coords[1] > difference)) {
-            pan = ol.animation.pan({
-                duration: this.animationDuration,
-                source: center
-            });
+            //zoom animation
+            if (z !== view.getZoom()) {
+                zoom = ol.animation.zoom({
+                    duration: this.animationDuration,
+                    resolution: map.getView().getResolution()
+                });
 
-            //register animations
-            map.beforeRender(pan);
-            view.setCenter(coords);
-        }
+                //register animations
+                map.beforeRender(zoom);
+                view.setZoom(z);
+            }
 
-        if (zoom || pan) {
-            batch.start();
+            //pan animation
+            //account for rounding differences
+            const difference = 0.0001;
+            if (Math.abs(center[0] - coords[0]) > difference ||
+                Math.abs(center[1] - coords[1] > difference)) {
+                pan = ol.animation.pan({
+                    duration: this.animationDuration,
+                    source: center
+                });
 
-            map.once('moveend', () => {
+                //register animations
+                map.beforeRender(pan);
+                view.setCenter(coords);
+            }
+
+            if (zoom || pan) {
+                batch.start();
+
+                map.once('moveend', () => {
+                    this.animating = false;
+                    batch.stop();
+                });
+            } else {
                 this.animating = false;
-                batch.stop();
-            });
-        }
+            }
+
+        }, 100);
     }
 });
 
