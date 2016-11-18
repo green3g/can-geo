@@ -1,10 +1,42 @@
 <div id="app"></div>
 
 <script type="text/stache" id="demo-html">
-  <ol-map>
-    <ol-popup active>
-      <p>A basic popup</p>
-      <button class="btn btn-primary" type="button" ($click)="set('active', false)">Hide</button>
+  <ol-map {^map-object}="*map" {map-options}="options">
+    <ol-popup {{#popup1}}active{{/popup1}}>
+      <div class="card">
+          <div class="card-header">
+              <h4 class="card-title">Popup</h4>
+          </div>
+          <div class="card-image">
+              <img src="https://picturepan2.github.io/spectre/demo/img/osx-yosemite.jpg" class="img-responsive" />
+          </div>
+          <div class="card-body">
+
+            <p>A basic popup.</p>
+            <p>Popups come with their own close button but you can also add your own as well.</p>
+            <button class="btn btn-primary" type="button" ($click)="set('active', false)">Hide</button>
+
+              <p>Since the popup leaks its scope to its content, you can use the
+              coordinates of the popup to do cool things. Like display the
+              coordinates:</p>
+              <pre>{{x}}, {{y}}</pre>
+
+              <p>These coordinates are in web mercator, which is not often useful.
+              Instead, lets transform them to lat/lon:</p>
+              <pre>{{transform(x,y)}}</pre>
+
+          </div>
+          <div class="card-footer">
+              <button class="btn btn-primary" ($click)="agree">Cool right?</button>
+              <button class="btn btn-danger" ($click)="togglePopup">Show a different popup</button>
+          </div>
+      </div>
+    </ol-popup>
+
+    <ol-popup id="popup2" {{#popup2}}active{{/popup2}}>
+      <!-- pass the map to identify widget -->
+      <identify-widget {map}="*map" popup-selector="#popup2" {{#popup2}}active{{/popup2}} />
+      <button class="btn btn-default" ($click)="togglePopup">Show a different popup</button>
     </ol-popup>
   </ol-map>
 </script>
@@ -12,13 +44,49 @@
 
   import 'ol-map/';
   import 'ol-popup/';
+  import 'identify-widget/';
 
   import stache from 'can-stache';
   import DefineMap from 'can-define/map/map';
   import DefineList from 'can-define/list/list';
+  import 'spectre.css/dist/spectre.css!';
+
+  import ol from 'openlayers';
 
   let renderer = stache.from('demo-html');
 
 
-  document.body.appendChild(renderer());
+  const mapOptions = {
+    //http://openlayers.org/en/v3.0.0/examples/wms-tiled.js
+    layers: [{
+      type: 'TileWMS',
+      extent: [-13884991, 2870341, -7455066, 6338219],
+      sourceOptions: {
+        url: 'http://demo.opengeo.org/geoserver/wms',
+        params: { 'LAYERS': 'topp:states', 'TILED': true },
+        serverType: 'geoserver'
+      }
+    }, {
+      type: 'OSM'
+    }]
+  };
+
+  document.body.appendChild(
+    renderer(
+      new DefineMap({
+        options: mapOptions,
+        popup1: true,
+        popup2: false,
+        togglePopup(){
+          this.popup1 = !this.popup1;
+          this.popup2 = !this.popup2;
+        },
+        transform(x,y){
+          return JSON.stringify(ol.proj.toLonLat([x,y], /*'EPSG:3857'*/));
+        },
+        agree(){
+          alert('Yes! Very cool indeed!');
+        }
+      })
+));
 </script>

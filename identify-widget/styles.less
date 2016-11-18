@@ -7,14 +7,20 @@ identify-widget{
   }
 
   .identify-results ul.pagination {
-    margin: 5px 0 0;
+    margin: 0;
   }
 
-  paginate-widget .pagination {
-    padding: 0.2rem;
-  }
+  paginate-widget {
+        .pagination {
+          padding: 0;
+        }
 
-  .zoom-btn {
-    margin-top: 24px;
-  }
+        .pagination .page-item a {
+          padding: 0 1.2rem;
+        }
+
+        ul li, ol li {
+            margin-top: 0;
+        }
+    }
 }

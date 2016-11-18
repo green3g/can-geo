@@ -1,5 +1,5 @@
 <div class="ol-popup">
-    <a href="#" class="ol-popup-closer" ($click)="hidePopup"><i class="fa fa-times-circle"></i></a>
+    <button type="button" class="float-right btn btn-clear" ($click)="hidePopup"></button>
     <div class="ol-popup-content">
       {{#unless modal}}
         <content></content>

@@ -7,7 +7,7 @@ import canViewModel from 'can-view-model';
 
 import 'spectre-canjs/modal-dialog/';
 import template from './olPopup.stache!';
-import './olPopup.css!';
+import './olPopup.less!';
 
 /**
  * @constructor ol-popup.ViewModel ViewModel

@@ -13,6 +13,8 @@ import Component from 'can-component';
 import DefineList from 'can-define/list/list';
 import ol from 'openlayers';
 
+import canViewModel from 'can-view-model';
+
 /**
  * @constructor identify-widget.ViewModel ViewModel
  * @parent identify-widget
@@ -102,19 +104,19 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             }
 
             //get this active feature by array index
-            var feature = this.features[this.activeFeatureIndex];
+            const feature = this.features[this.activeFeatureIndex];
 
             //update Map layer
             this.updateSelectedFeature(feature);
 
             //get the layer key name. Layer id is returned from wms by LayerName.fetureID
-            var layer = feature.getId().split('.');
-            var index = layer[1];
+            let layer = feature.getId().split('.');
+            const index = layer[1];
             layer = layer[0];
 
             //get the configured layer properties object key this.layerProperties.layerName
-            var layerProperties = this.layerProperties[layer];
-            var title, template, fields;
+            const layerProperties = this.layerProperties[layer];
+            let title, templ, fields;
 
             //if its provided parse the alias and formatters
             if (layerProperties) {
@@ -123,7 +125,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                 title = layerProperties.alias;
 
                 //set the correct template for this feature this.layerproperties.layername.template
-                template = layerProperties.template;
+                templ = layerProperties.template;
 
                 // set up the fields
                 fields = layerProperties.fields;
@@ -139,7 +141,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                 //get the field properties like alias and formatters this.layerproperties.layername.properties
                 fields: parseFieldArray(fields),
                 //feature template
-                featureTemplate: template || featureTemplate,
+                featureTemplate: templ || featureTemplate,
                 //the default template in case the other template wants to use it
                 defaultTemplate: featureTemplate,
                 layer: layer,
@@ -167,10 +169,15 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             return map;
         }
     },
+    /**
+     * the openlayers vector layer in which features are identified on
+     * @property {ol.layer.Vector} identify-widget.ViewModel.props.layer
+     * @parent identify-widget.ViewModel.props
+     */
     layer: {
         type: '*',
         value: function () {
-            var source = new ol.source.Vector({
+            const source = new ol.source.Vector({
                 features: []
             });
             return new ol.layer.Vector({
@@ -181,6 +188,30 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             });
         }
     },
+    /**
+     * The popup viewModel. If provided, the identify widget will move the popup
+     * to each feature as it is identified
+     * @property {ol.layer.Vector} identify-widget.ViewModel.props.popup
+     * @parent identify-widget.ViewModel.props
+     */
+    popup: {
+        value: null
+    },
+    /**
+     * A selector for a ol-popup node, for example `#identify-popup` or `ol-popup`
+     * If provided, the identify widget will automatically set this `popup`
+     * property using `can-view-model`
+     * @property {String} identify-widget.ViewModel.props.popupSelector
+     * @parent identify-widget.ViewModel.props
+     */
+    popupSelector: 'string',
+    /**
+     * Whether or not this widget should actively identify features on the map
+     * set this to true to turn on identifying
+     * @property {Boolean}  identify-widget.ViewModel.props.active
+     * @parent identify-widget.ViewModel.props
+     */
+    active: 'htmlbool',
   /**
    * @function identify
    * Queries the available map wms layers and updates the loading status
@@ -190,19 +221,22 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    * @return {Promise} A promise that is resolved when all of the identifies have finished loading
    */
     identify (event, coordinate) {
+        if (!this.active) {
+            return;
+        }
         if (!coordinate) {
             coordinate = event;
         }
         this.clearFeatures();
         this.hasError = null;
-        var layers = this.map.getLayers();
-        var urls = this.getQueryURLsRecursive(layers, coordinate);
-        var deferreds = [];
+        const layers = this.map.getLayers();
+        const urls = this.getQueryURLsRecursive(layers, coordinate);
+        const deferreds = [];
         urls.forEach((url) => {
-            var def = this.getFeatureInfo(url);
+            const def = this.getFeatureInfo(url);
             deferreds.push(def);
         });
-        var resolved = 0;
+        let resolved = 0;
         deferreds.forEach((d) => {
             d.then((json) => {
                 this.addFeatures(json, coordinate);
@@ -226,13 +260,13 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    * @return {Array<String>}            Array of GetFeatureInfo urls
    */
     getQueryURLsRecursive (layers, coordinate) {
-        var urls = [];
+        let urls = [];
         layers.forEach((layer) => {
             if (layer.getVisible() && !layer.get('excludeIdentify')) {
                 if (layer instanceof ol.layer.Group) {
                     urls = urls.concat(this.getQueryURLsRecursive(layer.getLayers(), coordinate));
                 } else {
-                    var url = this.getQueryURL(layer, coordinate);
+                    const url = this.getQueryURL(layer, coordinate);
                     if (url) {
                         urls.push(url);
                     }
@@ -251,10 +285,10 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    */
     getQueryURL (layer, coordinate) {
         if (layer.getSource && layer.getVisible()) {
-            var source = layer.getSource();
+            const source = layer.getSource();
             if (source && typeof source.getGetFeatureInfoUrl !== 'undefined') {
-                var map = this.map;
-                var view = map.getView();
+                const map = this.map;
+                const view = map.getView();
                 return source.getGetFeatureInfoUrl(
                   coordinate,
                   view.getResolution(),
@@ -290,13 +324,13 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    */
     addFeatures (collection, coordinate) {
         if (collection.features.length) {
-            var features = [];
+            let features = [];
             collection.features.forEach((feature) => {
 
                 //if this layer should be excluded, skip it
                 //path to exclude is this.layerproperties.layerName.excludeIdentify
-                var layer = feature.id.split('.')[0];
-                var exclude = this.layerProperties[layer] && this.layerProperties[layer].excludeIdentify;
+                const layer = feature.id.split('.')[0];
+                const exclude = this.layerProperties[layer] && this.layerProperties[layer].excludeIdentify;
                 if (!exclude) {
 
                     //otherwise, add the crs to each feature
@@ -304,15 +338,15 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                     features.push(feature);
                 }
             });
-            var newCollection = assign(collection, {
+            const newCollection = assign(collection, {
                 features: features
             });
             features = this.getFeaturesFromJson(newCollection);
             if (!this.features.length) {
-                var index = this.getClosestFeatureIndex(features, coordinate);
+                const index = this.getClosestFeatureIndex(features, coordinate);
                 if (index) {
                     //swap the feature for the first so it shows up first
-                    var temp = features[index];
+                    const temp = features[index];
                     features[index] = features[0];
                     features[0] = temp;
                 }
@@ -328,9 +362,9 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    * @return {ol.Collection<ol.Feature>}            The collection of openlayers features
    */
     getFeaturesFromJson (collection) {
-        var proj = this.map.getView().getProjection();
-        var gjson = new ol.format.GeoJSON();
-        var features = gjson.readFeatures(collection, {
+        const proj = this.map.getView().getProjection();
+        const gjson = new ol.format.GeoJSON();
+        const features = gjson.readFeatures(collection, {
             dataProjection: gjson.readProjection(collection),
             featureProjection: proj
         });
@@ -360,9 +394,14 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             this.layer.getSource().clear();
             return;
         }
-        var source = this.layer.getSource();
+
+        const source = this.layer.getSource();
         source.clear();
         source.addFeature(feature);
+        if (this.popup) {
+            const extent = feature.getGeometry().getExtent();
+            this.popup.showPopup(ol.extent.getCenter(extent));
+        }
         return;
     },
   /**
@@ -372,13 +411,13 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    * @param  {Object} object An object containing a feature property
    */
     zoomToFeature (object) {
-        var extent = object.feature
+        const extent = object.feature
       .getGeometry()
       .getExtent();
 
-        if (this.popupModel) {
-            var key = this.map.on('postrender', () => {
-                this.popupModel.centerPopup(ol.extent.getCenter(extent));
+        if (this.popup) {
+            const key = this.map.on('postrender', () => {
+                this.popup.showPopup(ol.extent.getCenter(extent));
                 this.map.unByKey(key);
             });
         }
@@ -392,13 +431,13 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    * @param  {Array<Number>} extent The extent to zoom the map to
    */
     animateZoomToExtent (extent) {
-        var map = this.map;
-        var duration = 750;
-        var pan = ol.animation.pan({
+        const map = this.map;
+        const duration = 750;
+        const pan = ol.animation.pan({
             duration: duration,
             source: map.getView().getCenter()
         });
-        var zoom = ol.animation.zoom({
+        const zoom = ol.animation.zoom({
             duration: duration,
             resolution: map.getView().getResolution()
         });
@@ -427,14 +466,14 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         if (features.length === 0) {
             return 0;
         }
-        var current = 0;
-        var current_distance = 99999;
-        var getDistance = this.getDistance;
+        let current = 0;
+        let currentDistance = 99999;
+        const getDistance = this.getDistance;
         features.forEach(function (feature, index) {
-            var center = ol.extent.getCenter(feature.getGeometry().getExtent());
-            var distance = getDistance(center, coord);
-            if (distance < current_distance) {
-                current_distance = distance;
+            const center = ol.extent.getCenter(feature.getGeometry().getExtent());
+            const distance = getDistance(center, coord);
+            if (distance < currentDistance) {
+                currentDistance = distance;
                 current = index;
             }
         });
@@ -463,10 +502,17 @@ export default Component.extend({
     view: template,
     viewModel: ViewModel,
     events: {
+        inserted () {
+            if (this.viewModel.popupSelector) {
+                this.viewModel.popup = canViewModel(document.querySelector(this.viewModel.popupSelector));
+            }
+        },
         removed () {
-            this.map.removeLayer(this.layer);
-            this.layer = null;
-            this.map = null;
+            if (this.map) {
+                this.map.removeLayer(this.layer);
+                this.layer = null;
+                this.map = null;
+            }
         }
     }
 });
