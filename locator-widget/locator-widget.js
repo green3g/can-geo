@@ -130,9 +130,11 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
                 this.locations.replace([data]);
             } else {
                 this.locations.push(data);
-                if (this.navigate && this.map) {
-                    this.navigateMap(data.items[0]);
-                }
+            }
+
+            // pan the map
+            if (this.navigate && this.map) {
+                this.navigateMap(data.items[0]);
             }
         });
     },
