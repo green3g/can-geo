@@ -1,96 +1,96 @@
 
-import can 
-import Print from './PrintProvider';
 import color from '../../util/color';
+import DefineMap from 'can-define/map/map';
+import ajax from 'can-util/dom/ajax/ajax';
+import assign from 'can-util/js/assign/assign';
+import param from 'can-util/js/param/param';
+import ol from 'openlayers';
 
-function parseUrl(url) {
-  var anchor = document.createElement("a");
-  anchor.href = url;
-  return anchor;
+function parseUrl (url) {
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    return anchor;
 }
 
-var encoders = {
-  OSM: function(layer) {
-    var source = layer.getSource();
-    var parts = parseUrl(source.getUrls()[0]);
-    var split = parts.pathname.split('.');
-    var extension = split[split.length - 1];
-    return {
-      type: 'OSM',
-      baseURL: 'http://c.tile.openstreetmap.org',
-      extension: extension,
-      tileSize: [256, 256],
-      maxExtent: layer.getExtent() || [420000, 30000, 900000, 350000],
-      resolutions: [156543.03, 78271.52, 39135.76],
-    };
-  },
-  Vector: function(layer) {
-    var source = layer.getSource();
-    var style = layer.getStyle();
-    if (typeof style === 'function') {
-      style = style();
-    }
-    if (style instanceof Array) {
-      style = style[0];
-    }
-    var fillColor = ol.color.asArray(style.getFill().getColor()).slice();
-
-    var fillOpacity;
-      fillOpacity = fillColor.length === 4 ? fillColor[3] : 0;
-      fillColor = color.rgbToHex(fillColor[0], fillColor[1], fillColor[2]);
-    var geoJson = new ol.format.GeoJSON().writeFeaturesObject(source.getFeatures());
-
-    return {
-      type: 'vector',
-      geoJson: geoJson,
-      styles: {
-        '': {
-          fillColor: fillColor,
-          strokeWidth: style.getStroke().getWidth(),
-          strokeColor: style.getStroke().getColor(),
-          fillOpacity: fillOpacity
+const encoders = {
+    OSM (layer) {
+        const source = layer.getSource();
+        const parts = parseUrl(source.getUrls()[0]);
+        const split = parts.pathname.split('.');
+        const extension = split[split.length - 1];
+        return {
+            type: 'OSM',
+            baseURL: 'http://c.tile.openstreetmap.org',
+            extension: extension,
+            tileSize: [256, 256],
+            maxExtent: layer.getExtent() || [420000, 30000, 900000, 350000],
+            resolutions: [156543.03, 78271.52, 39135.76]
+        };
+    },
+    Vector (layer) {
+        const source = layer.getSource();
+        let style = layer.getStyle();
+        if (typeof style === 'function') {
+            style = style();
         }
-      }
-    };
-  },
-  TileWMS: function(layer) {
-    var source = layer.getSource();
-    var params = source.getParams();
-    var layers = params.LAYERS || params.layers;
-    var url = parseUrl(source.getUrls()[0]);
-    return {
-      type: 'WMS',
-      layers: layers.split(','),
-      baseURL: url.protocol + '//' + url.hostname + url.pathname,
-      format: params.FORMAT || params.format || 'image/png'
-    };
-  },
-  ImageWMS: function(layer) {
-    return this.TileWMS(layer);
-  }
+        if (style instanceof Array) {
+            style = style[0];
+        }
+        let fillColor = ol.color.asArray(style.getFill().getColor()).slice();
+
+        let fillOpacity;
+        fillOpacity = fillColor.length === 4 ? fillColor[3] : 0;
+        fillColor = color.rgbToHex(fillColor[0], fillColor[1], fillColor[2]);
+        const geoJson = new ol.format.GeoJSON().writeFeaturesObject(source.getFeatures());
+
+        return {
+            type: 'vector',
+            geoJson: geoJson,
+            styles: {
+                '': {
+                    fillColor: fillColor,
+                    strokeWidth: style.getStroke().getWidth(),
+                    strokeColor: style.getStroke().getColor(),
+                    fillOpacity: fillOpacity
+                }
+            }
+        };
+    },
+    TileWMS (layer) {
+        const source = layer.getSource();
+        const params = source.getParams();
+        const layers = params.LAYERS || params.layers;
+        const url = parseUrl(source.getUrls()[0]);
+        return {
+            type: 'WMS',
+            layers: layers.split(','),
+            baseURL: url.protocol + '//' + url.hostname + url.pathname,
+            format: params.FORMAT || params.format || 'image/png'
+        };
+    },
+    ImageWMS (layer) {
+        return this.TileWMS(layer);
+    }
 };
 /**
  * @constructor providers/print/MapfishPrint MapfishPrint
  * @parent providers/print/PrintProvider
  */
-export default Print.extend({
-  define: can.extend(Print.prototype.define, {
+export default DefineMap.extend('MapfishProvider', {
     /**
      * The url to the mapfish print endpoint
      * @property {String} MapfishPrint.props.url
      * @parent MapfishPrint.props
      */
-    url: {
-      type: 'string'
-    },
+    url: 'string',
     /**
      * Whether or not to include legends. The default is `true`
      * @property {Boolean} MapfishPrint.props.legends
      * @parent MapfishPrint.props
      */
     legends: {
-      type: 'boolean',
-      value: true
+        type: 'boolean',
+        value: true
     },
     /**
      * The url to a proxy if required
@@ -98,8 +98,8 @@ export default Print.extend({
      * @parent MapfishPrint.props
      */
     proxy: {
-      type: 'string',
-      value: null
+        type: 'string',
+        value: null
     },
     /**
      * The method to use for printing. The default is `'POST'`
@@ -107,8 +107,8 @@ export default Print.extend({
      * @parent MapfishPrint.props
      */
     method: {
-      type: 'string',
-      value: 'POST'
+        type: 'string',
+        value: 'POST'
     },
     /**
      * The default page printing settings. These settings
@@ -123,11 +123,11 @@ export default Print.extend({
      * @parent MapfishPrint.props
      */
     pageDefaults: {
-      value: {
-        layout: '8.5x11 Landscape',
-        dpi: 300,
-        mapTitle: 'Map Print'
-      }
+        value: {
+            layout: '8.5x11 Landscape',
+            dpi: 300,
+            mapTitle: 'Map Print'
+        }
     },
     /**
      * The default print settings to use for the output print task.
@@ -141,10 +141,10 @@ export default Print.extend({
 
      */
     printDefaults: {
-      value: {
-        outputFormat: 'pdf',
-        outputFilename: 'Print.pdf'
-      }
+        value: {
+            outputFormat: 'pdf',
+            outputFilename: 'Print.pdf'
+        }
     },
     /**
      * The default time to wait for the print service to complete
@@ -153,10 +153,21 @@ export default Print.extend({
      * @parent MapfishPrint.props
      */
     maxWait: {
-      value: 10000,
-      type: 'number'
-    }
-  }),
+        value: 10000,
+        type: 'number'
+    },
+    /**
+     * The default time to wait for the print service to complete
+     * before timeout in milliseconds.
+     * @property {Promise} MapfishPrint.props.promise
+     * @parent MapfishPrint.props
+     */
+    promise: {
+        value: null
+    },
+    timeout: {
+        value: null
+    },
   /**
    * @prototype
    */
@@ -167,23 +178,21 @@ export default Print.extend({
    * @signature
    * @return {Promise} A promise resolved to the print data
    */
-  loadCapabilities: function() {
-    var self = this;
-    this.attr('deferred', can.Deferred());
-    var deferred = can.ajax({
-      url: this.attr('url') + '/info.json',
-      dateType: 'json',
-      method: 'GET',
-      success: function(capabilities) {
-        self.attr(capabilities);
-        self.attr('deferred').resolve(capabilities);
-      },
-      fail: function(error) {
-        console.error(error);
-      }
-    });
-    return this.attr('deferred').promise();
-  },
+    loadCapabilities () {
+        this.promise = new Promise((resolve, reject) => {
+            ajax({
+                url: this.url + '/info.json',
+                dateType: 'json',
+                method: 'GET'
+            }).then((capabilities) => {
+                resolve(capabilities);
+            }).catch((error) => {
+                console.error(error);
+                reject(error);
+            });
+        });
+        return this.promise;
+    },
   /**
    * Generates a printout and returns a promise
    * which resolves to an object with a `url` and
@@ -193,93 +202,65 @@ export default Print.extend({
    * @return {Promise} The promise that resolves to an object with
    * a `url` and `title` property. If the print fails, the `url` will be null, and instead an object with a `title` and `error` property will be returned
    */
-  print: function(options) {
-    this.attr('deferred', can.Deferred());
-    var spec = JSON.stringify(this.getPrintObject(options));
-    var url;
-    if (this.attr('method') === 'GET') {
-      url = this.attr('url') + '?spec=' + encodeURIComponent(spec);
+    print (options) {
+        this.promise = new Promise((resolve, reject) => {
+            const spec = JSON.stringify(this.getPrintObject(options));
+            let url;
+            if (this.method === 'GET') {
+                url = this.url + '?spec=' + encodeURIComponent(spec);
 
-      if (this.attr('proxy')) {
-        url = this.attr('proxy') + encodeURIComponent(url);
-      }
-      this.attr('deferred').resolve({
-        url: url,
-        title: options.title
-      });
-      return this.attr('deferred').promise();
-    } else {
-      url = this.attr('url') + '/create.json';
-      if (this.attr('proxy')) {
-        url = this.attr('proxy') + encodeURIComponent(url);
-      }
-      var deferred = can.ajax({
-        url: url,
-        data: spec,
-        contentType: 'application/json',
-        type: 'POST',
-        success: this.printSuccess.bind(this, options),
-        fail: this.printFail.bind(this)
-      });
-      this.attr('timeout', setTimeout(this.printTimeout.bind(this, deferred), this.attr('maxWait')));
-      return this.attr('deferred').promise();
-    }
-  },
-  /**
-   * Called internally when the print request returns a response.
-   * Since mapfish returns a url with the original server port/path, this function builds a new url using the path to the file and the original print url supplied to the provider.
-   * @signature
-   * @param  {Object} options The original print options
-   * @param  {Object} results The results of the print
-   */
-  printSuccess: function(options, results) {
-    window.clearTimeout(this.attr('timeout'));
-    if (!results.getURL) {
-      this.printFail({
-        responseText: 'No document was generated. A server error occurred.'
-      });
-      return;
-    }
-    var splitUrl = results.getURL.split('/');
-    var url = this.attr('url') + '/' + splitUrl[splitUrl.length - 1];
-    this.attr('deferred').resolve({
-      url: url,
-      title: options.title
-    });
-    this.attr('deferred', null);
-  },
-  /**
-   * Called internally when the print request exceeds
-   * the maximum amount of wait time. This value is configureable
-   * via the `maxWait` parameter.
-   * @signature
-   * @param  {can.Deferred} def The deferred value that we will
-   * manually resolve
-   */
-  printTimeout: function(def){
-    console.log('timeout!');
-    if(def){
-      def.abort();
-    }
-    this.printFail({responseText: 'Print timed out'});
-  },
-  /**
-   * Called internally when the print service fails, the maximum
-   * wait time is reached, or
-   * returns an invalid result.
-   * @signature
-   * @param  {Object} results The error results. Should contain
-   * a `responseText` property
-   */
-  printFail: function(results) {
-    window.clearTimeout(this.attr('timeout'));
-    this.attr('deferred').resolve({
-      url: null,
-      title: 'An error occurred while printing',
-      error: results.responseText
-    });
-    this.attr('deferred', null);
-  },
+                if (this.proxy) {
+                    url = this.proxy + encodeURIComponent(url);
+                }
+                resolve({
+                    url: url,
+                    title: options.title
+                });
+            } else {
+                url = this.url + '/create.json';
+                if (this.proxy) {
+                    url = this.proxy + encodeURIComponent(url);
+                }
+                ajax({
+                    url: url,
+                    data: spec,
+                    contentType: 'application/json',
+                    type: 'POST'
+                }).then((results) => {
+                    window.clearTimeout(this.timeout);
+                    if (!results.getURL) {
+                        resolve({
+                            iconClass: 'fa fa-fw fa-exclamation',
+                            url: null,
+                            title: 'An error occurred',
+                            error: 'No document was generated. A server error occurred.'
+                        });
+                        return;
+                    }
+                    const splitUrl = results.getURL.split('/');
+                    const pdfUrl = this.url + '/' + splitUrl[splitUrl.length - 1];
+                    resolve({
+                        iconClass: 'fa fa-fw fa-file-pdf-o',
+                        url: pdfUrl,
+                        title: options.title
+                    });
+                }).catch((results) => {
+                    window.clearTimeout(this.timeout);
+                    console.log(results);
+                    resolve({
+                        iconClass: 'fa fa-fw fa-exclamation',
+                        url: null,
+                        title: 'An error occurred',
+                        error: results.responseText
+                    });
+                });
+                this.timeout = setTimeout(() => {
+                    resolve({url: null, title: 'Print timed out', error: 'Print timed out'});
+                }, this.maxWait);
+            }
+        });
+        return this.promise;
+    },
   /**
    * Called internally to create a mapfish compliant print object
    * which can be converted into JSON and sent to the
@@ -289,157 +270,156 @@ export default Print.extend({
    * @return {Object} A JSON serializable object that meets
    * the mapfish print spec.
    */
-  getPrintObject: function(options) {
+    getPrintObject: function (options) {
     //make sure the selected values are set
-    var projection = options.map.getView().getProjection();
-    var layers = options.map.getLayers();
-    var self = this;
-    var printLayers = [];
-    layers.forEach(function(layer) {
-      if (layer.getVisible()) {
-        var lObjects = self.getLayerObjectRecursive(layer);
-        if (lObjects.length) {
-          printLayers = printLayers.concat(lObjects);
-        }
-      }
-    });
-    return can.extend({
-      layout: options.layout || this.attr('defaults.layout'),
-      layers: printLayers,
-      srs: projection.getCode(),
-      units: projection.getUnits(),
-      pages: [{
+        const projection = options.map.getView().getProjection();
+        const layers = options.map.getLayers();
+        const self = this;
+        let printLayers = [];
+        layers.forEach(function (layer) {
+            if (layer.getVisible()) {
+                const lObjects = self.getLayerObjectRecursive(layer);
+                if (lObjects.length) {
+                    printLayers = printLayers.concat(lObjects);
+                }
+            }
+        });
+        return assign({
+            layout: options.layout || this.defaults.layout,
+            layers: printLayers,
+            srs: projection.getCode(),
+            units: projection.getUnits(),
+            pages: [{
         // may be able to calculate the extent based
         // on the layout size of the map?
         // bbox: map.getView().calculateExtent([
-        //   layout.attr('map.width'),
-        //     layout.attr('map.height'),
+        //   layout.map.width,
+        //     layout.map.height,
         // ]),
-        bbox: options.map.getView().calculateExtent(options.map.getSize()),
+                bbox: options.map.getView().calculateExtent(options.map.getSize()),
         // center: map.getView().getCenter(),
-        scale: this.getMapScale(options.map),
-        mapTitle: options.title,
-        dpi: options.dpi
-      }]
-    }, this.getLegends(options.map));
-  },
+                scale: this.getMapScale(options.map),
+                mapTitle: options.title,
+                dpi: options.dpi
+            }]
+        }, this.getLegends(options.map));
+    },
   /**
    * A helper function to parse layers while flattening group layers
    * @signature
    * @param  {ol.Layer} layer The layer to flatten and parse
    * @return {Object[]} The flattened array of mapfish print ready encoded layer objects
    */
-  getLayerObjectRecursive: function(layer) {
-    var layerObjects = [];
-    if (layer instanceof ol.layer.Group) {
-      var self = this;
-      layer.getLayers().forEach(function(layer) {
-        if (layer.getVisible()) {
-          layerObjects = layerObjects.concat(self.getLayerObjectRecursive(layer));
+    getLayerObjectRecursive: function (layer) {
+        let layerObjects = [];
+        if (layer instanceof ol.layer.Group) {
+            const self = this;
+            layer.getLayers().forEach(function (layer) {
+                if (layer.getVisible()) {
+                    layerObjects = layerObjects.concat(self.getLayerObjectRecursive(layer));
+                }
+            });
+            return layerObjects;
         }
-      });
-      return layerObjects;
-    }
-    for (var enc in encoders) {
-      if (encoders.hasOwnProperty(enc)) {
-        if (layer.getSource() instanceof ol.source[enc]) {
-          layerObjects.push(encoders[enc](layer));
-          break;
+        for (const enc in encoders) {
+            if (encoders.hasOwnProperty(enc)) {
+                if (layer.getSource() instanceof ol.source[enc]) {
+                    layerObjects.push(encoders[enc](layer));
+                    break;
+                }
+            }
         }
-      }
-    }
-    return layerObjects;
-  },
+        return layerObjects;
+    },
   /**
    * A helper function to convert the map resolution to a scale
    * @signature
    * @param  {ol.Map} map The openlayers map
    * @return {Number} The map scale
    */
-  getMapScale: function(map) {
-    var resolution = map.getView().getResolution();
-    var units = map.getView().getProjection().getUnits();
-    var dpi = 25.4 / 0.28;
-    var mpu = ol.proj.METERS_PER_UNIT[units];
-    var scale = resolution * mpu * 39.37 * dpi;
+    getMapScale: function (map) {
+        const resolution = map.getView().getResolution();
+        const units = map.getView().getProjection().getUnits();
+        const dpi = 25.4 / 0.28;
+        const mpu = ol.proj.METERS_PER_UNIT[units];
+        const scale = resolution * mpu * 39.37 * dpi;
 
-    return scale;
-  },
+        return scale;
+    },
   /**
    * A helper function to generate urls to the layer legends
    * @signature
    * @param  {ol.Map} map The openlayers map
    * @return {object} An object consisting of the legend urls
    */
-  getLegends: function(map) {
-    if (!this.attr('legends')) {
-      return {};
-    }
+    getLegends: function (map) {
+        if (!this.legends) {
+            return {};
+        }
 
-    var legends = this.getLayerLegendsRecursive(map.getLayers());
+        const legends = this.getLayerLegendsRecursive(map.getLayers());
 
-    return {
-      legends: legends
-    };
-  },
+        return {
+            legends: legends
+        };
+    },
   /**
    * A helper function to flatten layer groups, create, parse, and return legend objects
    * @signature
    * @param  {ol.Collection} layers The layer collection array
    * @return {legendObject[]} The array of legend objects flattened
    */
-  getLayerLegendsRecursive: function(layers) {
-    var legends = [];
-    var self = this;
-    layers.forEach(function(layer) {
-      if (!layer.getVisible() || layer.get('excludeLegend')) {
-        return;
-      }
-      if (layer instanceof ol.layer.Group) {
-        legends = legends.concat(self.getLayerLegendsRecursive(layer.getLayers()));
+    getLayerLegendsRecursive: function (layers) {
+        let legends = [];
+        const self = this;
+        layers.forEach(function (layer) {
+            if (!layer.getVisible() || layer.get('excludeLegend')) {
+                return;
+            }
+            if (layer instanceof ol.layer.Group) {
+                legends = legends.concat(self.getLayerLegendsRecursive(layer.getLayers()));
+                return legends;
+            }
+            const source = layer.getSource();
+            if (source instanceof ol.source.TileWMS ||
+              source instanceof ol.source.ImageWMS) {
+
+                const subLayers = source.getParams().LAYERS || source.getParams().layers;
+                const legendObject = {
+                    name: layer.get('title') || subLayers,
+                    classes: []
+                };
+
+                // defaults
+                const legendParams = assign({
+                    'SERVICE': 'WMS',
+                    'REQUEST': 'GetLegendGraphic',
+                    'WIDTH': 15,
+                    'HEIGHT': 15,
+                    'FORMAT': 'image/png'
+                }, source.getParams());
+
+                const singlelayers = subLayers.split(',');
+                let url = parseUrl(source.getUrls()[0]);
+                url = url.protocol + '//' + url.hostname + url.pathname + '?';
+                // If a WMS layer doesn't have multiple server layers, only show one graphic
+                if (singlelayers.length === 1) {
+                    legendParams.LAYER = singlelayers[0];
+                    legendObject.icons = [url + param(legendParams)];
+                } else {
+                    for (let i = 0; i < singlelayers.length; i++) {
+                        legendParams.LAYER = singlelayers[i];
+                        legendObject.classes.push({
+                            name: singlelayers[i],
+                            icons: [url + param(legendParams)]
+                        });
+                    }
+                }
+                legends.push(legendObject);
+            }
+        });
         return legends;
-      }
-      var source = layer.getSource();
-      if (source instanceof ol.source.TileWMS ||
-        source instanceof ol.source.ImageWMS) {
-
-        var subLayers = source.getParams().LAYERS ||
-          source.getParams().layers;
-        var legendObject = {
-          name: layer.get('title') || subLayers,
-          classes: []
-        };
-
-        // defaults
-        var legendParams = can.extend({
-          'SERVICE': 'WMS',
-          'REQUEST': 'GetLegendGraphic',
-          'WIDTH': 15,
-          'HEIGHT': 15,
-          'FORMAT': 'image/png'
-        }, source.getParams());
-
-        var singlelayers = subLayers.split(',');
-        var url = parseUrl(source.getUrls()[0]);
-        url = url.protocol + '//' + url.hostname + url.pathname + '?';
-        // If a WMS layer doesn't have multiple server layers, only show one graphic
-        if (singlelayers.length === 1) {
-          legendParams.LAYER = singlelayers[0];
-          legendObject.icons = [url + can.param(legendParams)];
-        } else {
-          for (var i = 0; i < singlelayers.length; i++) {
-            legendParams.LAYER = singlelayers[i];
-            legendObject.classes.push({
-              name: singlelayers[i],
-              icons: [url + can.param(legendParams)]
-            });
-          }
-        }
-        legends.push(legendObject);
-      }
-    });
-    return legends;
-  }
+    }
   //the following is taken from the geoext print widget
   //and may be helpful in adding additional functionality to
   //this print provider
@@ -454,7 +434,7 @@ export default Print.extend({
   //   // 	map: this._map
   //   // });
   //
-  //   var jsonData = JSON.stringify(L.extend({
+  //   let jsonData = JSON.stringify(L.extend({
   //       units: L.print.Provider.UNITS,
   //       srs: L.print.Provider.SRS,
   //       layout: options.layout,
@@ -509,7 +489,7 @@ export default Print.extend({
   // },
   //
   // _getLayers: function(map) {
-  //   var markers = [],
+  //   let markers = [],
   //     vectors = [],
   //     tiles = [],
   //     imageOverlays = [],
@@ -522,7 +502,7 @@ export default Print.extend({
   //       if (!map._layers.hasOwnProperty(id)) {
   //         continue;
   //       }
-  //       var lyr = map._layers[id];
+  //       let lyr = map._layers[id];
   //
   //       if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
   //         tiles.push(lyr);
@@ -539,7 +519,7 @@ export default Print.extend({
   //     return a._icon.style.zIndex - b._icon.style.zIndex;
   //   });
   //
-  //   var i;
+  //   let i;
   //   // Layers with equal zIndexes can cause problems with mapfish print
   //   for (i = 1; i < markers.length; i++) {
   //     if (markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex) {
@@ -574,7 +554,7 @@ export default Print.extend({
   // },
   //
   // _getScale: function() {
-  //   var map = this._map,
+  //   let map = this._map,
   //     bounds = map.getBounds(),
   //     inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
   //     scales = this._capabilities.scales,
@@ -603,7 +583,7 @@ export default Print.extend({
   // },
   //
   // _getLayoutByName: function(name) {
-  //   var layout, i, l;
+  //   let layout, i, l;
   //
   //   for (i = 0, l = this._capabilities.layouts.length; i < l; i++) {
   //     if (this._capabilities.layouts[i].name === name) {
@@ -615,12 +595,12 @@ export default Print.extend({
   // },
   //
   // _encodeLayers: function(map) {
-  //   var enc = [],
+  //   let enc = [],
   //     vectors = [],
   //     layer,
   //     i;
   //
-  //   var layers = this._getLayers(map);
+  //   let layers = this._getLayers(map);
   //   for (i = 0; i < layers.length; i++) {
   //     layer = layers[i];
   //     if (layer instanceof L.TileLayer.WMS) {
@@ -646,11 +626,11 @@ export default Print.extend({
   //     return [];
   //   }
   //
-  //   var legends = [],
+  //   let legends = [],
   //     legendReq, singlelayers, url, i;
   //
-  //   var layers = this._getLayers(map);
-  //   var layer, oneLegend;
+  //   let layers = this._getLayers(map);
+  //   let layer, oneLegend;
   //   for (i = 0; i < layers.length; i++) {
   //     layer = layers[i];
   //     if (layer instanceof L.TileLayer.WMS) {
@@ -702,7 +682,7 @@ export default Print.extend({
   // _encoders: {
   //   layers: {
   //     httprequest: function(layer) {
-  //       var baseUrl = layer._url;
+  //       let baseUrl = layer._url;
   //
   //       if (baseUrl.indexOf('{s}') !== -1) {
   //         baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
@@ -715,7 +695,7 @@ export default Print.extend({
   //       };
   //     },
   //     tilelayer: function(layer) {
-  //       var enc = this._encoders.layers.httprequest.call(this, layer),
+  //       let enc = this._encoders.layers.httprequest.call(this, layer),
   //         baseUrl = layer._url.substring(0, layer._url.indexOf('{z}')),
   //         resolutions = [],
   //         zoom;
@@ -742,7 +722,7 @@ export default Print.extend({
   //       });
   //     },
   //     tilelayerwms: function(layer) {
-  //       var enc = this._encoders.layers.httprequest.call(this, layer),
+  //       let enc = this._encoders.layers.httprequest.call(this, layer),
   //         layerOpts = layer.options,
   //         p;
   //
@@ -771,14 +751,14 @@ export default Print.extend({
   //       return enc;
   //     },
   //     tilelayermapbox: function(layer) {
-  //       var resolutions = [],
+  //       let resolutions = [],
   //         zoom;
   //
   //       for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
   //         resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
   //       }
   //
-  //       var customParams = {};
+  //       let customParams = {};
   //       if (typeof layer.options.access_token === 'string' && layer.options.access_token.length > 0) {
   //         customParams.access_token = layer.options.access_token;
   //       }
@@ -807,7 +787,7 @@ export default Print.extend({
   //       };
   //     },
   //     vector: function(features) {
-  //       var encFeatures = [],
+  //       let encFeatures = [],
   //         encStyles = {},
   //         opacity,
   //         feature,
@@ -824,7 +804,7 @@ export default Print.extend({
   //         feature = features[i];
   //
   //         if (feature instanceof L.Marker) {
-  //           var icon = feature.options.icon,
+  //           let icon = feature.options.icon,
   //             iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
   //             iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
   //             iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
@@ -877,8 +857,8 @@ export default Print.extend({
   // },
   //
   // _circleGeoJSON: function(circle) {
-  //   var projection = circle._map.options.crs.projection;
-  //   var earthRadius = 1,
+  //   let projection = circle._map.options.crs.projection;
+  //   let earthRadius = 1,
   //     i;
   //
   //   if (projection === L.Projection.SphericalMercator) {
@@ -886,19 +866,19 @@ export default Print.extend({
   //   } else if (projection === L.Projection.Mercator) {
   //     earthRadius = projection.R_MAJOR;
   //   }
-  //   var cnt = projection.project(circle.getLatLng());
-  //   var scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
-  //   var points = [];
+  //   let cnt = projection.project(circle.getLatLng());
+  //   let scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
+  //   let points = [];
   //   for (i = 0; i < 64; i++) {
-  //     var radian = i * 2.0 * Math.PI / 64.0;
-  //     var shift = L.point(Math.cos(radian), Math.sin(radian));
+  //     let radian = i * 2.0 * Math.PI / 64.0;
+  //     let shift = L.point(Math.cos(radian), Math.sin(radian));
   //     points.push(projection.unproject(cnt.add(shift.multiplyBy(circle.getRadius() * scale / earthRadius))));
   //   }
   //   return L.polygon(points).toGeoJSON();
   // },
   //
   // _extractFeatureStyle: function(feature) {
-  //   var options = feature.options;
+  //   let options = feature.options;
   //
   //   return {
   //     stroke: options.stroke,
@@ -913,7 +893,7 @@ export default Print.extend({
   // },
   //
   // _getAbsoluteUrl: function(url) {
-  //   var a;
+  //   let a;
   //
   //   if (L.Browser.ie) {
   //     a = document.createElement('a');
@@ -929,14 +909,14 @@ export default Print.extend({
   // },
   //
   // _projectBounds: function(crs, bounds) {
-  //   var sw = bounds.getSouthWest(),
+  //   let sw = bounds.getSouthWest(),
   //     ne = bounds.getNorthEast();
   //
   //   return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
   // },
   //
   // _projectCoords: function(crs, coords) {
-  //   var crsKey = crs.toUpperCase().replace(':', ''),
+  //   let crsKey = crs.toUpperCase().replace(':', ''),
   //     crsClass = L.CRS[crsKey];
   //
   //   if (!crsClass) {
@@ -947,7 +927,7 @@ export default Print.extend({
   // },
   //
   // _project: function(crsClass, coords) {
-  //   var projected,
+  //   let projected,
   //     pt,
   //     i, l;
   //
@@ -989,7 +969,7 @@ export default Print.extend({
   // },
   //
   // onPrintSuccess: function(response) {
-  //   var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
+  //   let url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
   //
   //   if (this.options.autoOpen) {
   //     if (L.Browser.ie) {

@@ -1,53 +1,52 @@
 <div class="print-widget">
   <nav-container>
-    <nav-page title="Print" active="true">
+    <nav-page label="Print" active="true">
       <form>
         <div class="form-group">
           <label for="mapTitle">Map Title</label>
-          <input type="text" class="form-control" name="mapTitle" {($value)}="mapTitle" placeholder="" />
+          <input type="text" class="form-control form-input" name="mapTitle" {($value)}="mapTitle" placeholder="" />
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-default" ($click)="printButtonClick">
+          <button type="button" {{#if isPrinting}}disabled{{/if}} class="btn btn-sm btn-default {{#if isPrinting}}loading{{/if}}" ($click)="printButtonClick">
             <i class="fa fa-print"></i> Create Print</button>
           <button type="button" class="btn btn-sm btn-default" ($click)="clearButtonClick" {{^printResults}} disabled {{/printResults}}>
             <i class="fa fa-trash"></i> Clear Prints</button>
         </div>
       </form>
-      <div class="print-results list-group">
-        {{#each printResults}}
-          {{#if error}}
-            <a class="list-group-item list-group-item-danger" title="{{error}}">
-              <i class="fa fa-exclamation-triangle"></i> {{title}}</a>
-          {{else}}
-            <a href="{{url}}" class="list-group-item" target="_blank">
-              <i class="fa fa-paperclip"></i> {{title}}
-            </a>
-          {{/if}}
-        {{/each}}
-        {{#if printing}}
-          <div class="progress">
-            <div class="active progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-              <span>Printing...</span>
-            </div>
-          </div>
-        {{/if}}
-      </div>
+      {{#if printResults.length}}
+          <ul class="menu">
+            <!-- menu header -->
+            <li class="menu-header">
+                <span class="menu-header-text">
+                    Prints
+                </span>
+            </li>
+            {{#each printResults}}
+            <!-- menu item -->
+            <li class="menu-item">
+                <a {{#if error}}href="#"{{else}}href="{{url}}"{{/if}}>
+                    <i class="{{iconClass}}"></i> {{title}}
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+      {{/if}}
     </nav-page>
-    <nav-page title="Settings">
-      {{#if provider.layouts.length}}
+    <nav-page label="Settings">
+      {{#if printOptions.layouts.length}}
         <form class="print-settings">
           <div class="form-group">
             <label for="printLayout">Print Layout</label>
-            <select class="form-control" {($value)}="selectedLayout" name="printLayout">
-              {{#each provider.layouts}}
+            <select class="form-control form-select" {($value)}="selectedLayout" name="printLayout">
+              {{#each printOptions.layouts}}
                 <option value="{{name}}">{{name}}</option>
               {{/each}}
             </select>
           </div>
           <div class="form-group">
             <label for="dpi">Print Resolution (DPI)</label>
-            <select class="form-control" {($value)}="selectedDpi" name="dpi">
-              {{#each provider.dpis}}
+            <select class="form-control form-select" {($value)}="selectedDpi" name="dpi">
+              {{#each printOptions.dpis}}
                 <option value="{{name}}">{{name}}</option>
               {{/each}}
             </select>

@@ -58,18 +58,14 @@ export const ViewModel = DefineMap.extend({
      * @parent print-widget.ViewModel.props
      */
     provider: {
-        value: null
-    },
-    /**
-     * The print provider to use for printing
-     * @property {Promise} print-widget.ViewModel.provider provider
-     * @parent print-widget.ViewModel.props
-     */
-    printOptionsPromise: {
-        get (lastSetValue, setAttr) {
-            if (this.provider) {
-                return this.provider.getCapabilities();
+        value: null,
+        set (provider) {
+            if (provider) {
+                provider.loadCapabilities().then((data) => {
+                    this.printOptions = data;
+                });
             }
+            return provider;
         }
     },
     /**
@@ -78,12 +74,16 @@ export const ViewModel = DefineMap.extend({
      * @parent print-widget.ViewModel.props
      */
     printOptions: {
-        get (val, set) {
-            if (this.printOptionsPromise) {
-                this.printOptionsPromise.then(set);
-            } else {
-                return null;
+        value: null,
+        set (options) {
+            if (!options) {
+                return options;
             }
+            this.set({
+                selectedDpi: options.dpis[0].value,
+                selectedLayout: options.layouts[0].name
+            });
+            return options;
         }
     },
     /**
@@ -92,6 +92,12 @@ export const ViewModel = DefineMap.extend({
      * @parent print-widget.ViewModel.props
      */
     map: '*',
+    /**
+     * Whether or not we're currently printing an output
+     * @property {Any} print-widget.ViewModel.isPrinting
+     * @parent print-widget.ViewModel.props
+     */
+    isPrinting: 'boolean',
   /**
    * @function printButtonClick
    * Called when the print button is clicked to activate the provider's `print` method.
@@ -100,8 +106,11 @@ export const ViewModel = DefineMap.extend({
         if (!this.map) {
             console.error('Print: Map is not set');
         }
-        if (this.provider && !this.printing) {
-            this.printing = true;
+
+        console.log(this.provider, this.isPrinting);
+        if (this.provider && !this.isPrinting) {
+            console.log(this);
+            this.isPrinting = true;
             this.provider.print({
                 map: this.map,
                 layout: this.selectedLayout,
@@ -124,7 +133,8 @@ export const ViewModel = DefineMap.extend({
    * @param  {PrintResult} results The result of the printout
    */
     handlePrintout: function (results) {
-        this.printing = false;
+        console.log(results);
+        this.isPrinting = false;
         this.printResults.push(results);
     }
 });

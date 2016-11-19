@@ -1,7 +1,7 @@
 
 <script type="text/stache" id="demo-html">
   <ol-map {^map-object}="myMap" {map-options}="options" />
-  <print-widget {map}="myMap" {provider}="mapfish" />
+  <print-widget {map}="myMap" {provider}="provider" />
 </script>
 
 <style type="text/css">
@@ -26,10 +26,15 @@
   import 'font-awesome/css/font-awesome.min.css';
   import stache from 'can-stache';
   import DefineMap from 'can-define/map/map';
-  
+
+  import 'spectre-canjs/nav-container/nav-container';
   import 'print-widget/print-widget';
+  import Mapfish from 'providers/print/MapfishPrint';
 
   let map = new DefineMap({
+    provider: new Mapfish({
+      url: 'http://localhost/geoserver/pdf'
+    }),
     options: {
       //http://openlayers.org/en/v3.0.0/examples/wms-tiled.js
       layers: [{
