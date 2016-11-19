@@ -1,10 +1,10 @@
 <div class="print-widget">
-  <tab-container>
-    <panel-container title="Print" open="true">
+  <nav-container>
+    <nav-page title="Print" active="true">
       <form>
         <div class="form-group">
           <label for="mapTitle">Map Title</label>
-          <input type="text" class="form-control" name="mapTitle" can-value="mapTitle" placeholder="" />
+          <input type="text" class="form-control" name="mapTitle" {($value)}="mapTitle" placeholder="" />
         </div>
         <div class="btn-group">
           <button type="button" class="btn btn-sm btn-default" ($click)="printButtonClick">
@@ -32,13 +32,13 @@
           </div>
         {{/if}}
       </div>
-    </panel-container>
-    <panel-container title="Settings">
+    </nav-page>
+    <nav-page title="Settings">
       {{#if provider.layouts.length}}
         <form class="print-settings">
           <div class="form-group">
             <label for="printLayout">Print Layout</label>
-            <select class="form-control" can-value="selectedLayout" name="printLayout">
+            <select class="form-control" {($value)}="selectedLayout" name="printLayout">
               {{#each provider.layouts}}
                 <option value="{{name}}">{{name}}</option>
               {{/each}}
@@ -46,7 +46,7 @@
           </div>
           <div class="form-group">
             <label for="dpi">Print Resolution (DPI)</label>
-            <select class="form-control" can-value="selectedDpi" name="dpi">
+            <select class="form-control" {($value)}="selectedDpi" name="dpi">
               {{#each provider.dpis}}
                 <option value="{{name}}">{{name}}</option>
               {{/each}}
@@ -56,6 +56,6 @@
       {{else}}
         <p>Loading...</p>
       {{/if}}
-    </panel-container>
-  </tab-container>
+    </nav-page>
+  </nav-container>
 </div>

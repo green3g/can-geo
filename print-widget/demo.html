@@ -1,0 +1,50 @@
+
+<script type="text/stache" id="demo-html">
+  <ol-map {^map-object}="myMap" {map-options}="options" />
+  <print-widget {map}="myMap" {provider}="mapfish" />
+</script>
+
+<style type="text/css">
+  print-widget {
+    position: absolute;
+    right: 0;
+    top: 10%;
+    width: 250px;
+    height:300px;
+    display:block;
+    background: #fff;
+    padding:10px;
+    border-radius:5px;
+    overflow:auto;
+  }
+</style>
+
+<script src="../node_modules/steal/steal.js" id="demo-source" main="@loader">
+
+  import 'ol-map/';
+  import 'spectre.css/dist/spectre.min.css';
+  import 'font-awesome/css/font-awesome.min.css';
+  import stache from 'can-stache';
+  import DefineMap from 'can-define/map/map';
+  
+  import 'print-widget/print-widget';
+
+  let map = new DefineMap({
+    options: {
+      //http://openlayers.org/en/v3.0.0/examples/wms-tiled.js
+      layers: [{
+        type: 'TileWMS',
+        extent: [-13884991, 2870341, -7455066, 6338219],
+        sourceOptions: {
+          url: 'http://demo.opengeo.org/geoserver/wms',
+          params: { 'LAYERS': 'topp:states', 'TILED': true },
+          serverType: 'geoserver'
+        }
+      }, {
+        type: 'OSM'
+      }]
+    }
+  });
+  const render = stache.from('demo-html');
+  document.body.appendChild(render(map));
+</script>
