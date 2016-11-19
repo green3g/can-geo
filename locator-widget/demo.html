@@ -1,6 +1,6 @@
 <script type="text/stache" id="demo-html">
-  <locator-widget {provider}="esri" {^locations}="locations" />
-  <ol-map {map-object}="*map" {{#if locations.length}}{x}="locations.0.items.0.x" {y}="locations.0.items.0.y"{{/if}} />
+<locator-widget {provider}="esri" {^locations}="locations" {map}="map" />
+  <ol-map {^map-object}="map"  />
 
   <ul>
     {{#each locations as loc}}
@@ -13,12 +13,14 @@
   import 'spectre.css/dist/spectre.css';
   import 'locator-widget/';
   import 'ol-map/';
+  import DefineMap from 'can-define/map/map';
   import EsriProvider from 'providers/location/EsriGeocoder';
 
   import stache from 'can-stache';
 
   var render = stache.from('demo-html');
-  var frag = render({
+  var frag = render(new DefineMap({
+    map: null,
     esri: new EsriProvider({
       url: 'http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/'
     }),
@@ -26,7 +28,7 @@
       this.locations.push(location);
     },
     locations: []
-  });
+  }));
 
   document.body.appendChild(frag);
 

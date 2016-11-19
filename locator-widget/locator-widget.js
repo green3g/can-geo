@@ -4,6 +4,7 @@ import DefineMap from 'can-define/map/map';
 import CanEvent from 'can-event';
 import Component from 'can-component';
 import assign from 'can-util/js/assign/assign';
+import ol from 'openlayers';
 
 import template from './locator.stache!';
 import './locator.less!';
@@ -55,9 +56,15 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
     provider: {},
     map: {
         set (map) {
-            this.initVectorLayer();
+            if (!map) {
+                return map;
+            }
+            this.initVectorLayer(map);
             return map;
         }
+    },
+    vectorLayer: {
+        value: null
     },
     locations: {
         Value: DefineList
@@ -74,7 +81,7 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
    * @signature
    * @param  {can.Map} map The map viewModel
    */
-    initVectorLayer () {
+    initVectorLayer (map) {
         this.vectorLayer = new ol.layer.Vector({
             title: 'Location',
             id: 'location' + id++,
@@ -89,6 +96,7 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
                 }))
             })
         });
+        map.addLayer(this.vectorLayer);
     },
     refreshSuggestions (value) {
         this.provider.searchText = value;
@@ -122,6 +130,9 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
                 this.locations.replace([data]);
             } else {
                 this.locations.push(data);
+                if (this.navigate && this.map) {
+                    this.navigateMap(data.items[0]);
+                }
             }
         });
     },
@@ -130,6 +141,9 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
         if (index !== -1) {
             this.locations.splice(index, 1);
         }
+        if (!this.locations.length) {
+            this.clearGraphics();
+        }
     },
   /**
    * Clears the graphics layer
@@ -137,7 +151,6 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
    */
     clearGraphics: function () {
         if (this.map) {
-            this.map.removeLayer(this.vectorLayer);
             this.vectorLayer.getSource().clear();
         }
     },
@@ -166,22 +179,20 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
    * @param  {providers.locationProvider.types.locationObject} location The location object
    */
     navigateMap: function (location) {
-        var map = this.map;
         var coords = ol.proj.transform([location.x, location.y],
-          'EPSG:4326', map.getView().getProjection());
+          'EPSG:4326', this.map.getView().getProjection());
         var duration = 750;
         var pan = ol.animation.pan({
             duration: duration,
-            source: map.getView().getCenter()
+            source: this.map.getView().getCenter()
         });
         var zoom = ol.animation.zoom({
             duration: duration,
-            resolution: map.getView().getResolution()
+            resolution: this.map.getView().getResolution()
         });
-        map.beforeRender(pan, zoom);
-        map.getView().setCenter(coords);
-        map.getView().setZoom(this.zoomLevel);
-        this.map.addLayer(this.vectorLayer);
+        this.map.beforeRender(pan, zoom);
+        this.map.getView().setCenter(coords);
+        this.map.getView().setZoom(this.zoomLevel);
         this.vectorLayer.getSource().addFeature(new ol.Feature({
             geometry: new ol.geom.Point(coords)
         }));
