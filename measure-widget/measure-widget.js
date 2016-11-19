@@ -78,6 +78,7 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
     measureOverlays: {Type: DefineList, Value: DefineList},
     measureValue: '*',
     interaction: '*',
+    pointerMoveKey: '*',
     activeUnits: {
         get () {
             if (!this.unitsDropdown) {
