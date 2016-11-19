@@ -1,14 +1,18 @@
 <div class="ol-popup">
-    <button type="button" class="float-right btn btn-clear" ($click)="hidePopup"></button>
-    <div class="ol-popup-content">
-      {{#unless modal}}
-        <content></content>
-      {{/unless}}
-    </div>
-  </div>
+    {{#if active}}
+      <button type="button" class="float-right btn btn-clear" ($click)="hidePopup"></button>
+      <div class="ol-popup-content">
+        {{#unless modal}}
+          <content></content>
+        {{/unless}}
+      </div>
+    {{/if}}
+</div>
 
-{{#if modal}}
-  <modal-dialog active="{{active}}">
-    <content></content>
-  </modal-dialog>
+{{#if active}}
+  {{#if modal}}
+    <modal-dialog active="{{active}}">
+      <content></content>
+    </modal-dialog>
+  {{/if}}
 {{/if}}

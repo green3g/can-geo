@@ -1,5 +1,3 @@
-<div id="app"></div>
-
 <script type="text/stache" id="demo-html">
   <ol-map {^map-object}="*map" {map-options}="options">
     <ol-popup {{#popup1}}active{{/popup1}}>
@@ -48,45 +46,46 @@
 
   import stache from 'can-stache';
   import DefineMap from 'can-define/map/map';
-  import DefineList from 'can-define/list/list';
   import 'spectre.css/dist/spectre.css!';
 
   import ol from 'openlayers';
 
-  let renderer = stache.from('demo-html');
+  const renderer = stache.from('demo-html');
 
 
   const mapOptions = {
     //http://openlayers.org/en/v3.0.0/examples/wms-tiled.js
-    layers: [{
-      type: 'TileWMS',
-      extent: [-13884991, 2870341, -7455066, 6338219],
-      sourceOptions: {
-        url: 'http://demo.opengeo.org/geoserver/wms',
-        params: { 'LAYERS': 'topp:states', 'TILED': true },
-        serverType: 'geoserver'
-      }
-    }, {
-      type: 'OSM'
-    }]
+      layers: [{
+          type: 'TileWMS',
+          extent: [-13884991, 2870341, -7455066, 6338219],
+          sourceOptions: {
+              url: 'http://demo.opengeo.org/geoserver/wms',
+              params: {'LAYERS': 'topp:states', 'TILED': true},
+              serverType: 'geoserver'
+          }
+      }, {
+          type: 'OSM'
+      }]
   };
 
   document.body.appendChild(
     renderer(
       new DefineMap({
-        options: mapOptions,
-        popup1: true,
-        popup2: false,
-        togglePopup(){
-          this.popup1 = !this.popup1;
-          this.popup2 = !this.popup2;
-        },
-        transform(x,y){
-          return JSON.stringify(ol.proj.toLonLat([x,y], /*'EPSG:3857'*/));
-        },
-        agree(){
-          alert('Yes! Very cool indeed!');
-        }
+          options: mapOptions,
+          popup1: true,
+          popup2: false,
+          togglePopup () {
+              this.popup1 = !this.popup1;
+              this.popup2 = !this.popup2;
+          },
+          transform (x, y) {
+              return JSON.stringify(ol.proj.toLonLat([x, y]));
+          },
+          agree () {
+              alert('Yes! Very cool indeed!');
+          }
       })
-));
+    )
+  );
+
 </script>

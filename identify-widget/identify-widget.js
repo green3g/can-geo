@@ -89,6 +89,10 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         value: 0,
         type: 'number'
     },
+    hasError: {
+        type: 'boolean',
+        value: false
+    },
     /**
      * A virtual property that returns an object consisting of the formatted fields, values, and layer properties.
      * @property {can.Map} identify-widget.ViewModel.props.activeFeature
@@ -116,7 +120,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
 
             //get the configured layer properties object key this.layerProperties.layerName
             const layerProperties = this.layerProperties[layer];
-            let title, templ, fields;
+            let title, template, fields;
 
             //if its provided parse the alias and formatters
             if (layerProperties) {
@@ -125,7 +129,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                 title = layerProperties.alias;
 
                 //set the correct template for this feature this.layerproperties.layername.template
-                templ = layerProperties.template;
+                template = layerProperties.template;
 
                 // set up the fields
                 fields = layerProperties.fields;
@@ -141,7 +145,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                 //get the field properties like alias and formatters this.layerproperties.layername.properties
                 fields: parseFieldArray(fields),
                 //feature template
-                featureTemplate: templ || featureTemplate,
+                featureTemplate: template || featureTemplate,
                 //the default template in case the other template wants to use it
                 defaultTemplate: featureTemplate,
                 layer: layer,
@@ -161,6 +165,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         type: '*',
         set (map) {
             if (map) {
+                console.log(map);
                 map.on('click', (event) => {
                     this.identify(event.coordinate);
                 });
@@ -206,9 +211,9 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      */
     popupSelector: 'string',
     /**
-     * Whether or not this widget should actively identify features on the map
-     * set this to true to turn on identifying
-     * @property {Boolean}  identify-widget.ViewModel.props.active
+     * Whether or not this identify widget should actively perform an identify
+     * task. This must be set in order for the identify to be used.
+     * @property {HTMLBoolean} identify-widget.ViewModel.props.active
      * @parent identify-widget.ViewModel.props
      */
     active: 'htmlbool',
@@ -222,33 +227,26 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    */
     identify (event, coordinate) {
         if (!this.active) {
-            return;
+            return false;
         }
         if (!coordinate) {
             coordinate = event;
         }
         this.clearFeatures();
-        this.hasError = null;
+        this.hasError = false;
         const layers = this.map.getLayers();
-        const urls = this.getQueryURLsRecursive(layers, coordinate);
-        const deferreds = [];
-        urls.forEach((url) => {
-            const def = this.getFeatureInfo(url);
-            deferreds.push(def);
+        const promises = [];
+        this.getQueryURLsRecursive(layers, coordinate).forEach((url) => {
+            promises.push(this.getFeatureInfo(url));
         });
-        let resolved = 0;
-        deferreds.forEach((d) => {
-            d.then((json) => {
+        promises.forEach((promise) => {
+            promise.then((json) => {
                 this.addFeatures(json, coordinate);
-                resolved++;
-                // self.updateLoading(resolved, deferreds.length);
             }).catch((e) => {
                 this.error(e);
-                resolved++;
-                // self.updateLoading(resolved, deferreds.length);
             });
         });
-        this.promises = deferreds;
+        this.promises = promises;
         return this.loading;
     },
   /**
