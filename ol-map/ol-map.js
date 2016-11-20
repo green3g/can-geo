@@ -115,15 +115,6 @@ export const ViewModel = DefineMap.extend('OlMap', {
     },
     /**
      * @description
-     * The deferred object used to notify listeners when the map is ready
-     * @property {can.Deferred} ol-map.ViewModel.props.deferred
-     * @parent ol-map.ViewModel.props
-     */
-    deferred: {
-        value: null
-    },
-    /**
-     * @description
      * Optional map options to override the defaults
      * @property {object} ol-map.ViewModel.props.mapOptions
      * @parent ol-map.ViewModel.props
@@ -150,7 +141,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
         type: 'number',
         value: 750
     },
-    animating: {
+    isAnimating: {
         type: 'boolean',
         value: false
     },
@@ -277,11 +268,11 @@ export const ViewModel = DefineMap.extend('OlMap', {
     },
   /**
    * determines if the view needs to be changed and if so begins a
-   * can.batch process while asynchronously animating the view changes
+   * can.batch process while asynchronously isAnimating the view changes
    * that are necessary
    */
     changeViewAsync () {
-        if (this.animating) {
+        if (this.isAnimating) {
             return;
         }
         //make sure map exists
@@ -289,7 +280,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
             return;
         }
 
-        this.animating = true;
+        this.isAnimating = true;
 
         setTimeout(() => {
             const x = this.x,
@@ -338,11 +329,11 @@ export const ViewModel = DefineMap.extend('OlMap', {
                 batch.start();
 
                 map.once('moveend', () => {
-                    this.animating = false;
+                    this.isAnimating = false;
                     batch.stop();
                 });
             } else {
-                this.animating = false;
+                this.isAnimating = false;
             }
 
         }, 100);

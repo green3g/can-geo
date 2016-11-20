@@ -16,8 +16,8 @@ var getNextId = function () {
 };
 
 function convertToObject (obj) {
-    if (obj.attr) {
-        return obj.attr();
+    if (obj.serialize {
+        return obj.serialize();
     }
     return obj;
 }
