@@ -47,7 +47,7 @@
     "openlayers": "^3.19.1",
     "spectre-canjs": "^0.12.0",
     "spectre.css": "^0.1.27",
-    "steal": "^0.16.42",
+    "steal": "^0.16.43",
     "steal-stache": "^3.0.1"
   },
   "system": {
