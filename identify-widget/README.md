@@ -13,8 +13,8 @@ A configureable feature identify tool for wms layers using wms `GetFeatureInfo` 
 ## Usage
 This component may be placed inside an `ol-popup` component, but it doesn't have to be.
 ```html
-<ol-popup>
-  <identify-widget {layer-properties}="propsObj" />
+<ol-popup id="identify">
+  <identify-widget {layer-properties}="propsObj" {map}="map" popup-selector="#identify" />
 </ol-popup>
 ```
 

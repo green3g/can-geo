@@ -1,7 +1,7 @@
 import ol from 'openlayers';
 import assign from 'can-util/js/assign/assign';
 import DefineList from 'can-define/list/list';
-var layerClass = {
+const layerClass = {
     TileWMS: 'Tile',
     Group: 'Group',
     OSM: 'Tile',
@@ -10,13 +10,10 @@ var layerClass = {
     Vector: 'Vector'
 };
 
-var currentId = 0;
-var getNextId = function () {
-    return currentId++;
-};
+let currentId = 0;
 
 function convertToObject (obj) {
-    if (obj.serialize {
+    if (obj.serialize) {
         return obj.serialize();
     }
     return obj;
@@ -32,17 +29,17 @@ export default {
       //get the layer class name
       //different from our short name
       //For example, layer type TileWMS and ImageWMS both use type 'Tile'
-        var type = layerClass[options.type];
+        const type = layerClass[options.type];
 
       //the user custom constructor options
-        var userOptions = options.options ? options.options : {};
+        const userOptions = options.options ? options.options : {};
 
       //the required parameters for the layer
-        var requiredOptions = this[options.type](options);
+        const requiredOptions = this[options.type](options);
 
       //make sure the layer has a unique id
         if (!userOptions.id) {
-            userOptions.id = 'layer-' + getNextId();
+            userOptions.id = 'layer-' + currentId ++;
         }
 
       //mixin all of our configuration options for the constructor
@@ -72,13 +69,13 @@ export default {
         };
     },
     OSM (options) {
-        var sourceOptions = options.sourceOptions ? options.sourceOptions : {};
+        const sourceOptions = options.sourceOptions ? options.sourceOptions : {};
         return {
             source: new ol.source.OSM(sourceOptions)
         };
     },
     Vector (options) {
-        var sourceOptions = options.sourceOptions ? options.sourceOptions : {};
+        const sourceOptions = options.sourceOptions ? options.sourceOptions : {};
         return {
             source: new ol.source.Vector(sourceOptions)
         };

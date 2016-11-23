@@ -1,7 +1,5 @@
 {
   "siteDefaults": {
-    "static": "guides/site/static",
-    "templates": "guides/site/templates"
   },
   "sites": {
     "docs": {
@@ -9,9 +7,7 @@
         "ignore": "{docs,dist,node_modules}/**/*"
       },
       "parent": "geo",
-      "dest": "./docs",
-      "templates": "guides/site/templates",
-      "static": "guides/site/static"
+      "dest": "./docs"
     }
   }
 }

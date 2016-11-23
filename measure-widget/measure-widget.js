@@ -20,9 +20,6 @@ import measureOverlayTemplate from './templates/measureOverlay.stache!';
  * @description A `<measure-widget />` component's ViewModel
  */
 export const ViewModel = DefineMap.extend('MeasureWidget', {
-  /**
-   * @prototype
-   */
     /**
      * An array of measurement objects to use. These are configureable in `./modules/measurements`
      * @property {Array<measurementObjects>} measure-widget.ViewModel.props.measurements
@@ -31,6 +28,11 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
     measurements: {
         value: measurements
     },
+     /**
+      * The current state of the widget. This is set to true when a button is activated
+      * @property {Boolean} measure-widget.ViewModel.props.active
+      * @parent measure-widget.ViewModel.props
+      */
     active: {
         Type: DefineMap,
         set (active) {
@@ -40,6 +42,7 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
                     this.map.removeInteraction(this.interaction);
                     this.interaction = null;
                 }
+                this.dispatch('deactivate');
                 return active;
             }
             if (this.interaction) {
@@ -50,6 +53,7 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             //add the interaction for measuring
             this.interaction = this.getInteraction(active.type);
             this.map.addInteraction(this.interaction);
+            this.dispatch('activate');
             return active;
         }
 
@@ -104,6 +108,7 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
     },
   /**
    * This is the function called when a tool button is clicked. Activates a measure tool if is not already active. If it is already active, it deactivates the measure tool.
+   * @prototype
    * @signature
    * @param  {measureToolObject} measureTool The tool to activate
    */
