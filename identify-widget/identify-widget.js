@@ -165,8 +165,10 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         type: '*',
         set (map) {
             if (map) {
-                console.log(map);
                 map.on('click', (event) => {
+                    if (!this.active) {
+                        return false;
+                    }
                     this.identify(event.coordinate);
                 });
                 map.addLayer(this.layer);
@@ -226,9 +228,6 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    * @return {Promise} A promise that is resolved when all of the identifies have finished loading
    */
     identify (event, coordinate) {
-        if (!this.active) {
-            return false;
-        }
         if (!coordinate) {
             coordinate = event;
         }
@@ -398,7 +397,8 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         source.addFeature(feature);
         if (this.popup) {
             const extent = feature.getGeometry().getExtent();
-            this.popup.showPopup(ol.extent.getCenter(extent));
+            const center = ol.extent.getCenter(extent);
+            this.popup.showPopup(center);
         }
         return;
     },
