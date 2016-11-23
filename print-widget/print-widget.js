@@ -107,9 +107,7 @@ export const ViewModel = DefineMap.extend({
             console.error('Print: Map is not set');
         }
 
-        console.log(this.provider, this.isPrinting);
         if (this.provider && !this.isPrinting) {
-            console.log(this);
             this.isPrinting = true;
             this.provider.print({
                 map: this.map,
@@ -133,7 +131,6 @@ export const ViewModel = DefineMap.extend({
    * @param  {PrintResult} results The result of the printout
    */
     handlePrintout: function (results) {
-        console.log(results);
         this.isPrinting = false;
         this.printResults.push(results);
     }
