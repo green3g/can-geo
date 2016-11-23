@@ -105,15 +105,18 @@ export const ViewModel = DefineMap.extend({
         }
         this.dispatch('show', [coordinate]);
     },
-    showPopupAsync () {
+    showPopupAsync (coordinate) {
         return new Promise((resolve) => {
             if (!this.isSettingAsync) {
                 this.isSettingAsync = true;
                 setTimeout(() => {
-                    this.showPopup([this.x, this.y]);
+                    if (!coordinate) {
+                        coordinate = [this.x, this.y];
+                    }
+                    this.showPopup(coordinate);
                     this.isSettingAsync = false;
                     resolve(true);
-                }, 100);
+                });
             } else {
                 resolve(false);
             }
