@@ -73,8 +73,8 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         }
     },
     /**
-     * A list of pending identify deferreds
-     * @property {Array<can.Deferred>} identify-widget.ViewModel.props.promises
+     * A list of pending identify promises
+     * @property {Array<Promise>} identify-widget.ViewModel.props.promises
      * @parent identify-widget.ViewModel.props
      */
     promises: {
@@ -100,18 +100,20 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      */
     activeFeature: {
         get () {
+
             //if no features, return null
             if (!this.features.length) {
-                //update Map layer
-                this.updateSelectedFeature(null);
+                this.layer.getSource().clear();
                 return null;
             }
 
             //get this active feature by array index
             const feature = this.features[this.activeFeatureIndex];
 
-            //update Map layer
-            this.updateSelectedFeature(feature);
+            //clear any active features and add the new one
+            const source = this.layer.getSource();
+            source.clear();
+            source.addFeature(feature);
 
             //get the layer key name. Layer id is returned from wms by LayerName.fetureID
             let layer = feature.getId().split('.');
@@ -136,7 +138,6 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             } else {
                 fields = Object.keys(feature.getProperties());
             }
-
             return {
                 //raw ol.feature
                 feature: feature,
@@ -195,23 +196,6 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             });
         }
     },
-    /**
-     * The popup viewModel. If provided, the identify widget will move the popup
-     * to each feature as it is identified
-     * @property {ol.layer.Vector} identify-widget.ViewModel.props.popup
-     * @parent identify-widget.ViewModel.props
-     */
-    popup: {
-        value: null
-    },
-    /**
-     * A selector for a ol-popup node, for example `#identify-popup` or `ol-popup`
-     * If provided, the identify widget will automatically set this `popup`
-     * property using `can-view-model`
-     * @property {String} identify-widget.ViewModel.props.popupSelector
-     * @parent identify-widget.ViewModel.props
-     */
-    popupSelector: 'string',
     /**
      * Whether or not this identify widget should actively perform an identify
      * task. This must be set in order for the identify to be used.
@@ -377,30 +361,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             p.abort();
         });
         this.features.replace([]);
-        this.updateSelectedFeature(null);
         this.activeFeatureIndex = 0;
-    },
-  /**
-   * @function updateSelectedFeature
-   * Updates the currently selected feature and replaces the table attributes and the vector layer with the new feature
-   * @signature
-   * @param  {ol.Feature} feature The feature
-   */
-    updateSelectedFeature (feature) {
-        if (!feature) {
-            this.layer.getSource().clear();
-            return;
-        }
-
-        const source = this.layer.getSource();
-        source.clear();
-        source.addFeature(feature);
-        if (this.popup) {
-            const extent = feature.getGeometry().getExtent();
-            const center = ol.extent.getCenter(extent);
-            this.popup.showPopup(center);
-        }
-        return;
     },
   /**
    * @function zoomToFeature
@@ -410,15 +371,9 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
    */
     zoomToFeature (object) {
         const extent = object.feature
-      .getGeometry()
-      .getExtent();
+                        .getGeometry()
+                        .getExtent();
 
-        if (this.popup) {
-            const key = this.map.on('postrender', () => {
-                this.popup.showPopup(ol.extent.getCenter(extent));
-                this.map.unByKey(key);
-            });
-        }
 
         this.animateZoomToExtent(extent);
     },
@@ -495,15 +450,12 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
     }
 });
 
-export default Component.extend({
+export const IdentifyWidget = Component.extend({
     tag: 'identify-widget',
     view: template,
     viewModel: ViewModel,
     events: {
         inserted () {
-            if (this.viewModel.popupSelector) {
-                this.viewModel.popup = canViewModel(document.querySelector(this.viewModel.popupSelector));
-            }
         },
         removed () {
             if (this.map) {
