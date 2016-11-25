@@ -22,7 +22,7 @@
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "documentjs": "^0.4.x",
-    "eslint": "^3.10.1",
+    "eslint": "^3.11.0",
     "jshint": "latest",
     "npm-watch": "^0.1.6",
     "steal-qunit": "^0.1.x",
