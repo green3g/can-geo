@@ -4,7 +4,7 @@ import CanEvent from 'can-event';
 import DefineMap from 'can-define/map/map';
 import assign from 'can-util/js/assign/assign';
 import canViewModel from 'can-view-model';
-
+import ol from 'openlayers';
 import 'spectre-canjs/modal-dialog/';
 import template from './olPopup.stache!';
 import './olPopup.less!';
@@ -29,17 +29,26 @@ export const ViewModel = DefineMap.extend({
         type: 'htmlbool',
         value: false
     },
+    modalActive: 'boolean',
     x: {
         type: 'number',
         set (x) {
-            this.showPopupAsync();
+            if (typeof x === 'undefined') {
+                this.hidePopup();
+            } else {
+                this.showPopupAsync();
+            }
             return x;
         }
     },
     y: {
         type: 'number',
         set (y) {
-            this.showPopupAsync();
+            if (typeof y === 'undefined') {
+                this.hidePopup();
+            } else {
+                this.showPopupAsync();
+            }
             return y;
         }
     },
@@ -52,9 +61,7 @@ export const ViewModel = DefineMap.extend({
             return active;
         }
     },
-    overlay: {
-        type: '*'
-    },
+    overlay: '*',
     overlayElement: {
         type: '*',
         set (element) {
@@ -74,7 +81,9 @@ export const ViewModel = DefineMap.extend({
             if (!map) {
                 return map;
             }
-            map.addOverlay(this.overlay);
+            if (this.overlay && map.getOverlays().getArray().indexOf(this.overlay) === -1) {
+                map.addOverlay(this.overlay);
+            }
             map.on('click', (event) => {
                 // this.showPopup(event.coordinate);
                 this.set({
@@ -97,11 +106,13 @@ export const ViewModel = DefineMap.extend({
    * @param  {Array<Number>} coordinate The x,y pair to center the popup on
    */
     showPopup (coordinate) {
-        if (!this.active || this.modal) {
+        if (!this.active) {
             return;
         }
         if (!this.modal) {
             this.overlay.setPosition(coordinate);
+        } else {
+            this.modalActive = true;
         }
         this.dispatch('show', [coordinate]);
     },
@@ -125,12 +136,17 @@ export const ViewModel = DefineMap.extend({
     },
     hidePopup () {
         this.overlay.setPosition(undefined);
+        this.modalActive = false;
     }
 });
 
 assign(ViewModel.prototype, CanEvent);
 
-export default Component.extend({
+/**
+ * @module {can.Component} ol-popup <ol-popup />
+ * @parent geo.components
+ */
+export const OlPopup = Component.extend({
     tag: 'ol-popup',
     view: template,
     viewModel: ViewModel,
@@ -138,12 +154,13 @@ export default Component.extend({
     events: {
         inserted () {
             var mapViewModel = canViewModel(this.element.parentNode);
-            this.viewModel.set({
-                overlayElement: this.element.querySelector('.ol-popup'),
-                map: mapViewModel.mapObject
-            });
+            this.viewModel.overlayElement = this.element.querySelector('.ol-popup');
+            this.viewModel.map = mapViewModel.mapObject;
         },
         removed () {
+            if (this.viewModel.overlay && this.viewModel.map) {
+                this.viewModel.map.removeOverlay(this.overlay);
+            }
         }
     }
 });

@@ -1,6 +1,6 @@
 <script type="text/stache" id="demo-html">
-  <ol-map {^map-object}="*map" {map-options}="options">
-    <ol-popup {{#popup1}}active{{/popup1}}>
+  <ol-map {^map-object}="*map" {map-options}="options" >
+    <ol-popup {{#popup1}}active{{/popup1}} modal>
       <div class="card">
           <div class="card-header">
               <h4 class="card-title">Popup</h4>
@@ -10,7 +10,7 @@
           </div>
           <div class="card-body">
 
-            <p>A basic popup.</p>
+            <p>A basic popup. This popup is displayed in a modal</p>
             <p>Popups come with their own close button but you can also add your own as well.</p>
             <button class="btn btn-primary" type="button" ($click)="set('active', false)">Hide</button>
 
@@ -27,12 +27,15 @@
           <div class="card-footer">
               <button class="btn btn-primary" ($click)="agree">Cool right?</button>
               <button class="btn btn-danger" ($click)="togglePopup">Show a different popup</button>
+              <button class="btn btn-danger" ($click)="toggleModal">Show as modal dialog</button>
           </div>
       </div>
     </ol-popup>
 
     <ol-popup id="popup2" {{#popup2}}active{{/popup2}}>
       <!-- pass the map to identify widget -->
+      This popup uses the standard openlayers overlay to position the popup
+      on a coordinate. See also, the identify-popup class.
       <identify-widget {map}="*map" popup-selector="#popup2" {{#popup2}}active{{/popup2}} />
       <button class="btn btn-default" ($click)="togglePopup">Show a different popup</button>
     </ol-popup>
@@ -74,9 +77,13 @@
           options: mapOptions,
           popup1: true,
           popup2: false,
+          modal: false,
           togglePopup () {
               this.popup1 = !this.popup1;
               this.popup2 = !this.popup2;
+          },
+          toggleModal() {
+            this.modal = !this.modal;
           },
           transform (x, y) {
               return JSON.stringify(ol.proj.toLonLat([x, y]));

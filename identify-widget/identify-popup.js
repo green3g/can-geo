@@ -1,15 +1,28 @@
-import {ViewModel as Popup} from '../ol-popup/ol-popup';
+import {ViewModel as Popup, OlPopup} from '../ol-popup/ol-popup';
 import './identify-widget';
 import ol from 'openlayers';
 import template from './identify-popup.stache';
 import Component from 'can-component';
 import canViewModel from 'can-view-model';
 
-export const ViewModel = Popup.extend({
+/**
+ * @constructor identify-popup.ViewModel ViewModel
+ * @extends ol-popup.ViewModel
+ * @parent identify-popup
+ * @group identify-popup.ViewModel.props Properties
+ *
+ * @description A `<identify-popup />` component's ViewModel
+ */
+export const ViewModel = Popup.extend('IdentifyPopup', {
+    /**
+     * The currently active feature in the identify widget
+     * When this feature object is set, the map and popup are centered
+     * on the feature's center.
+     * @property {Object}
+     */
     activeFeature: {
         type: '*',
         set (feature) {
-            console.log(this.overlay, feature);
             if (!this.overlay) {
                 return feature;
             }
@@ -25,19 +38,13 @@ export const ViewModel = Popup.extend({
     }
 });
 
-export const IdentifyPopup = Component.extend({
+/**
+ * @module {can.Component} identify-popup
+ * @parent geo.components
+ * @extends ol-popup
+ */
+export const IdentifyPopup = OlPopup.extend({
     tag: 'identify-popup',
     viewModel: ViewModel,
-    view: template,
-    events: {
-        inserted () {
-            var mapViewModel = canViewModel(this.element.parentNode);
-            this.viewModel.set({
-                overlayElement: this.element.querySelector('.ol-popup'),
-                map: mapViewModel.mapObject
-            });
-        },
-        removed () {
-        }
-    }
+    view: template
 });

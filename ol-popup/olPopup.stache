@@ -11,7 +11,7 @@
 
 {{#if active}}
   {{#if modal}}
-    <modal-dialog active="{{active}}">
+    <modal-dialog {(active)}="{{modalActive}}">
       <content></content>
     </modal-dialog>
   {{/if}}
