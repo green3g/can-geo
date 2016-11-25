@@ -89,7 +89,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         value: 0,
         type: 'number'
     },
-    hasError: {
+    hasErrors: {
         type: 'boolean',
         value: false
     },
@@ -99,6 +99,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      * @parent identify-widget.ViewModel.props
      */
     activeFeature: {
+        Type: DefineMap,
         get () {
 
             //if no features, return null
@@ -216,7 +217,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             coordinate = event;
         }
         this.clearFeatures();
-        this.hasError = false;
+        this.hasErrors = false;
         const layers = this.map.getLayers();
         const promises = [];
         this.getQueryURLsRecursive(layers, coordinate).forEach((url) => {
