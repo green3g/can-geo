@@ -1,0 +1,21 @@
+
+<div class="ol-popup">
+    {{#if active}}
+      <button type="button" class="float-right btn btn-clear" ($click)="hidePopup"></button>
+      <div class="ol-popup-content">
+        {{#unless modal}}
+          <content></content>
+          <identify-widget {map}="map" {^active-feature}="activeFeature" {{#if active}}active{{/if}}/>
+        {{/unless}}
+      </div>
+    {{/if}}
+</div>
+
+{{#if active}}
+  {{#if modal}}
+    <modal-dialog {(active)}="{{modalActive}}">
+      <content></content>
+      <identify-widget {map}="map" {^active-feature}="activeFeature" {{#if active}}active{{/if}} />
+    </modal-dialog>
+  {{/if}}
+{{/if}}

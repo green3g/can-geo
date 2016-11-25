@@ -1,0 +1,36 @@
+
+<script type="text/stache" id="demo-html">
+  <ol-map {^map-object}="myMap" {map-options}="options">
+    <identify-popup {map}="myMap" active="true" />
+  </ol-map>
+</script>
+
+
+<script src="../node_modules/steal/steal.js" id="demo-source" main="@loader">
+
+  import 'ol-map/';
+  import 'spectre.css/dist/spectre.min.css';
+  import 'font-awesome/css/font-awesome.min.css';
+  import stache from 'can-stache';
+  import DefineMap from 'can-define/map/map';
+  import 'identify-widget/identify-popup';
+
+  let map = new DefineMap({
+    options: {
+      //http://openlayers.org/en/v3.0.0/examples/wms-tiled.js
+      layers: [{
+        type: 'TileWMS',
+        extent: [-13884991, 2870341, -7455066, 6338219],
+        sourceOptions: {
+          url: 'http://demo.opengeo.org/geoserver/wms',
+          params: { 'LAYERS': 'topp:states', 'TILED': true },
+          serverType: 'geoserver'
+        }
+      }, {
+        type: 'OSM'
+      }]
+    }
+  });
+  const render = stache.from('demo-html');
+  document.body.appendChild(render(map));
+</script>
