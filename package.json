@@ -40,7 +40,7 @@
     "can-route": "^3.0.4",
     "can-stache": "^3.0.9",
     "can-ui": "latest",
-    "can-util": "^3.0.12",
+    "can-util": "^3.0.13",
     "can-view-model": "^3.1.0",
     "font-awesome": "^4.6.x",
     "jquery": "^3.1.1",
