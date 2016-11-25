@@ -2,8 +2,6 @@ import {ViewModel as Popup, OlPopup} from '../ol-popup/ol-popup';
 import './identify-widget';
 import ol from 'openlayers';
 import template from './identify-popup.stache';
-import Component from 'can-component';
-import canViewModel from 'can-view-model';
 
 /**
  * @constructor identify-popup.ViewModel ViewModel
