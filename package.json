@@ -41,7 +41,7 @@
     "can-stache": "^3.0.10",
     "can-ui": "latest",
     "can-util": "^3.0.13",
-    "can-view-model": "^3.1.1",
+    "can-view-model": "^3.1.2",
     "font-awesome": "^4.6.x",
     "jquery": "^3.1.1",
     "openlayers": "^3.19.1",
