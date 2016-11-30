@@ -48,7 +48,7 @@
     "spectre-canjs": "^0.12.0",
     "spectre.css": "^0.1.27",
     "steal": "^0.16.43",
-    "steal-stache": "^3.0.1"
+    "steal-stache": "^3.0.2"
   },
   "system": {
     "paths": {
