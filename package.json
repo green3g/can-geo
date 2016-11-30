@@ -37,7 +37,7 @@
     "can-define": "^1.0.4",
     "can-event": "^3.0.1",
     "can-getfeatureinfo": "^0.3.0",
-    "can-route": "^3.0.4",
+    "can-route": "^3.0.5",
     "can-stache": "^3.0.11",
     "can-ui": "latest",
     "can-util": "^3.0.13",
