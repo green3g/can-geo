@@ -34,7 +34,7 @@
     "can-boot": "^0.1.0",
     "can-component": "^3.0.3",
     "can-crud": "latest",
-    "can-define": "^1.0.4",
+    "can-define": "^1.0.5",
     "can-event": "^3.0.1",
     "can-getfeatureinfo": "^0.3.0",
     "can-route": "^3.0.5",
