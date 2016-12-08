@@ -27,7 +27,7 @@
     "npm-watch": "^0.1.6",
     "steal-qunit": "^0.1.x",
     "steal-tools": "^0.16.8",
-    "testee": "^0.2.x"
+    "testee": "^0.3.0"
   },
   "dependencies": {
     "animate.css": "^3.5.2",
