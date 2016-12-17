@@ -22,27 +22,27 @@ function convertToObject (obj) {
 export default {
     getLayer (options) {
         options = convertToObject(options);
-      //if user provides the actual layer, skip the layer factory
+        //if user provides the actual layer, skip the layer factory
         if (options instanceof ol.layer.Base) {
             return options;
         }
-      //get the layer class name
-      //different from our short name
-      //For example, layer type TileWMS and ImageWMS both use type 'Tile'
+        //get the layer class name
+        //different from our short name
+        //For example, layer type TileWMS and ImageWMS both use type 'Tile'
         const type = layerClass[options.type];
 
-      //the user custom constructor options
+        //the user custom constructor options
         const userOptions = options.options ? options.options : {};
 
-      //the required parameters for the layer
+        //the required parameters for the layer
         const requiredOptions = this[options.type](options);
 
-      //make sure the layer has a unique id
+        //make sure the layer has a unique id
         if (!userOptions.id) {
             userOptions.id = 'layer-' + currentId ++;
         }
 
-      //mixin all of our configuration options for the constructor
+        //mixin all of our configuration options for the constructor
         return new ol.layer[type](assign(userOptions, requiredOptions));
     },
     ImageWMS (options) {
