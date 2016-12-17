@@ -7,7 +7,7 @@
             <button type="button" class="zoom-btn btn btn-primary float-right" href="#" ($click)="zoomToFeature"><i class="fa fa-search-plus"></i> {{title}}: {{index}}</a></li>
         {{/activeFeature}}
         {{#if loading.isPending }}
-            <li><a href="#"><i class="fa fa-refresh fa-spin"></i></a></li>
+            <p><a href="#"><i class="fa fa-refresh fa-spin"></i></a></p>
         {{/if}}
 
         <div class="identify-scroller">
@@ -27,6 +27,6 @@
             {{/features}}
           {{else}}
             <!-- loading element -->
-            <div class="loading"></div>
+            <div class="loading"><br /></div>
         {{/if}}
     </div>
