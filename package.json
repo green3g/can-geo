@@ -21,12 +21,15 @@
   "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^7.1.1",
-    "documentjs": "^0.4.x",
+    "documentjs": "^0.4.4",
     "eslint": "^3.12.1",
-    "jshint": "latest",
     "npm-watch": "^0.1.6",
-    "steal-qunit": "^0.1.x",
-    "steal-tools": "^0.16.8",
+    "steal": "^1.0.4",
+    "steal-css": "^1.0.0",
+    "steal-less": "^1.0.1",
+    "steal-qunit": "^1.0.0",
+    "steal-stache": "^3.0.4",
+    "steal-tools": "^1.0.1",
     "testee": "^0.3.0"
   },
   "dependencies": {
@@ -43,9 +46,7 @@
     "jquery": "^3.1.1",
     "openlayers": "^3.20.0",
     "spectre-canjs": "^0.15.5",
-    "spectre.css": "^0.1.29",
-    "steal": "^0.16.43",
-    "steal-stache": "^3.0.4"
+    "spectre.css": "^0.1.29"
   },
   "system": {
     "paths": {
