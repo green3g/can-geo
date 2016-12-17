@@ -40,7 +40,7 @@
     "can-getfeatureinfo": "^0.3.0",
     "can-route": "^3.0.5",
     "can-stache": "^3.0.13",
-    "can-util": "^3.0.13",
+    "can-util": "^3.1.1",
     "can-view-model": "^3.1.2",
     "font-awesome": "^4.6.x",
     "jquery": "^3.1.1",
@@ -48,7 +48,12 @@
     "spectre-canjs": "^0.15.5",
     "spectre.css": "^0.1.29"
   },
-  "system": {
+  "steal": {
+    "plugins": [
+        "steal-less",
+        "steal-css",
+        "steal-stache"
+    ],
     "paths": {
       "openlayers": "node_modules/openlayers/dist/ol-debug.js"
     },
