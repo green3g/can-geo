@@ -24,7 +24,7 @@
     "documentjs": "^0.4.4",
     "eslint": "^3.12.1",
     "npm-watch": "^0.1.6",
-    "steal": "^1.0.4",
+    "steal": "^1.0.5",
     "steal-css": "^1.0.0",
     "steal-less": "^1.0.1",
     "steal-qunit": "^1.0.0",
