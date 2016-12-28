@@ -1,15 +1,17 @@
 identify-widget{
 
+  /* scroll the identify results */
   .identify-scroller {
     width:100%;
     overflow-y:auto;
     overflow-x: hidden;
   }
 
+
+  /* position the pagination butons */
   .identify-results ul.pagination {
     margin: 0;
   }
-
   .pagination {
     padding: 0;
   }
@@ -20,5 +22,10 @@ identify-widget{
 
   .pagination li.page-item {
       margin-top: 0;
+  }
+
+  /* fix loading blink issue */
+  .popup-alerts {
+    min-height: 3rem;
   }
 }
