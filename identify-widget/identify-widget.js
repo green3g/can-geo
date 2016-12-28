@@ -1,11 +1,12 @@
-
 import featureTemplate from './featureTemplate.stache!';
 import template from './template.stache!';
 import './styles.less!';
 
 import 'spectre-canjs/property-table/property-table';
 import 'spectre-canjs/paginate-widget/paginate-widget';
-import {parseFieldArray} from 'spectre-canjs/util/field';
+import {
+    parseFieldArray
+} from 'spectre-canjs/util/field';
 import ajax from 'can-util/dom/ajax/ajax';
 import assign from 'can-util/js/assign/assign';
 import DefineMap from 'can-define/map/map';
@@ -23,9 +24,9 @@ import canViewModel from 'can-view-model';
  * @description A `<identify-widget />` component's ViewModel
  */
 export const ViewModel = DefineMap.extend('IdentifyWidget', {
-  /**
-   * @prototype
-   */
+    /**
+     * @prototype
+     */
     /**
      * The max number of features to return for each layer. The default is 10.
      * @signature `{Number}` `max-feature-count="10"`
@@ -116,14 +117,14 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             source.clear();
             source.addFeature(feature);
 
-            //get the layer key name. Layer id is returned from wms by LayerName.fetureID
+            //get the layer key name. Layer id is returned from wms by <LayerName>.<fetureID>
             let layer = feature.getId().split('.');
             const index = layer[1];
             layer = layer[0];
 
             //get the configured layer properties object key this.layerProperties.layerName
             const layerProperties = this.layerProperties[layer];
-            let title, template, fields;
+            let title, templ, fields;
 
             //if its provided parse the alias and formatters
             if (layerProperties) {
@@ -132,7 +133,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                 title = layerProperties.alias;
 
                 //set the correct template for this feature this.layerproperties.layername.template
-                template = layerProperties.template;
+                templ = layerProperties.template;
 
                 // set up the fields
                 fields = layerProperties.fields;
@@ -140,18 +141,29 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                 fields = Object.keys(feature.getProperties());
             }
             return {
+
                 //raw ol.feature
                 feature: feature,
+
                 //feature property values
                 properties: feature.getProperties(),
+
                 //get the field properties like alias and formatters this.layerproperties.layername.properties
                 fields: parseFieldArray(fields),
+
                 //feature template
-                featureTemplate: template || featureTemplate,
+                featureTemplate: templ || featureTemplate,
+
                 //the default template in case the other template wants to use it
                 defaultTemplate: featureTemplate,
+
+                //the layer name feature belongs to
                 layer: layer,
+
+                //a formatted title
                 title: title || layer,
+
+                // the feature index (id) number
                 index: index
             };
         }
@@ -204,14 +216,14 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      * @parent identify-widget.ViewModel.props
      */
     active: 'htmlbool',
-  /**
-   * @function identify
-   * Queries the available map wms layers and updates the loading status
-   * @signature
-   * @param  {ol.events.Event} event The click event dispatched by the map
-   * @param  {Array<Number>} coordinate Optional coordinate array to identify at
-   * @return {Promise} A promise that is resolved when all of the identifies have finished loading
-   */
+    /**
+     * @function identify
+     * Queries the available map wms layers and updates the loading status
+     * @signature
+     * @param  {ol.events.Event} event The click event dispatched by the map
+     * @param  {Array<Number>} coordinate Optional coordinate array to identify at
+     * @return {Promise} A promise that is resolved when all of the identifies have finished loading
+     */
     identify (event, coordinate) {
         if (!coordinate) {
             coordinate = event;
@@ -233,14 +245,14 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         this.promises = promises;
         return this.loading;
     },
-  /**
-   * @function getQueryURLsRecursive
-   * Recursively queries wms layers for identify results. Recursion is used to drill into group layers
-   * @signature
-   * @param  {ol.Collection<ol.Layer>} layers     A collection (array) of layers
-   * @param  {Array<Number>} coordinate The current identify coordinate
-   * @return {Array<String>}            Array of GetFeatureInfo urls
-   */
+    /**
+     * @function getQueryURLsRecursive
+     * Recursively queries wms layers for identify results. Recursion is used to drill into group layers
+     * @signature
+     * @param  {ol.Collection<ol.Layer>} layers     A collection (array) of layers
+     * @param  {Array<Number>} coordinate The current identify coordinate
+     * @return {Array<String>}            Array of GetFeatureInfo urls
+     */
     getQueryURLsRecursive (layers, coordinate) {
         let urls = [];
         layers.forEach((layer) => {
@@ -257,14 +269,14 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         });
         return urls;
     },
-  /**
-   * @function getQueryURL
-   * Creates a wms getGetFeatureInfo url
-   * @signature
-   * @param  {ol.layer} layer      The wms layer
-   * @param  {Array<Number>} coordinate The coordinate pair to identify at
-   * @return {String}            The url to query for identify results
-   */
+    /**
+     * Creates a wms getGetFeatureInfo url
+     * @function getQueryURL
+     * @signature
+     * @param  {ol.layer} layer      The wms layer
+     * @param  {Array<Number>} coordinate The coordinate pair to identify at
+     * @return {String}            The url to query for identify results
+     */
     getQueryURL (layer, coordinate) {
         if (layer.getSource && layer.getVisible()) {
             const source = layer.getSource();
@@ -272,24 +284,25 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                 const map = this.map;
                 const view = map.getView();
                 return source.getGetFeatureInfoUrl(
-                  coordinate,
-                  view.getResolution(),
-                  view.getProjection(), {
-                      'INFO_FORMAT': 'application/json',
-                      'FEATURE_COUNT': this.maxFeatureCount,
-                      'BUFFER': this.featureBuffer
-                    //'QUERY_LAYERS': 'only_query_these_layers'
-                  });
+                    coordinate,
+                    view.getResolution(),
+                    view.getProjection(), {
+                        'INFO_FORMAT': 'application/json',
+                        'FEATURE_COUNT': this.maxFeatureCount,
+                        'BUFFER': this.featureBuffer
+                            //'QUERY_LAYERS': 'only_query_these_layers'
+                    });
             }
         }
+        return undefined;
     },
-  /**
-   * @function getFeatureInfo
-   * Queries the wms endpoint for identify results
-   * @signature
-   * @param  {String} url The url to query
-   * @return {Deferred}     The deferred that is resolved to the raw wms feature data
-   */
+    /**
+     * Queries the wms endpoint for identify results
+     * @function getFeatureInfo
+     * @signature
+     * @param  {String} url The url to query
+     * @return {Deferred}     The deferred that is resolved to the raw wms feature data
+     */
     getFeatureInfo (url) {
         return ajax({
             url: url,
@@ -297,13 +310,13 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             method: 'GET'
         });
     },
-  /**
-   * @function addFeatures
-   * Adds features to this widgets collection after a layer has been identified
-   * @signature
-   * @param  {Object} collection A GeoJSON feature collection
-   * @param  {Array<Number>} coordinate The coordinate pair where the mouse click occurred
-   */
+    /**
+     * Adds features to this widgets collection after a layer has been identified
+     * @function addFeatures
+     * @signature
+     * @param  {Object} collection A GeoJSON feature collection
+     * @param  {Array<Number>} coordinate The coordinate pair where the mouse click occurred
+     */
     addFeatures (collection, coordinate) {
         if (collection.features.length) {
             let features = [];
@@ -336,13 +349,13 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             this.features = this.features.concat(features);
         }
     },
-  /**
-   * @function getFeaturesFromJson
-   * Converts raw geojson into openlayers features
-   * @signature
-   * @param  {Object } collection Raw GeoJSON object
-   * @return {ol.Collection<ol.Feature>}            The collection of openlayers features
-   */
+    /**
+     * Converts raw geojson into openlayers features
+     * @function getFeaturesFromJson
+     * @signature
+     * @param  {Object } collection Raw GeoJSON object
+     * @return {ol.Collection<ol.Feature>}            The collection of openlayers features
+     */
     getFeaturesFromJson (collection) {
         const proj = this.map.getView().getProjection();
         const gjson = new ol.format.GeoJSON();
@@ -352,11 +365,11 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         });
         return features;
     },
-  /**
-   * @function clearFeatures
-   * clears the features in this widget
-   * @signature
-   */
+    /**
+     * clears the features in this widget
+     * @function clearFeatures
+     * @signature
+     */
     clearFeatures () {
         this.promises.forEach((p) => {
             p.abort();
@@ -364,26 +377,26 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         this.features.replace([]);
         this.activeFeatureIndex = 0;
     },
-  /**
-   * @function zoomToFeature
-   * Zooms the map to a feature
-   * @signature
-   * @param  {Object} object An object containing a feature property
-   */
+    /**
+     * Zooms the map to a feature
+     * @function zoomToFeature
+     * @signature
+     * @param  {Object} object An object containing a feature property
+     */
     zoomToFeature (object) {
         const extent = object.feature
-                        .getGeometry()
-                        .getExtent();
+            .getGeometry()
+            .getExtent();
 
 
         this.animateZoomToExtent(extent);
     },
-  /**
-   * @function animateZoomToExtent
-   * Zooms the map to an extent and creates the zoom animation
-   * @signature
-   * @param  {Array<Number>} extent The extent to zoom the map to
-   */
+    /**
+     * Zooms the map to an extent and creates the zoom animation
+     * @function animateZoomToExtent
+     * @signature
+     * @param  {Array<Number>} extent The extent to zoom the map to
+     */
     animateZoomToExtent (extent) {
         const map = this.map;
         const duration = 750;
@@ -397,25 +410,25 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         });
         map.beforeRender(pan, zoom);
         map.getView().fit(
-      extent, map.getSize(), [50, 50, 50, 50]);
+            extent, map.getSize(), [50, 50, 50, 50]);
     },
-  /**
-   * @function error
-   * An error logging function for failed ajax requests
-   * @signature
-   * @param  {Error} e The error
-   */
+    /**
+     * An error logging function for failed ajax requests
+     * @function error
+     * @signature
+     * @param  {Error} e The error
+     */
     error (e) {
         this.hasErrors = true;
         console.warn('Could not perform ajax request: ', e);
     },
-  /**
-   * @function getClosestFeatureIndex
-   * finds the closest feature to the coordinate and returns that feature index
-   * @signature
-   * @param  {ol.feature[]} features The array of features to search through
-   * @return {Number}          The index value of the closest feature
-   */
+    /**
+     * finds the closest feature to the coordinate and returns that feature index
+     * @function getClosestFeatureIndex
+     * @signature
+     * @param  {ol.feature[]} features The array of features to search through
+     * @return {Number}          The index value of the closest feature
+     */
     getClosestFeatureIndex (features, coord) {
         if (features.length === 0) {
             return 0;
@@ -433,21 +446,21 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         });
         return current;
     },
-  /**
-   * @function getDistance
-   * Gets the approximate distance value for two coordinates.
-   * Not to be used for measuring as it uses a simple distance calculation
-   * and does not take the earth's curvature into consideration
-   * @signature
-   * @param  {Number[]} c1 The first xy coordinate
-   * @param  {Number[]} c2 The second xy coordinate
-   * @return {Number}    The distance between the two points
-   */
+    /**
+     * Gets the approximate distance value for two coordinates.
+     * Not to be used for measuring as it uses a simple distance calculation
+     * and does not take the earth's curvature into consideration
+     * @function getDistance
+     * @signature
+     * @param  {Number[]} c1 The first xy coordinate
+     * @param  {Number[]} c2 The second xy coordinate
+     * @return {Number}    The distance between the two points
+     */
     getDistance (c1, c2) {
         return Math.sqrt(
-      Math.pow((c1[0] - c2[0]), 2) +
-      Math.pow((c1[1] - c2[1]), 2)
-    );
+            Math.pow((c1[0] - c2[0]), 2) +
+            Math.pow((c1[1] - c2[1]), 2)
+        );
     }
 });
 
@@ -456,8 +469,7 @@ export const IdentifyWidget = Component.extend({
     view: template,
     viewModel: ViewModel,
     events: {
-        inserted () {
-        },
+        inserted () {},
         removed () {
             if (this.map) {
                 this.map.removeLayer(this.layer);

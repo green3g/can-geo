@@ -1,181 +1,112 @@
-
+/* eslint-env qunit, browser */
 import q from 'steal-qunit';
-import can 
 
-import template from 'ol-map/test/mapTemplate.stache!';
 import {ViewModel} from 'identify-widget/';
 import IdentifyResult from './test/identify-result';
+import ol from 'openlayers';
 
-var vm, mapModel, popupModel, FeatureCollection, coordinate;
-var clickKey = 'mykey';
-var Coord = [-10566654.790142762, 5439870.428999424];
+let vm, FeatureCollection, coordinate;
+const clickKey = 'mykey';
+const Coord = [-10566654.790142762, 5439870.428999424];
 q.module('identify-widget.ViewModel', {
-  beforeEach: function() {
+    beforeEach () {
 
-    FeatureCollection = can.extend({}, IdentifyResult);
-    coordinate = [Coord[0], Coord[1]];
+        FeatureCollection = Object.assign({}, IdentifyResult);
+        coordinate = [Coord[0], Coord[1]];
 
-    //create a new viewModel for testing
-    vm = new ViewModel({
-      mapNode: clickKey
-    });
+        //create a new viewModel for testing
+        vm = new ViewModel({
+            mapNode: clickKey
+        });
 
-  },
-  afterEach: function(assert) {
-    vm = mapModel = popupModel = null;
-  }
-});
-
-test('initWidget', function(assert) {
-  vm.initWidget({
-    map: mapModel,
-    popup: popupModel
-  });
-  mapModel.setDefaultClickHandler(vm.attr('mapClickKey'));
-  assert.equal(mapModel.attr('defaultClick'), vm.attr('mapClickKey'), 'default map click is initialized to default');
-});
-test('initWidget without popup', function(assert) {
-  vm.initWidget({
-    map: mapModel
-  });
-  mapModel.setDefaultClickHandler(vm.attr('mapClickKey'));
-  assert.equal(mapModel.attr('defaultClick'), vm.attr('mapClickKey'), 'default map click is initialized to default');
-});
-
-test('onMapClick, updateLoading', function(assert) {
-  var done = assert.async();
-  vm.initWidget({
-    map: mapModel,
-    popup: popupModel
-  });
-  mapModel.ready().then(function() {
-    mapModel.onMapClick({
-      coordinate: coordinate
-    }).then(function(features) {
-      assert.equal(features.length, 1, 'features should have a count of 1 at this coordinate');
-      assert.ok(features[0].getGeometry(), 'feature should have a geometry');
-      done();
-    });
-  });
-});
-
-test('addFeatures', function(assert) {
-  vm.initWidget({
-    map: mapModel,
-    popup: popupModel
-  });
-  //add layerProperties to exclude the states layer
-  vm.attr('layerProperties', {
-    states: {
-      excludeIdentify: true
+    },
+    afterEach () {
+        vm = null;
     }
-  });
-  vm.addFeatures(FeatureCollection, coordinate);
-  assert.equal(vm.attr('features').length, 2, 'features should have a length of 2 since we are excluding 2');
-  vm.attr('features').forEach(function(feature) {
-    assert.ok(feature.getGeometry(), 'features should have a geometry');
-  });
 });
 
-test('gotoNext', function(assert) {
-  vm.initWidget({
-    map: mapModel,
-    popup: popupModel
-  });
-  vm.addFeatures(FeatureCollection, coordinate);
-  var max = vm.attr('features').length - 1;
-  //goto last feature (of 4)
-  for (var i = 1; i < 10; i++) {
-    vm.gotoNext();
-    assert.equal(vm.attr('activeFeatureIndex'), i < max + 1 ? i : max, 'current feature index should be ' + (i < max + 1 ? i : max) + ' after going to next');
-  }
+test('loading get()', (assert) => {
+    const done = assert.async();
+    const p = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+    vm.promises = [p];
+    console.log(vm.loading);
 });
 
-test('gotoPrevious', function(assert) {
-  vm.initWidget({
-    map: mapModel,
-    popup: popupModel
-  });
-  vm.addFeatures(FeatureCollection, coordinate);
-  vm.attr('activeFeatureIndex', vm.attr('features').length - 1);
-  //goto last feature (of 4)
-  for (var i = 10; i > 0; i--) {
-    vm.gotoPrevious();
-    assert.equal(vm.attr('activeFeatureIndex'), i - 8 > 0 ? i - 8 : 0, 'current feature index should be ' + (i - 8 > 0 ? i - 8 : 0) + ' after going to previous');
-  }
-});
-
-test('hasNextFeature', function(assert) {
-  vm.initWidget({
-    map: mapModel,
-    popup: popupModel
-  });
-  vm.addFeatures(FeatureCollection, coordinate);
-  assert.ok(vm.attr('hasNextFeature'), 'hasNextFeature should be true');
-  assert.notOk(vm.attr('hasPreviousFeature'), 'hasPreviousFeature should not be true');
-});
-
-test('hasPreviousFeature', function(assert) {
-  vm.initWidget({
-    map: mapModel,
-    popup: popupModel
-  });
-  vm.addFeatures(FeatureCollection, coordinate);
-  //goto last feature (of 4)
-  vm.gotoNext().gotoNext().gotoNext();
-  assert.notOk(vm.attr('hasNextFeature'), 'hasNextFeature should not be true');
-  assert.ok(vm.attr('hasPreviousFeature'), 'hasPreviousFeature should not be true');
-});
-
-test('activeFeature', function(assert) {
-  vm.initWidget({
-    map: mapModel
-  });
-  var a;
-  vm.addFeatures(FeatureCollection, coordinate);
-  var f = vm.attr('activeFeature');
-  assert.equal(f.feature, vm.attr('features')[0], 'feature should be in the object returned');
-  assert.ok(f.featureTemplate, 'feature should have a template');
-  assert.ok(f.layer, 'feature should have a layer name');
-  assert.ok(f.title, 'feature should have a title');
-  assert.ok(f.index, 'feature should have a index number');
-  for (a in f.attributes) {
-    if (f.attributes.hasOwnProperty(a)) {
-      assert.ok(f.attributes[a].rawValue, 'attribute should have a rawValue');
-      assert.ok(f.attributes[a].value, 'attribute should have a value');
-      assert.ok(f.attributes[a].alias, 'attribute should have a alias');
-    }
-  }
-
-  var dummy = 'dummy';
-  vm.attr('layerProperties', {
-    not_states: {
-      alias: dummy,
-      template: dummy,
-      properties: {
-        STATE_NAME: {
-          alias: dummy,
-          formatter: function() {
-            return dummy;
-          }
+test('activeFeature get()', (assert) => {
+    vm.initWidget({
+        map: mapModel
+    });
+    let a;
+    vm.addFeatures(FeatureCollection, coordinate);
+    const f = vm.activeFeature;
+    assert.equal(f.feature, vm.features[0], 'feature should be in the object returned');
+    assert.ok(f.featureTemplate, 'feature should have a template');
+    assert.ok(f.layer, 'feature should have a layer name');
+    assert.ok(f.title, 'feature should have a title');
+    assert.ok(f.index, 'feature should have a index number');
+    for (a in f.attributes) {
+        if (f.attributes.hasOwnProperty(a)) {
+            assert.ok(f.attributes[a].rawValue, 'attribute should have a rawValue');
+            assert.ok(f.attributes[a].value, 'attribute should have a value');
+            assert.ok(f.attributes[a].alias, 'attribute should have a alias');
         }
-      }
     }
-  });
-  f = vm.attr('activeFeature');
-  assert.equal(f.feature, vm.attr('features')[0], 'feature should be in the object returned');
-  assert.equal(f.featureTemplate, dummy, 'feature should have a template');
-  assert.equal(f.layer, 'not_states', 'feature should have a layer name');
-  assert.equal(f.title, dummy, 'feature should have a title');
-  assert.ok(f.index, 'feature should have a index number');
-  for (a in f.attributes) {
-    if (f.attributes.hasOwnProperty(a)) {
-      assert.ok(f.attributes[a].rawValue, 'attribute should have a rawValue');
-      assert.ok(f.attributes[a].value, 'attribute should have a value');
-      assert.ok(f.attributes[a].alias, 'attribute should have a alias');
-    }
-  }
-  assert.equal(f.attributes.STATE_NAME.alias, dummy, 'STATE_NAME alias should be dummmy ');
-  assert.equal(f.attributes.STATE_NAME.value, dummy, 'STATE_NAME value should be dummmy ');
-  assert.notEqual(f.attributes.STATE_NAME.rawValue, dummy, 'STATE_NAME rawValue should not be dummy ');
+
+    const dummy = 'dummy';
+    vm.layerProperties = {
+        not_states: {
+            alias: dummy,
+            template: dummy,
+            properties: {
+                STATE_NAME: {
+                    alias: dummy,
+                    formatter: function () {
+                        return dummy;
+                    }
+                }
+            }
+        }
+    };
+    assert.equal(f.feature, vm.features[0], 'feature should be in the object returned');
+    assert.equal(f.featureTemplate, dummy, 'feature should have a template');
+    assert.equal(f.layer, 'not_states', 'feature should have a layer name');
+    assert.equal(f.title, dummy, 'feature should have a title');
+    assert.ok(f.index, 'feature should have a index number');
 });
+
+//TODO: map set()
+test('layer value()', (assert) => {
+    assert.ok(vm.layer instanceof ol.layer.Vector, 'layer should be set correctly');
+    assert.ok(vm.layer.get('title', 'layer should have a title'));
+});
+
+//TODO: test identify()
+//TODO: test getQueryURLsRecursive
+//TODO: test getQueryURL
+//TODO: test getFeatureInfo
+//TODO:
+test('addFeatures', (assert) => {
+    //add layerProperties to exclude the states layer
+    vm.attr('layerProperties', {
+        states: {
+            excludeIdentify: true
+        }
+    });
+    vm.addFeatures(FeatureCollection, coordinate);
+    assert.equal(vm.attr('features').length, 2, 'features should have a length of 2 since we are excluding 2');
+    vm.attr('features').forEach(function (feature) {
+        assert.ok(feature.getGeometry(), 'features should have a geometry');
+    });
+});
+
+//TODO: test getFeaturesFromJson
+//TODO: test clearFeatures
+//TODO: test zoomToFeature
+//TODO: test animateZoomToExtent
+//TODO: test error
+//TODO: test getClosestFeatureIndex
+//TODO: test getDistance
