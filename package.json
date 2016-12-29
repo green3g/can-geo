@@ -48,7 +48,7 @@
     "font-awesome": "^4.6.x",
     "jquery": "^3.1.1",
     "openlayers": "^3.20.0",
-    "spectre-canjs": "^0.17.0",
+    "spectre-canjs": "^0.17.1",
     "spectre.css": "^0.1.29"
   },
   "steal": {
