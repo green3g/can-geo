@@ -1,3 +1,10 @@
+0.3.6 / 2017-01-31
+==================
+
+  * 0.3.6
+  * FIX: dev.error should be dev.warn
+  * changelog
+
 0.3.5 / 2017-01-31
 ==================
 
@@ -182,11 +189,3 @@
     https://greenkeeper.io/
   * Merge pull request [#40](https://github.com/roemhildtg/can-geo/issues/40) from roemhildtg/greenkeeper-eslint-3.11.0
     eslint@3.11.0 breaks build ⚠️
-  * chore(package): update eslint to version 3.11.0
-    https://greenkeeper.io/
-
-0.4.0 / 2016-11-25
-==================
-
-  * removes extra dependencies
-  * make ol-popup and identify-popup more reliable
