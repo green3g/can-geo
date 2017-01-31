@@ -39,7 +39,7 @@ DefineMap.extend({
    * @param  {float[]} point      x,y pair in latitude and longitude coordinates
    * @return {promise}            a promise resolved once the query completes. resolved with {suggestionsObject} suggestions
    */
-  getSuggestions: function(searchText, point, stuff) {},
+    getSuggestions: function (searchText, point, stuff) {},
   /**
    * Retrieves the coordinates for a known location. This location is a fully qualified address or place name returned from the `getSuggestions` query.
    * @link locationProvider.types.locationObject locationObject
@@ -47,12 +47,12 @@ DefineMap.extend({
    * @param  {String} knownLocation The location name
    * @return {Promise} A promise that is resolved to the {locationObject}
    */
-  getLocation: function(knownLocation) {},
+    getLocation: function (knownLocation) {},
 
   /**
    * A helper function to cancel any pending queries.
    * @signature
    *
    */
-  cancelPending: function() {}
+    cancelPending: function () {}
 });

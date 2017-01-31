@@ -2,15 +2,15 @@
 
 /* contains 4 features, 2 from the states, 2 from the not_states layer*/
 export default {
-  "type": "FeatureCollection",
-  "features": [{
-    "type": "Feature",
-    "id": "not_states.8",
-    "geometry": {
-      "type": "MultiPolygon",
-      "coordinates": [
-        [
-          [
+    'type': 'FeatureCollection',
+    'features': [{
+        'type': 'Feature',
+        'id': 'not_states.8',
+        'geometry': {
+            'type': 'MultiPolygon',
+            'coordinates': [
+                [
+                    [
             [-95.071693, 37.001408],
             [-95.406372, 37.000538000000006],
             [-95.525764, 37.000938000000005],
@@ -135,44 +135,44 @@ export default {
             [-94.620155, 36.996983],
             [-95.032509, 37.00071],
             [-95.071693, 37.001408]
-          ]
-        ]
-      ]
-    },
-    "geometry_name": "the_geom",
-    "properties": {
-      "STATE_NAME": "Kansas",
-      "STATE_FIPS": "20",
-      "SUB_REGION": "W N Cen",
-      "STATE_ABBR": "KS",
-      "LAND_KM": 211921.641,
-      "WATER_KM": 1188.865,
-      "PERSONS": 2477574,
-      "FAMILIES": 658600,
-      "HOUSHOLD": 944726,
-      "MALE": 1214645,
-      "FEMALE": 1262929,
-      "WORKERS": 907383,
-      "DRVALONE": 928575,
-      "CARPOOL": 135598,
-      "PUBTRANS": 7585,
-      "EMPLOYED": 1172214,
-      "UNEMPLOY": 57772,
-      "SERVICE": 346339,
-      "MANUAL": 166429,
-      "P_MALE": 0.49,
-      "P_FEMALE": 0.51,
-      "SAMP_POP": 453411,
-      "bbox": [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
-    }
-  }, {
-    "type": "Feature",
-    "id": "not_states.8",
-    "geometry": {
-      "type": "MultiPolygon",
-      "coordinates": [
-        [
-          [
+                    ]
+                ]
+            ]
+        },
+        'geometry_name': 'the_geom',
+        'properties': {
+            'STATE_NAME': 'Kansas',
+            'STATE_FIPS': '20',
+            'SUB_REGION': 'W N Cen',
+            'STATE_ABBR': 'KS',
+            'LAND_KM': 211921.641,
+            'WATER_KM': 1188.865,
+            'PERSONS': 2477574,
+            'FAMILIES': 658600,
+            'HOUSHOLD': 944726,
+            'MALE': 1214645,
+            'FEMALE': 1262929,
+            'WORKERS': 907383,
+            'DRVALONE': 928575,
+            'CARPOOL': 135598,
+            'PUBTRANS': 7585,
+            'EMPLOYED': 1172214,
+            'UNEMPLOY': 57772,
+            'SERVICE': 346339,
+            'MANUAL': 166429,
+            'P_MALE': 0.49,
+            'P_FEMALE': 0.51,
+            'SAMP_POP': 453411,
+            'bbox': [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
+        }
+    }, {
+        'type': 'Feature',
+        'id': 'not_states.8',
+        'geometry': {
+            'type': 'MultiPolygon',
+            'coordinates': [
+                [
+                    [
             [-95.071693, 37.001408],
             [-95.406372, 37.000538000000006],
             [-95.525764, 37.000938000000005],
@@ -297,44 +297,44 @@ export default {
             [-94.620155, 36.996983],
             [-95.032509, 37.00071],
             [-95.071693, 37.001408]
-          ]
-        ]
-      ]
-    },
-    "geometry_name": "the_geom",
-    "properties": {
-      "STATE_NAME": "Kansas",
-      "STATE_FIPS": "20",
-      "SUB_REGION": "W N Cen",
-      "STATE_ABBR": "KS",
-      "LAND_KM": 211921.641,
-      "WATER_KM": 1188.865,
-      "PERSONS": 2477574,
-      "FAMILIES": 658600,
-      "HOUSHOLD": 944726,
-      "MALE": 1214645,
-      "FEMALE": 1262929,
-      "WORKERS": 907383,
-      "DRVALONE": 928575,
-      "CARPOOL": 135598,
-      "PUBTRANS": 7585,
-      "EMPLOYED": 1172214,
-      "UNEMPLOY": 57772,
-      "SERVICE": 346339,
-      "MANUAL": 166429,
-      "P_MALE": 0.49,
-      "P_FEMALE": 0.51,
-      "SAMP_POP": 453411,
-      "bbox": [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
-    }
-  }, {
-    "type": "Feature",
-    "id": "states.8",
-    "geometry": {
-      "type": "MultiPolygon",
-      "coordinates": [
-        [
-          [
+                    ]
+                ]
+            ]
+        },
+        'geometry_name': 'the_geom',
+        'properties': {
+            'STATE_NAME': 'Kansas',
+            'STATE_FIPS': '20',
+            'SUB_REGION': 'W N Cen',
+            'STATE_ABBR': 'KS',
+            'LAND_KM': 211921.641,
+            'WATER_KM': 1188.865,
+            'PERSONS': 2477574,
+            'FAMILIES': 658600,
+            'HOUSHOLD': 944726,
+            'MALE': 1214645,
+            'FEMALE': 1262929,
+            'WORKERS': 907383,
+            'DRVALONE': 928575,
+            'CARPOOL': 135598,
+            'PUBTRANS': 7585,
+            'EMPLOYED': 1172214,
+            'UNEMPLOY': 57772,
+            'SERVICE': 346339,
+            'MANUAL': 166429,
+            'P_MALE': 0.49,
+            'P_FEMALE': 0.51,
+            'SAMP_POP': 453411,
+            'bbox': [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
+        }
+    }, {
+        'type': 'Feature',
+        'id': 'states.8',
+        'geometry': {
+            'type': 'MultiPolygon',
+            'coordinates': [
+                [
+                    [
             [-95.071693, 37.001408],
             [-95.406372, 37.000538000000006],
             [-95.525764, 37.000938000000005],
@@ -459,44 +459,44 @@ export default {
             [-94.620155, 36.996983],
             [-95.032509, 37.00071],
             [-95.071693, 37.001408]
-          ]
-        ]
-      ]
-    },
-    "geometry_name": "the_geom",
-    "properties": {
-      "STATE_NAME": "Kansas",
-      "STATE_FIPS": "20",
-      "SUB_REGION": "W N Cen",
-      "STATE_ABBR": "KS",
-      "LAND_KM": 211921.641,
-      "WATER_KM": 1188.865,
-      "PERSONS": 2477574,
-      "FAMILIES": 658600,
-      "HOUSHOLD": 944726,
-      "MALE": 1214645,
-      "FEMALE": 1262929,
-      "WORKERS": 907383,
-      "DRVALONE": 928575,
-      "CARPOOL": 135598,
-      "PUBTRANS": 7585,
-      "EMPLOYED": 1172214,
-      "UNEMPLOY": 57772,
-      "SERVICE": 346339,
-      "MANUAL": 166429,
-      "P_MALE": 0.49,
-      "P_FEMALE": 0.51,
-      "SAMP_POP": 453411,
-      "bbox": [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
-    }
-  }, {
-    "type": "Feature",
-    "id": "states.8",
-    "geometry": {
-      "type": "MultiPolygon",
-      "coordinates": [
-        [
-          [
+                    ]
+                ]
+            ]
+        },
+        'geometry_name': 'the_geom',
+        'properties': {
+            'STATE_NAME': 'Kansas',
+            'STATE_FIPS': '20',
+            'SUB_REGION': 'W N Cen',
+            'STATE_ABBR': 'KS',
+            'LAND_KM': 211921.641,
+            'WATER_KM': 1188.865,
+            'PERSONS': 2477574,
+            'FAMILIES': 658600,
+            'HOUSHOLD': 944726,
+            'MALE': 1214645,
+            'FEMALE': 1262929,
+            'WORKERS': 907383,
+            'DRVALONE': 928575,
+            'CARPOOL': 135598,
+            'PUBTRANS': 7585,
+            'EMPLOYED': 1172214,
+            'UNEMPLOY': 57772,
+            'SERVICE': 346339,
+            'MANUAL': 166429,
+            'P_MALE': 0.49,
+            'P_FEMALE': 0.51,
+            'SAMP_POP': 453411,
+            'bbox': [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
+        }
+    }, {
+        'type': 'Feature',
+        'id': 'states.8',
+        'geometry': {
+            'type': 'MultiPolygon',
+            'coordinates': [
+                [
+                    [
             [-95.071693, 37.001408],
             [-95.406372, 37.000538000000006],
             [-95.525764, 37.000938000000005],
@@ -621,42 +621,42 @@ export default {
             [-94.620155, 36.996983],
             [-95.032509, 37.00071],
             [-95.071693, 37.001408]
-          ]
-        ]
-      ]
+                    ]
+                ]
+            ]
+        },
+        'geometry_name': 'the_geom',
+        'properties': {
+            'STATE_NAME': 'Kansas',
+            'STATE_FIPS': '20',
+            'SUB_REGION': 'W N Cen',
+            'STATE_ABBR': 'KS',
+            'LAND_KM': 211921.641,
+            'WATER_KM': 1188.865,
+            'PERSONS': 2477574,
+            'FAMILIES': 658600,
+            'HOUSHOLD': 944726,
+            'MALE': 1214645,
+            'FEMALE': 1262929,
+            'WORKERS': 907383,
+            'DRVALONE': 928575,
+            'CARPOOL': 135598,
+            'PUBTRANS': 7585,
+            'EMPLOYED': 1172214,
+            'UNEMPLOY': 57772,
+            'SERVICE': 346339,
+            'MANUAL': 166429,
+            'P_MALE': 0.49,
+            'P_FEMALE': 0.51,
+            'SAMP_POP': 453411,
+            'bbox': [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
+        }
+    }],
+    'crs': {
+        'type': 'name',
+        'properties': {
+            'name': 'urn:ogc:def:crs:EPSG::4326'
+        }
     },
-    "geometry_name": "the_geom",
-    "properties": {
-      "STATE_NAME": "Kansas",
-      "STATE_FIPS": "20",
-      "SUB_REGION": "W N Cen",
-      "STATE_ABBR": "KS",
-      "LAND_KM": 211921.641,
-      "WATER_KM": 1188.865,
-      "PERSONS": 2477574,
-      "FAMILIES": 658600,
-      "HOUSHOLD": 944726,
-      "MALE": 1214645,
-      "FEMALE": 1262929,
-      "WORKERS": 907383,
-      "DRVALONE": 928575,
-      "CARPOOL": 135598,
-      "PUBTRANS": 7585,
-      "EMPLOYED": 1172214,
-      "UNEMPLOY": 57772,
-      "SERVICE": 346339,
-      "MANUAL": 166429,
-      "P_MALE": 0.49,
-      "P_FEMALE": 0.51,
-      "SAMP_POP": 453411,
-      "bbox": [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
-    }
-  }],
-  "crs": {
-    "type": "name",
-    "properties": {
-      "name": "urn:ogc:def:crs:EPSG::4326"
-    }
-  },
-  "bbox": [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
+    'bbox': [-102.051071, 36.988853000000006, -94.60099, 40.00297900000001]
 };

@@ -14,51 +14,51 @@ export default DefineMap.extend({
   /**
    * @prototype
    */
-  define: {
+    define: {
     /**
      * The print dpi setting
      * @parent printProvider.props
      * @property {Number} printProvider.props.dpi
      */
-    dpis: {
-      Value: DefineList
-    },
+        dpis: {
+            Value: DefineList
+        },
     /**
      * A list of layout strings
      * @parent printProvider.props
      * @property {Array<String>} printProvider.props.layouts
      */
-    layouts: {
-      Value: DefineList
-    },
+        layouts: {
+            Value: DefineList
+        },
     /**
      * A list of layout scales
      * @parent printProvider.props
      * @property {Array<Number>} printProvider.props.scales
      */
-    scales: {
-      Value: DefineList
-    },
+        scales: {
+            Value: DefineList
+        },
     /**
      * A list of output file formats
      * @parent printProvider.props
      * @property {Array<String>} printProvider.props.outputFormats
      */
-    outputFormats: {
-      Value: DefineList
-    }
-  },
+        outputFormats: {
+            Value: DefineList
+        }
+    },
   /**
    * Loads the capabilities and returns a promise that resolves to
    * the capabilities that were loaded. Upon loading the capabilities, the values describing the print services layouts, scales, etc should be populated.
    * @return {Promise} A promise that is resolved once the loading of the capabilities is complete.
    */
-  loadCapabilities: function() {},
+    loadCapabilities: function () {},
 
   /**
    * [function description]
    * @param  {printProvider.types.printOptions} options The print options
    * @return {printProvider.types.printResult}         A promise that resolves to a {printResult}
    */
-  print: function(options) {}
+    print: function (options) {}
 });
