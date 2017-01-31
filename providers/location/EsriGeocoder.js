@@ -1,6 +1,5 @@
 
 import DefineMap from 'can-define/map/map';
-import ajax from 'can-util/dom/ajax/ajax';
 import DefineList from 'can-define/list/list';
 import $ from 'jquery';
 
@@ -91,7 +90,7 @@ export default DefineMap.extend('EsriGeocoder', {
         value: null
     },
     locationPromise: {
-        get (val) {
+        get () {
             if (!this.searchAddress) {
                 return null;
             }

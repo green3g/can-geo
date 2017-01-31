@@ -1,4 +1,6 @@
-/*jshint esnext:true */
+/*eslint-disable */
+
+// this is a placeholder file to demonstrate the structure of a location provider 
 
 import DefineMap from 'can-define/map/map';
 /**

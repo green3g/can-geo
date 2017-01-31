@@ -14,7 +14,7 @@ import Component from 'can-component';
 import DefineList from 'can-define/list/list';
 import ol from 'openlayers';
 
-import canViewModel from 'can-view-model';
+import dev from 'can-util/js/dev/dev';
 
 /**
  * @constructor identify-widget.ViewModel ViewModel
@@ -184,6 +184,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
                         return false;
                     }
                     this.identify(event.coordinate);
+                    return true;
                 });
                 map.addLayer(this.layer);
             }
@@ -217,8 +218,8 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      */
     active: 'htmlbool',
     /**
-     * @function identify
      * Queries the available map wms layers and updates the loading status
+     * @function identify
      * @signature
      * @param  {ol.events.Event} event The click event dispatched by the map
      * @param  {Array<Number>} coordinate Optional coordinate array to identify at
@@ -246,8 +247,8 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         return this.loading;
     },
     /**
-     * @function getQueryURLsRecursive
      * Recursively queries wms layers for identify results. Recursion is used to drill into group layers
+     * @function getQueryURLsRecursive
      * @signature
      * @param  {ol.Collection<ol.Layer>} layers     A collection (array) of layers
      * @param  {Array<Number>} coordinate The current identify coordinate
@@ -420,13 +421,14 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      */
     error (e) {
         this.hasErrors = true;
-        console.warn('Could not perform ajax request: ', e);
+        dev.warn('Could not perform ajax request: ', e);
     },
     /**
      * finds the closest feature to the coordinate and returns that feature index
      * @function getClosestFeatureIndex
      * @signature
      * @param  {ol.feature[]} features The array of features to search through
+     * @param {Array<Number>} coord The coordinate to start searching from 
      * @return {Number}          The index value of the closest feature
      */
     getClosestFeatureIndex (features, coord) {

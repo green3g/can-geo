@@ -1,5 +1,6 @@
-/* jshint esnext:true */
+/*eslint camelcase: ["error", {properties: "never"}]*/
 import ol from 'openlayers';
+import dev from 'can-util/js/dev/dev';
 export default {
     m: {
         //single dimension
@@ -30,28 +31,28 @@ export default {
                 }
             };
         default:
-        //this does not work
-        // var coords = point.getCoordinates();
-        // var sourceUnits = srcProj.getUnits();
-        // return {
-        //   lon: {
-        //     value: Math.round(this._convert(coords[0], sourceUnits, destUnits) * 1000) / 1000,
-        //     direction: sourceUnits + ' Easting'
-        //   }, lat: {
-        //     value: Math.round(this._convert(coords[0], sourceUnits, destUnits) * 1000) / 1000,
-        //     direction: sourceUnits + ' Northing'
-        //   }
-        // };
+                //this does not work
+                // var coords = point.getCoordinates();
+                // var sourceUnits = srcProj.getUnits();
+                // return {
+                //   lon: {
+                //     value: Math.round(this._convert(coords[0], sourceUnits, destUnits) * 1000) / 1000,
+                //     direction: sourceUnits + ' Easting'
+                //   }, lat: {
+                //     value: Math.round(this._convert(coords[0], sourceUnits, destUnits) * 1000) / 1000,
+                //     direction: sourceUnits + ' Northing'
+                //   }
+                // };
             return null;
         }
     },
-  /*
-   * format length output
-   * @param {ol.geom.LineString} line
-   * @return {float}
-   */
+    /*
+     * format length output
+     * @param {ol.geom.LineString} line
+     * @return {float}
+     */
     getLength (line, sourceProj, destUnits, useGeodisic) {
-    //used for transforming measurements to geodisic
+        //used for transforming measurements to geodisic
         var wgs84Sphere = new ol.Sphere(6378137);
         var length;
         if (useGeodisic !== false) {
@@ -71,20 +72,20 @@ export default {
         }
         return this._convert(length, sourceUnits, destUnits);
     },
-  /*
-   * get polygon area
-   * @param {ol.geom.Polygon} polygon
-   * @param {ol.proj.Projection} srcProj
-   * @param {Boolean} useGeodisic - optional, default true
-   * @return {string}
-   */
+    /*
+     * get polygon area
+     * @param {ol.geom.Polygon} polygon
+     * @param {ol.proj.Projection} srcProj
+     * @param {Boolean} useGeodisic - optional, default true
+     * @return {string}
+     */
     getArea (polygon, sourceProj, destUnits, useGeodisic) {
-    //used for transforming measurements to geodisic
+        //used for transforming measurements to geodisic
         var wgs84Sphere = new ol.Sphere(6378137);
         var area;
         if (useGeodisic !== false) {
             var geom = /* @property {ol.geom.Polygon} */ (polygon.clone().transform(
-        sourceProj, 'EPSG:4326'));
+                sourceProj, 'EPSG:4326'));
             var coordinates = geom.getLinearRing(0).getCoordinates();
             area = Math.abs(wgs84Sphere.geodesicArea(coordinates));
         } else {
@@ -96,19 +97,20 @@ export default {
         }
         return this._convert(area, sourceUnits, destUnits);
     },
-  /*
-   * converts a number between units
-   * @param {float} value
-   * @param {string} sourceUnits
-   * @param {string} destUnits
-   * @return {float}
-   */
+    /*
+     * converts a number between units
+     * @param {float} value
+     * @param {string} sourceUnits
+     * @param {string} destUnits
+     * @return {float}
+     */
     _convert (value, sourceUnits, destUnits) {
         if (this.hasOwnProperty(sourceUnits) &&
-      this[sourceUnits].hasOwnProperty(destUnits)) {
+            this[sourceUnits].hasOwnProperty(destUnits)) {
             return Math.round(value * this[sourceUnits][destUnits] * 100) / 100;
         }
-        console.warn('Source or destination unit conversion not found.',
-      sourceUnits, destUnits);
+        dev.warn('Source or destination unit conversion not found.',
+            sourceUnits, destUnits);
+        return null;
     }
 };

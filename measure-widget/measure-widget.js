@@ -1,4 +1,3 @@
-
 import DefineMap from 'can-define/map/map';
 import DefineList from 'can-define/list/list';
 import assign from 'can-util/js/assign/assign';
@@ -28,11 +27,11 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
     measurements: {
         value: measurements
     },
-     /**
-      * The current state of the widget. This is set to true when a button is activated
-      * @property {Boolean} measure-widget.ViewModel.props.active
-      * @parent measure-widget.ViewModel.props
-      */
+    /**
+     * The current state of the widget. This is set to true when a button is activated
+     * @property {Boolean} measure-widget.ViewModel.props.active
+     * @parent measure-widget.ViewModel.props
+     */
     active: {
         Type: DefineMap,
         set (active) {
@@ -79,7 +78,10 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
     vectorLayer: '*',
     helpOverlay: '*',
     measureOverlay: '*',
-    measureOverlays: {Type: DefineList, Value: DefineList},
+    measureOverlays: {
+        Type: DefineList,
+        Value: DefineList
+    },
     measureValue: '*',
     interaction: '*',
     pointerMoveKey: '*',
@@ -106,12 +108,12 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             return map;
         }
     },
-  /**
-   * This is the function called when a tool button is clicked. Activates a measure tool if is not already active. If it is already active, it deactivates the measure tool.
-   * @prototype
-   * @signature
-   * @param  {measureToolObject} measureTool The tool to activate
-   */
+    /**
+     * This is the function called when a tool button is clicked. Activates a measure tool if is not already active. If it is already active, it deactivates the measure tool.
+     * @prototype
+     * @signature
+     * @param  {measureToolObject} measureTool The tool to activate
+     */
     activateMeasureTool (measureTool) {
         if (this.active === measureTool) {
             this.active = null;
@@ -120,10 +122,10 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             this.unitsDropdown = this.active.units[0].value;
         }
     },
-  /**
-   * Calls methods to clear the overlay layers
-   * @signature
-   */
+    /**
+     * Calls methods to clear the overlay layers
+     * @signature
+     */
     clearMeasurements () {
         this.clearMeasureOverlays();
     },
@@ -244,8 +246,8 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
         if (geom instanceof ol.geom.Point) {
             this.measureOverlay.setPosition(geom.getLastCoordinate());
             this.measureValue = conversion.getPosition(geom,
-              this.map.getView().getProjection(),
-              this.activeUnits.value
+                this.map.getView().getProjection(),
+                this.activeUnits.value
             );
             this.drawEnd(evt);
             return;
@@ -257,11 +259,11 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             if (geomChg instanceof ol.geom.Polygon) {
                 coords = geomChg.getInteriorPoint().getCoordinates();
                 value = conversion.getArea(geomChg, this.map.getView().getProjection(),
-                          this.activeUnits.value, this.useGeodisic);
+                    this.activeUnits.value, this.useGeodisic);
             } else if (geomChg instanceof ol.geom.LineString) {
                 coords = geomChg.getLastCoordinate();
                 value = conversion.getLength(geomChg, this.map.getView().getProjection(),
-                  this.activeUnits.value, this.useGeodisic);
+                    this.activeUnits.value, this.useGeodisic);
             }
             this.measureOverlay.setPosition(coords);
             this.measureValue = value;

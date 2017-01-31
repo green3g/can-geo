@@ -1,9 +1,9 @@
-
 import Component from 'can-component';
 import DefineMap from 'can-define/map/map';
 import template from './print.stache!';
 
 import 'spectre-canjs/nav-container/';
+import dev from 'can-util/js/dev/dev';
 
 /**
  * @constructor print-widget.ViewModel ViewModel
@@ -13,9 +13,9 @@ import 'spectre-canjs/nav-container/';
  * @description A `<print-widget />` component's ViewModel
  */
 export const ViewModel = DefineMap.extend({
-  /**
-   * @prototype
-   */
+    /**
+     * @prototype
+     */
     /**
      * @property {String} print-widget.ViewModel.mapTitle mapTitle
      * @parent print-widget.ViewModel.props
@@ -98,13 +98,13 @@ export const ViewModel = DefineMap.extend({
      * @parent print-widget.ViewModel.props
      */
     isPrinting: 'boolean',
-  /**
-   * @function printButtonClick
-   * Called when the print button is clicked to activate the provider's `print` method.
-   */
+    /**
+     * Called when the print button is clicked to activate the provider's `print` method.
+     * @function printButtonClick
+     */
     printButtonClick () {
         if (!this.map) {
-            console.error('Print: Map is not set');
+            dev.error('Print: Map is not set');
         }
 
         if (this.provider && !this.isPrinting) {
@@ -117,19 +117,18 @@ export const ViewModel = DefineMap.extend({
             }).then(this.handlePrintout.bind(this));
         }
     },
-  /**
-   * @function clearButtonClick
-   * Click handler for when the clear button is clicked. Empties out the current list of `printResults`
-   * @return {[type]} [description]
-   */
+    /**
+     * Click handler for when the clear button is clicked. Empties out the current list of `printResults`
+     * @function clearButtonClick
+     */
     clearButtonClick () {
         this.printResults.replace([]);
     },
-  /**
-   * @function handlePrintout
-   * Hanlder for when the print deferred returned by the provider resolves to update add the print result to the list of results
-   * @param  {PrintResult} results The result of the printout
-   */
+    /**
+     * Hanlder for when the print deferred returned by the provider resolves to update add the print result to the list of results
+     * @function handlePrintout
+     * @param  {PrintResult} results The result of the printout
+     */
     handlePrintout: function (results) {
         this.isPrinting = false;
         this.printResults.push(results);

@@ -1,4 +1,3 @@
-
 import DefineList from 'can-define/list/list';
 import DefineMap from 'can-define/map/map';
 import CanEvent from 'can-event';
@@ -21,7 +20,7 @@ let id = 0;
  */
 export const ViewModel = DefineMap.extend('LocatorWidget', {
     /**
-    * the url to geocode to for find and suggest endpoints
+     * the url to geocode to for find and suggest endpoints
      * @property {String} locator-widget.ViewModel.props.url
      * @parent locator-widget.ViewModel.props
      */
@@ -30,7 +29,7 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
         type: 'string'
     },
     /**
-    * The default level of zoom to apply if using an ol-map. The default is `18`
+     * The default level of zoom to apply if using an ol-map. The default is `18`
      * @property {Number} locator-widget.ViewModel.props.zoomLevel
      * @parent locator-widget.ViewModel.props
      */
@@ -73,14 +72,14 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
         type: 'htmlbool',
         value: false
     },
-  /**
-   * @prototype
-   */
-  /**
-   * When the map is ready, this is called internally to add a new vector layer to it and stores a reference to the map.
-   * @signature
-   * @param  {can.Map} map The map viewModel
-   */
+    /**
+     * @prototype
+     */
+    /**
+     * When the map is ready, this is called internally to add a new vector layer to it and stores a reference to the map.
+     * @signature
+     * @param  {can.Map} map The map viewModel
+     */
     initVectorLayer (map) {
         this.vectorLayer = new ol.layer.Vector({
             title: 'Location',
@@ -101,25 +100,11 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
     refreshSuggestions (value) {
         this.provider.searchText = value;
     },
-  /**
-   * Called when the search text changes to retrieve suggestions
-   * @param  {String} address The text string to search for suggestions
-   */
-    searchAddressValue (address) {
-        this.clearGraphics();
-        var point;
-        if (this.map) {
-            var view = this.map.getView();
-            point = ol.proj.transform(view.getCenter(),
-              view.getProjection(), 'EPSG:4326');
-            this.provider.searchPoint = point;
-        }
-    },
-  /**
-   * Called when one of the suggestions is clicked. This function kicks off the geocode by querying the provider with the qualified address or location name.
-   * @signature
-   * @param  {String} address The fully qualified address or string name
-   */
+    /**
+     * Called when one of the suggestions is clicked. This function kicks off the geocode by querying the provider with the qualified address or location name.
+     * @signature
+     * @param  {String} address The fully qualified address or string name
+     */
     selectAddress: function (address) {
         this.provider.set({
             searchAddress: address,
@@ -147,26 +132,26 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
             this.clearGraphics();
         }
     },
-  /**
-   * Clears the graphics layer
-   * @signature
-   */
+    /**
+     * Clears the graphics layer
+     * @signature
+     */
     clearGraphics: function () {
         if (this.map) {
             this.vectorLayer.getSource().clear();
         }
     },
-  /**
-   * @typedef {can.Event} locator-widget.events.locationFound location-found
-   * @parent locator-widget.events
-   * An event dispatched when the the location is found by the provider
-   * @option {providers.locationProvider.types.locationObject} location The location found by the provider
-   */
-  /**
-   * Called internally when the address is resolved to a location by the provider
-   * @signature
-   * @param  {providers.locationProvider.types.locationObject} location The location object
-   */
+    /**
+     * @typedef {can.Event} locator-widget.events.locationFound location-found
+     * @parent locator-widget.events
+     * An event dispatched when the the location is found by the provider
+     * @option {providers.locationProvider.types.locationObject} location The location found by the provider
+     */
+    /**
+     * Called internally when the address is resolved to a location by the provider
+     * @signature
+     * @param  {providers.locationProvider.types.locationObject} location The location object
+     */
     // handleAddressLocated: function (location) {
     //     this.clearSuggestions();
     //     this.location = location;
@@ -175,14 +160,14 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
     //         this.navigateMap(location);
     //     }
     // },
-  /**
-   * Pans the map to the location and adds a point to the graphics layer
-   * @signature
-   * @param  {providers.locationProvider.types.locationObject} location The location object
-   */
+    /**
+     * Pans the map to the location and adds a point to the graphics layer
+     * @signature
+     * @param  {providers.locationProvider.types.locationObject} location The location object
+     */
     navigateMap: function (location) {
         var coords = ol.proj.transform([location.x, location.y],
-          'EPSG:4326', this.map.getView().getProjection());
+            'EPSG:4326', this.map.getView().getProjection());
         var duration = 750;
         var pan = ol.animation.pan({
             duration: duration,
@@ -207,6 +192,5 @@ export default Component.extend({
     viewModel: ViewModel,
     view: template,
     tag: 'locator-widget',
-    events: {
-    }
+    events: {}
 });

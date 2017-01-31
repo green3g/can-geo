@@ -1,4 +1,4 @@
-/*jshint esnext:true */
+/*eslint-disable */ 
 import DefineMap from 'can-define/map/map';
 import DefineList from 'can-define/list/list';
 /**

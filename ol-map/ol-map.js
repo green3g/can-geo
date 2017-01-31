@@ -1,4 +1,3 @@
-
 import DefineMap from 'can-define/map/map';
 import DefineList from 'can-define/list/list';
 import batch from 'can-event/batch/batch';
@@ -12,15 +11,25 @@ import './olMap.css!';
 import ol from 'openlayers';
 import 'node_modules/openlayers/dist/ol.css!';
 
+import dev from 'can-util/js/dev/dev';
+
 
 import Factory from './LayerFactory';
 
 export const ViewOptions = DefineMap.extend('ViewOptions', {
-    projection: {type: 'string', value: 'EPSG:3857'},
+    projection: {
+        type: 'string',
+        value: 'EPSG:3857'
+    },
     minZoom: 'number',
     maxZoom: 'number',
-    rotation: {type: 'number', value: 0},
-    extent: {Type: DefineList}
+    rotation: {
+        type: 'number',
+        value: 0
+    },
+    extent: {
+        Type: DefineList
+    }
 });
 
 export const MapOptions = DefineMap.extend('MapOptions', {
@@ -45,9 +54,9 @@ export const MapOptions = DefineMap.extend('MapOptions', {
  * @description A `<ol-map />` component's ViewModel
  */
 export const ViewModel = DefineMap.extend('OlMap', {
-  /**
-   * @prototype
-   */
+    /**
+     * @prototype
+     */
     /**
      * Openlayers projection string to use for the coordinates. of this viewModel.
      * The default is `'EPSG:4326'` (latitude and longitude). This projection is not
@@ -145,12 +154,12 @@ export const ViewModel = DefineMap.extend('OlMap', {
         type: 'boolean',
         value: false
     },
-  /**
-   * @function initMap
-   * Initializes the map
-   * @signature
-   * @param  {domElement} element The dom element to place the map
-   */
+    /**
+     * Initializes the map
+     * @function initMap
+     * @signature
+     * @param  {domElement} element The dom element to place the map
+     */
     initMap (element) {
         this.mapOptions.layers = this.getLayers(this.mapOptions.layers);
         this.mapOptions.view = this.getView(this.mapOptions.view);
@@ -165,32 +174,32 @@ export const ViewModel = DefineMap.extend('OlMap', {
         //create the map
         this.mapObject = this.getMap(options);
     },
-  /**
-   * @function getLayers
-   * Creates new ol layers from the provided paramters using the Layer Factory.
-   * Layers are added to the map in the order of first to last, with the last appearing
-   * on the bottom.
-   * @param  {Array<object>} layerConf The array of layer properties to pass to the factory
-   * @return {ol.Collection<ol.Layer>} The assembled layers in the correct order
-   */
+    /**
+     * Creates new ol layers from the provided paramters using the Layer Factory.
+     * Layers are added to the map in the order of first to last, with the last appearing
+     * on the bottom.
+     * @function getLayers
+     * @param  {Array<object>} layerConf The array of layer properties to pass to the factory
+     * @return {ol.Collection<ol.Layer>} The assembled layers in the correct order
+     */
     getLayers (layerConf) {
         const layers = layerConf.reverse().map(function (l) {
             return Factory.getLayer(l);
         });
         return new ol.Collection(layers);
     },
-  /**
-   * @function getView
-   * creates a new ol.View object from the provided paramters.
-   * If a view object exists in the mapOptions, the view object's properties
-   * will override the defaults including x and y properties set on this viewModel
-   * @param  {[type]} viewConf [description]
-   * @return {[type]}          [description]
-   */
+    /**
+     * creates a new ol.View object from the provided paramters.
+     * If a view object exists in the mapOptions, the view object's properties
+     * will override the defaults including x and y properties set on this viewModel
+     * @function getView
+     * @param  {[type]} viewConf [description]
+     * @return {[type]}          [description]
+     */
     getView (viewConf) {
         //transform the coordinates if necessary
         const center = ol.proj.transform([this.x, this.y], this.projection,
-          this.mapOptions.view.projection);
+            this.mapOptions.view.projection);
         const viewOptions = assign({
             zoom: this.zoom,
             center: center
@@ -199,14 +208,14 @@ export const ViewModel = DefineMap.extend('OlMap', {
         //create the view
         return new ol.View(viewOptions);
     },
-  /**
-   * @function getMap
-   * @description
-   * Creates and initializes the map with the map options. Called internally.
-   * @signature
-   * @param  {object} options `ol.map` constructor options
-   * @return {ol.map}         The map object that is now set up
-   */
+    /**
+     * @description
+     * Creates and initializes the map with the map options. Called internally.
+     * @function getMap
+     * @signature
+     * @param  {object} options `ol.map` constructor options
+     * @return {ol.map}         The map object that is now set up
+     */
     getMap (options) {
         const map = new ol.Map(options);
         map.on('click', (event) => {
@@ -218,14 +227,14 @@ export const ViewModel = DefineMap.extend('OlMap', {
             // project to components projection
             const center = ol.proj.transform(
 
-              //coordinates
-              view.getCenter(),
+                //coordinates
+                view.getCenter(),
 
-              //from projection
-              view.getProjection(),
+                //from projection
+                view.getProjection(),
 
-              //to projection
-              this.projection
+                //to projection
+                this.projection
             );
             //export the properties
             this.set({
@@ -236,18 +245,21 @@ export const ViewModel = DefineMap.extend('OlMap', {
         });
         return map;
     },
-  /**
-   * @function removeMap
-   * Removes the map when this element is removed
-   */
+    /**
+     * Removes the map when this element is removed
+     * @function removeMap
+     */
     removeMap () {
         this.mapObject.setTarget(null);
         this.mapObject = null;
     },
-  /**
-   * returns the viewModels coordinates in the map view's coordinate system
-   * @return {Array<Number>} the transformed coordinates
-   */
+    /**
+     * returns the viewModels coordinates in the map view's coordinate system
+     * @function removeMap
+     * @param {Number} x The x coordinate
+     * @param {Number} y The y coordinate
+     * @return {Array<Number>} the transformed coordinates
+     */
     getTransformedCoordinates (x, y) {
         if (!this.mapObject) {
             return null;
@@ -255,22 +267,22 @@ export const ViewModel = DefineMap.extend('OlMap', {
         const view = this.mapObject.getView();
         const coords = ol.proj.transform(
 
-          //x,y or lon,lat coordinate pair
-          [x, y],
+            //x,y or lon,lat coordinate pair
+            [x, y],
 
-          //from projection
-          this.projection,
+            //from projection
+            this.projection,
 
-          //to projection
-          view.getProjection()
+            //to projection
+            view.getProjection()
         );
         return coords;
     },
-  /**
-   * determines if the view needs to be changed and if so begins a
-   * can.batch process while asynchronously isAnimating the view changes
-   * that are necessary
-   */
+    /**
+     * determines if the view needs to be changed and if so begins a
+     * can.batch process while asynchronously isAnimating the view changes
+     * that are necessary
+     */
     changeViewAsync () {
         if (this.isAnimating) {
             return;
@@ -291,7 +303,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
             const coords = this.getTransformedCoordinates(x, y);
             const center = view.getCenter();
             if (!coords || !center) {
-                console.warn('Coords or center not calculated correctly');
+                dev.warn('Coords or center not calculated correctly');
                 return;
             }
 

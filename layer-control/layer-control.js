@@ -20,9 +20,9 @@ const controlTemplates = {
  * @description A `<layer-control />` component's ViewModel
  */
 export const ViewModel = DefineMap.extend('LayerControl', {
-  /**
-   * @prototype
-   */
+    /**
+     * @prototype
+     */
     /**
      * An internal list of layers used by the template
      * @property {Array<geo.types.ControlLayerObject>} layer-control.ViewModel.props.layers
@@ -48,10 +48,10 @@ export const ViewModel = DefineMap.extend('LayerControl', {
             return map;
         }
     },
-  /**
-   * Calls `addLayer` for each layer currently in the collection and binds to the add/remove events of the collection
-   * @param  {ol.Collection} collection The collection of layers
-   */
+    /**
+     * Calls `addLayer` for each layer currently in the collection and binds to the add/remove events of the collection
+     * @param  {ol.Collection} collection The collection of layers
+     */
     initLayers (collection) {
         this.layers = collection.getArray().map((l) => {
             return {
@@ -79,11 +79,11 @@ export const ViewModel = DefineMap.extend('LayerControl', {
             this.removeLayerById(event.element.get('id'));
         });
     },
-  /**
-   * Adds a layer to the view models collection
-   * @param  {ol.Layer} layer The layer to add
-   * @param  {Number} index The layer's position in the collection
-   */
+    /**
+     * Adds a layer to the view models collection
+     * @param  {ol.Layer} layer The layer to add
+     * @param  {Number} index The layer's position in the collection
+     */
     addLayer: function (layer, index) {
         var filteredLayers = this.layers.filter(function (l) {
             return l.id === layer.get('id');
@@ -99,12 +99,12 @@ export const ViewModel = DefineMap.extend('LayerControl', {
             this.layers.splice(index, 0, props);
         }
     },
-  /**
-   * Removes a layer
-   * @param  {String} id The unique layer id
-   * @return {Boolean} The result of the remove, true if successful, false if
-   * the layer was not found
-   */
+    /**
+     * Removes a layer
+     * @param  {String} id The unique layer id
+     * @return {Boolean} The result of the remove, true if successful, false if
+     * the layer was not found
+     */
     removeLayerById: function (id) {
         this.layers.each((layer, index) => {
             if (layer.layer.get('id') === id) {
@@ -115,20 +115,20 @@ export const ViewModel = DefineMap.extend('LayerControl', {
         });
         return true;
     },
-  /**
-   * Returns a template renderer for the layer
-   * @param  {ol.Layer} layer The layer to find the template renderer for
-   * @return {can.stache}       The stache renderer
-   */
+    /**
+     * Returns a template renderer for the layer
+     * @param  {ol.Layer} layer The layer to find the template renderer for
+     * @return {can.stache}       The stache renderer
+     */
     getLayerTemplate: function (layer) {
-        var template;
+        var templ;
         //handle layers without sources
         if (!layer.getSource) {
-            for (template in controlTemplates) {
-                if (controlTemplates.hasOwnProperty(template) &&
-          ol.layer[template] &&
-          layer instanceof ol.layer[template]) {
-                    return stache(controlTemplates[template]);
+            for (templ in controlTemplates) {
+                if (controlTemplates.hasOwnProperty(templ) &&
+                    ol.layer[templ] &&
+                    layer instanceof ol.layer[templ]) {
+                    return stache(controlTemplates[templ]);
                 }
             }
             return stache(controlTemplates.default);
@@ -136,11 +136,11 @@ export const ViewModel = DefineMap.extend('LayerControl', {
         //handle layer sources for more specific
         //layer types
         var layerSource = layer.getSource();
-        for (template in controlTemplates) {
-            if (controlTemplates.hasOwnProperty(template) &&
-        ol.source[template] &&
-        layerSource instanceof ol.source[template]) {
-                return stache(controlTemplates[template]);
+        for (templ in controlTemplates) {
+            if (controlTemplates.hasOwnProperty(templ) &&
+                ol.source[templ] &&
+                layerSource instanceof ol.source[templ]) {
+                return stache(controlTemplates[templ]);
             }
         }
         return stache(controlTemplates.default);
@@ -152,7 +152,6 @@ export default Component.extend({
     viewModel: ViewModel,
     view: template,
     events: {
-        inserted: function () {
-        }
+        inserted: function () {}
     }
 });

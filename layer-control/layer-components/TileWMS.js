@@ -1,8 +1,9 @@
-
 import Component from 'can-component';
 import baseViewModel from './Default';
 import template from './TileWMS.stache!';
 import DefineList from 'can-define/list/list';
+
+import dev from 'can-util/js/dev/dev';
 
 const ViewModel = baseViewModel.extend({
     collapsed: {
@@ -30,8 +31,8 @@ const ViewModel = baseViewModel.extend({
                 visible: defaultVisible,
                 collapsed: true,
                 baseUrl: source.getUrls()[0],
-                toggleCollapsed: function (sublayer) {
-                    sublayer.collapsed = !sublayer.collapsed;
+                toggleCollapsed: function (sub) {
+                    sub.collapsed = !sub.collapsed;
                 },
                 getLegendGraphicURL () {
                     let separator;
@@ -68,7 +69,7 @@ const ViewModel = baseViewModel.extend({
             return s.id;
         }).join(',');
         if (!newLayersParam) {
-            console.warn('No layers are visible, wms server may not respond correctly');
+            dev.warn('No layers are visible, wms server may not respond correctly');
         }
         source.updateParams({
             LAYERS: newLayersParam
