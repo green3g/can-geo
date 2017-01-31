@@ -1,3 +1,10 @@
+0.3.7 / 2017-01-31
+==================
+
+  * 0.3.7
+  * DOCS: measure-widget documentation
+  * changelog
+
 0.3.6 / 2017-01-31
 ==================
 
@@ -183,9 +190,3 @@
     can-view-model@3.1.2 breaks build ⚠️
   * chore(package): update can-view-model to version 3.1.2
     https://greenkeeper.io/
-  * Merge pull request [#41](https://github.com/roemhildtg/can-geo/issues/41) from roemhildtg/greenkeeper-eslint-3.11.1
-    eslint@3.11.1 breaks build ⚠️
-  * chore(package): update eslint to version 3.11.1
-    https://greenkeeper.io/
-  * Merge pull request [#40](https://github.com/roemhildtg/can-geo/issues/40) from roemhildtg/greenkeeper-eslint-3.11.0
-    eslint@3.11.0 breaks build ⚠️
