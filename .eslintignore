@@ -1,0 +1,14 @@
+# distributable files
+dist/*
+
+# ignore tests for now...
+*.test.js
+
+# docs and demos
+docs/*
+docs-site/*
+**/demo/*.js
+
+# build scripts
+build.js
+docs-bundle.js
