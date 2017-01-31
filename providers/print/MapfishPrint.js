@@ -187,7 +187,7 @@ export default DefineMap.extend('MapfishProvider', {
             }).then((capabilities) => {
                 resolve(capabilities);
             }).catch((error) => {
-                dev.error(error);
+                dev.warn(error);
                 reject(error);
             });
         });
