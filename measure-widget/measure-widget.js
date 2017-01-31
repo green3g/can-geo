@@ -29,14 +29,21 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
     },
     /**
      * The current state of the widget. This is set to true when a button is activated
-     * @property {Boolean} measure-widget.ViewModel.props.active
+     * @property {Boolean} measure-widget.ViewModel.props.active active
      * @parent measure-widget.ViewModel.props
      */
     active: {
         Type: DefineMap,
         set (active) {
             if (!active) {
+
+                // reset the units dropdown value
+                this.unitsDropdown = '';
+
+                // remove the hover overlay
                 this.removeMapHover();
+
+                // remove any interaction
                 if (this.interaction) {
                     this.map.removeInteraction(this.interaction);
                     this.interaction = null;
@@ -44,11 +51,18 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
                 this.dispatch('deactivate');
                 return active;
             }
+
+            // update the units dropdown value
+            this.unitsDropdown = active.units[0].value;
+
+            // remove any existing draw interactions
             if (this.interaction) {
                 this.map.removeInteraction(this.interaction);
             }
+
             //add the help tooltip listener
             this.addMapHover();
+
             //add the interaction for measuring
             this.interaction = this.getInteraction(active.type);
             this.map.addInteraction(this.interaction);
@@ -75,16 +89,11 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
         value: true,
         type: 'boolean'
     },
-    vectorLayer: '*',
-    helpOverlay: '*',
-    measureOverlay: '*',
-    measureOverlays: {
-        Type: DefineList,
-        Value: DefineList
-    },
-    measureValue: '*',
-    interaction: '*',
-    pointerMoveKey: '*',
+    /**
+     * The current set of units available in the units dropdown
+     * @property {Array<Object>} measure-widget.ViewModel.props.activeUnits activeUnits
+     * @parent measure-widget.ViewModel.props
+     */
     activeUnits: {
         get () {
             if (!this.unitsDropdown) {
@@ -95,6 +104,11 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             })[0];
         }
     },
+    /**
+     * The openlayers map object
+     * @property {ol.Map} measure-widget.ViewModel.props.map map
+     * @parent measure-widget.ViewModel.props
+     */
     map: {
         type: '*',
         set (map) {
@@ -108,6 +122,17 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             return map;
         }
     },
+    // internal props
+    vectorLayer: '*',
+    helpOverlay: '*',
+    measureOverlay: '*',
+    measureOverlays: {
+        Type: DefineList,
+        Value: DefineList
+    },
+    measureValue: '*',
+    interaction: '*',
+    pointerMoveKey: '*',
     /**
      * This is the function called when a tool button is clicked. Activates a measure tool if is not already active. If it is already active, it deactivates the measure tool.
      * @prototype
@@ -119,28 +144,29 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             this.active = null;
         } else {
             this.active = measureTool;
-            this.unitsDropdown = this.active.units[0].value;
         }
     },
     /**
      * Calls methods to clear the overlay layers
+     * @function clearMeasurements
      * @signature
      */
     clearMeasurements () {
         this.clearMeasureOverlays();
     },
-    changeUnits (key) {
-        this.active.units.forEach((unit) => {
-            if (unit.value === key) {
-                this.activeUnits = unit;
-            }
-        });
-    },
+    /**
+     * Adds the move handler to display the help tooltip
+     * @function addMapHover
+     */
     addMapHover () {
         if (!this.pointerMoveKey) {
-            this.pointerMoveKey = this.map.on('pointermove', this.pointerMove.bind(this));
+            this.pointerMoveKey = this.map.on('pointermove', this.updateHelpOverlay.bind(this));
         }
     },
+    /**
+     * Removes the help tooltip move handler
+     * @function removeMapHover
+     */
     removeMapHover () {
         if (this.pointerMoveKey) {
             this.map.unByKey(this.pointerMoveKey);
@@ -148,6 +174,14 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
         }
         this.helpOverlay.setPosition(undefined);
     },
+    /**
+     * Creates an ol interaction for the specified type
+     * @function getInteraction
+     * @signature
+     * @param {String} type The type of interaction to retrieve
+     * @return {ol.Interaction} The initialized ol interaction object that can be
+     * added to a map via `map.addInteraction`
+     */
     getInteraction (type) {
         const interaction = new ol.interaction.Draw({
             source: this.vectorLayer.getSource(),
@@ -176,6 +210,12 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
         interaction.on('drawend', this.drawEnd.bind(this));
         return interaction;
     },
+    /**
+     * Initializes a vector layer for the interaction to draw on
+     * @function initVectorLayer
+     * @signature
+     * @param {ol.Map} map The openlayers map
+     */
     initVectorLayer (map) {
         const vectorSource = new ol.source.Vector();
         this.vectorLayer = new ol.layer.Vector({
@@ -200,6 +240,12 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
         });
         map.addLayer(this.vectorLayer);
     },
+    /**
+     * Initializes the help overlay on the map
+     * @function initHelpOverlay
+     * @signature
+     * @param {ol.Map} map The openlayers map
+     */
     initHelpOverlay (map) {
         const node = map.getViewport();
         window.node = node;
@@ -212,7 +258,14 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
         });
         map.addOverlay(this.helpOverlay);
     },
-    createMeasureOverlay (attributes) {
+    /**
+     * Creates and returns a new overlay to render measurement data into
+     * @function getMeasureOverlay
+     * @signature
+     * @param {DefineMap} attributes The attributes to place in the measure overlay
+     * @return {ol.Overlay} The overlay that can be added to the map via `map.addOverlay`
+     */
+    getMeasureOverlay (attributes) {
         const node = this.map.getViewport();
         const frag = measureOverlayTemplate(attributes);
         const measureNode = node.appendChild(frag.firstChild);
@@ -223,6 +276,11 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             positioning: 'bottom-center'
         });
     },
+    /**
+     * Clears any existing measurement overlays and drawings
+     * @function clearMeasureOverlays
+     * @signature
+     */
     clearMeasureOverlays () {
         this.measureOverlays.forEach((o) => {
             const element = o.getElement();
@@ -232,14 +290,28 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
         this.measureOverlays.replace([]);
         this.vectorLayer.getSource().clear();
     },
-    pointerMove (evt) {
+    /**
+     * Sets the help overlay position. If the mouse event is dragging, the
+     * help position will not be updated
+     * @function updateHelpOverlay
+     * @signature
+     * @param {ol.MapBrowserEvent}  evt The mouse move event
+     */
+    updateHelpOverlay (evt) {
         if (evt.dragging) {
             return;
         }
         this.helpOverlay.setPosition(evt.coordinate);
     },
+    /**
+     * Sets up a new measurement drawing
+     * @function drawStart
+     * @signature
+     * @param {ol.MapBrowserEvent} evt The pointer event that started the drawing
+     *
+     */
     drawStart (evt) {
-        this.measureOverlay = this.createMeasureOverlay(this);
+        this.measureOverlay = this.getMeasureOverlay(this);
         this.map.addOverlay(this.measureOverlay);
         evt.feature.set('name', 'Measurement');
         const geom = evt.feature.getGeometry();
@@ -269,11 +341,16 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
             this.measureValue = value;
         });
     },
+    /**
+     * Ends the measurement drawing at the current measurement overlay coordinates
+     * @function drawEnd
+     * @signature 
+     */
     drawEnd () {
         const coords = this.measureOverlay.getPosition();
         this.measureOverlay.setPosition(undefined);
         if (this.addLabels) {
-            const tooltip = this.createMeasureOverlay({
+            const tooltip = this.getMeasureOverlay({
                 activeUnits: assign({}, this.activeUnits),
                 measureValue: this.measureValue,
                 cssClass: ' measure-tooltip-static'
