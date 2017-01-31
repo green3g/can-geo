@@ -79,13 +79,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
      */
     x: {
         type: 'number',
-        value: 0,
-        set (x) {
-            if (this.x !== x) {
-                this.changeViewAsync();
-            }
-            return x;
-        }
+        value: 0
     },
     /**
      *
@@ -96,13 +90,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
      */
     y: {
         type: 'number',
-        value: 0,
-        set (y) {
-            if (this.y !== y) {
-                this.changeViewAsync();
-            }
-            return y;
-        }
+        value: 0
     },
     /**
      * The starting zoom level of the map view. The default is 1.
@@ -114,13 +102,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
      */
     zoom: {
         type: 'number',
-        value: 1,
-        set (z) {
-            if (this.zoom !== z) {
-                this.changeViewAsync();
-            }
-            return z;
-        }
+        value: 1
     },
     /**
      * @description
@@ -299,6 +281,7 @@ export const ViewModel = DefineMap.extend('OlMap', {
                 y = this.y,
                 z = this.zoom,
                 map = this.mapObject;
+            let willAnimate = false;
             const view = map.getView();
             const coords = this.getTransformedCoordinates(x, y);
             const center = view.getCenter();
@@ -307,37 +290,25 @@ export const ViewModel = DefineMap.extend('OlMap', {
                 return;
             }
 
-            //do the animation
-            let zoom, pan;
-
-            //zoom animation
+            //zoom
             if (z !== view.getZoom()) {
-                zoom = ol.animation.zoom({
-                    duration: this.animationDuration,
-                    resolution: map.getView().getResolution()
-                });
-
-                //register animations
-                map.beforeRender(zoom);
-                view.setZoom(z);
+                willAnimate = true;
             }
 
-            //pan animation
+            //pan
             //account for rounding differences
             const difference = 0.0001;
             if (Math.abs(center[0] - coords[0]) > difference ||
                 Math.abs(center[1] - coords[1] > difference)) {
-                pan = ol.animation.pan({
-                    duration: this.animationDuration,
-                    source: center
-                });
-
-                //register animations
-                map.beforeRender(pan);
-                view.setCenter(coords);
+                willAnimate = true;
             }
 
-            if (zoom || pan) {
+            view.animate({
+                zoom: z,
+                center: coords
+            });
+
+            if (willAnimate) {
                 batch.start();
 
                 map.once('moveend', () => {
@@ -359,6 +330,15 @@ export default Component.extend({
     viewModel: ViewModel,
     view: template,
     events: {
+        '{viewModel} x': function () {
+            this.viewModel.changeViewAsync();
+        },
+        '{viewModel} y': function () {
+            this.viewModel.changeViewAsync();
+        },
+        '{viewModel} zoom': function () {
+            this.viewModel.changeViewAsync();
+        },
         inserted () {
             this.viewModel.initMap(this.element.querySelector('.ol-map-container'));
         },
