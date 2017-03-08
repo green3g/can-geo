@@ -5,24 +5,24 @@ import Component from 'can-component';
 import assign from 'can-util/js/assign/assign';
 import ol from 'openlayers';
 
-import template from './locator.stache!';
-import './locator.less!';
+import template from './search.stache!';
+import './search.less!';
 import icon from './icon';
 
 let id = 0;
 
 /**
- * @constructor locator-widget.ViewModel ViewModel
- * @parent locator-widget
- * @group locator-widget.ViewModel.props Properties
+ * @constructor search-widget.ViewModel ViewModel
+ * @parent search-widget
+ * @group search-widget.ViewModel.props Properties
  *
- * @description A `<locator-widget />` component's ViewModel
+ * @description A `<search-widget />` component's ViewModel
  */
-export const ViewModel = DefineMap.extend('LocatorWidget', {
+export const ViewModel = DefineMap.extend('SearchWidget', {
     /**
      * the url to geocode to for find and suggest endpoints
-     * @property {String} locator-widget.ViewModel.props.url
-     * @parent locator-widget.ViewModel.props
+     * @property {String} search-widget.ViewModel.props.url
+     * @parent search-widget.ViewModel.props
      */
     url: {
         value: null,
@@ -30,8 +30,8 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
     },
     /**
      * The default level of zoom to apply if using an ol-map. The default is `18`
-     * @property {Number} locator-widget.ViewModel.props.zoomLevel
-     * @parent locator-widget.ViewModel.props
+     * @property {Number} search-widget.ViewModel.props.zoomLevel
+     * @parent search-widget.ViewModel.props
      */
     zoomLevel: {
         value: 18,
@@ -39,8 +39,8 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
     },
     /**
      * whether or not to navigate the map
-     * @property {Boolean} locator-widget.ViewModel.props.navigate
-     * @parent locator-widget.ViewModel.props
+     * @property {Boolean} search-widget.ViewModel.props.navigate
+     * @parent search-widget.ViewModel.props
      */
     navigate: {
         type: 'boolean',
@@ -48,9 +48,9 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
     },
     /**
      * a geocoder service provider
-     * @property {providers.locationProvider} locator-widget.ViewModel.props.provider
+     * @property {providers.locationProvider} search-widget.ViewModel.props.provider
      * @link providers.locationProvider Location Providers
-     * @parent locator-widget.ViewModel.props
+     * @parent search-widget.ViewModel.props
      */
     provider: {},
     map: {
@@ -142,8 +142,8 @@ export const ViewModel = DefineMap.extend('LocatorWidget', {
         }
     },
     /**
-     * @typedef {can.Event} locator-widget.events.locationFound location-found
-     * @parent locator-widget.events
+     * @typedef {can.Event} search-widget.events.locationFound location-found
+     * @parent search-widget.events
      * An event dispatched when the the location is found by the provider
      * @option {providers.locationProvider.types.locationObject} location The location found by the provider
      */
@@ -191,6 +191,6 @@ assign(ViewModel.prototype, CanEvent);
 export default Component.extend({
     viewModel: ViewModel,
     view: template,
-    tag: 'locator-widget',
+    tag: 'search-widget',
     events: {}
 });

@@ -1,0 +1,52 @@
+{{#if provider}}
+    <div class="form-autocomplete">
+        <!-- autocomplete input container -->
+        <div class="form-autocomplete-input form-input">
+            <!-- autocomplete chips -->
+            {{#each locations}}
+                <label class="chip">
+              <span class="chip-name">{{items.0.address}}</span>
+              <button class="btn btn-clear" ($click)="removeLocation(.)"></button>
+          </label>
+            {{/each}}
+            <!-- autocomplete real input box -->
+            <input class="form-input" type="text" placeholder="Seach for an address or place" {($value)}="provider.searchText" ($keyup)="refreshSuggestions(%element.value)" />
+
+        </div>
+        {{#if provider.suggestionPromise.isPending}}
+            <ul class="menu">
+                <li class="menu-item">
+                    <a href="#">
+                        <div class="tile tile-centered">
+                            <div class="tile-icon">
+                                <figure class="avatar avatar-sm" data-initial="TS" style="background-color: #5764c6;"></figure>
+                            </div>
+                            <div class="tile-content loading">
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        {{/if}}
+        {{#if provider.suggestions.length}}
+            <ul class="menu">
+                <!-- autocomplete list  -->
+                {{#each provider.suggestions as sug}}
+                    <li class="menu-item" ($click)="selectAddress(sug)">
+                        <a href="#">
+                            <div class="tile tile-centered">
+                                <div class="tile-icon">
+                                  <i class="fa fa-map-marker"></i></div>
+                                <div class="tile-content">
+                                    {{sug}}
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                {{/each}}
+            </ul>
+        {{/if}}
+    </div>
+{{else}}
+    <p>No location provider</p>
+{{/if}}

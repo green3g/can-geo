@@ -1,6 +1,6 @@
 <!--
 
-@module {can.Component} locator-widget <locator-widget />
+@module {can.Component} search-widget <search-widget />
 @parent geo.components
 
 -->
@@ -10,4 +10,4 @@
 
 ## Demo
 
-@demo locator-widget/demo.html 500
+@demo search-widget/demo.html 500
