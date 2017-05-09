@@ -1,6 +1,8 @@
 import ol from 'openlayers';
 import assign from 'can-util/js/assign/assign';
 import DefineList from 'can-define/list/list';
+import stache from 'can-stache';
+
 const layerClass = {
     TileWMS: 'Tile',
     Group: 'Group',
@@ -8,6 +10,12 @@ const layerClass = {
     ImageWMS: 'Image',
     ImageVector: 'Image',
     Vector: 'Vector'
+};
+
+const controlTemplates = {
+    'default': '<layer-control-default {layer}="." />',
+    'Group': '<layer-control-group {layer}="." />',
+    'TileWMS': '<layer-control-tilewms {layer}="." />'
 };
 
 let currentId = 0;
@@ -37,9 +45,13 @@ export default {
         //the required parameters for the layer
         const requiredOptions = this[options.type](options);
 
+        // template for layer control
+        userOptions.controlTemplate = userOptions.excludeControl ? null
+            : userOptions.controlTemplate || stache(controlTemplates[options.type] || controlTemplates.default);
+
         //make sure the layer has a unique id
         if (!userOptions.id) {
-            userOptions.id = 'layer-' + currentId ++;
+            userOptions.id = 'layer-' + currentId++;
         }
 
         //mixin all of our configuration options for the constructor
@@ -62,8 +74,8 @@ export default {
     },
     Group (options) {
         const layers = new DefineList(options.options.layers)
-        .reverse()
-        .map(this.getLayer.bind(this));
+            .reverse()
+            .map(this.getLayer.bind(this));
         return {
             layers: new ol.Collection(layers)
         };
