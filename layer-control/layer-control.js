@@ -2,16 +2,9 @@ import DefineMap from 'can-define/map/map';
 
 import DefineList from 'can-define/list/list';
 import Component from 'can-component';
-import stache from 'can-stache';
 import template from './layercontrol.stache!';
 import './layercontrol.less!';
-import ol from 'openlayers';
 
-const controlTemplates = {
-    'default': '<layer-control-default {layer}="." />',
-    'Group': '<layer-control-group {layer}="." />',
-    'TileWMS': '<layer-control-tilewms {layer}="." />'
-};
 /**
  * @constructor layer-control.ViewModel ViewModel
  * @parent layer-control
@@ -59,7 +52,7 @@ export const ViewModel = DefineMap.extend('LayerControl', {
                 title: l.get('title') || 'Layer',
                 visible: l.getVisible(),
                 layer: l,
-                template: this.getLayerTemplate(l)
+                template: l.get('controlTemplate')
             };
         }).reverse();
 
@@ -114,36 +107,6 @@ export const ViewModel = DefineMap.extend('LayerControl', {
             return true;
         });
         return true;
-    },
-    /**
-     * Returns a template renderer for the layer
-     * @param  {ol.Layer} layer The layer to find the template renderer for
-     * @return {can.stache}       The stache renderer
-     */
-    getLayerTemplate: function (layer) {
-        var templ;
-        //handle layers without sources
-        if (!layer.getSource) {
-            for (templ in controlTemplates) {
-                if (controlTemplates.hasOwnProperty(templ) &&
-                    ol.layer[templ] &&
-                    layer instanceof ol.layer[templ]) {
-                    return stache(controlTemplates[templ]);
-                }
-            }
-            return stache(controlTemplates.default);
-        }
-        //handle layer sources for more specific
-        //layer types
-        var layerSource = layer.getSource();
-        for (templ in controlTemplates) {
-            if (controlTemplates.hasOwnProperty(templ) &&
-                ol.source[templ] &&
-                layerSource instanceof ol.source[templ]) {
-                return stache(controlTemplates[templ]);
-            }
-        }
-        return stache(controlTemplates.default);
     }
 });
 
