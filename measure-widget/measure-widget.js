@@ -169,7 +169,7 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
      */
     removeMapHover () {
         if (this.pointerMoveKey) {
-            this.map.unByKey(this.pointerMoveKey);
+            ol.Observable.unByKey(this.pointerMoveKey);
             this.pointerMoveKey = null;
         }
         this.helpOverlay.setPosition(undefined);
@@ -344,7 +344,7 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
     /**
      * Ends the measurement drawing at the current measurement overlay coordinates
      * @function drawEnd
-     * @signature 
+     * @signature
      */
     drawEnd () {
         const coords = this.measureOverlay.getPosition();
