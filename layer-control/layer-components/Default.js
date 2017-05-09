@@ -8,9 +8,9 @@ export const DefaultViewModel = DefineMap.extend('DefaultLayer', {
     title: 'string',
     layer: {
         set (layer) {
-            const layer = layer.layer;
-            this.visible = layer.getVisible();
-            layer.on('change:visible', this.updateVisible.bind(this));
+            this.visible = layer.layer.getVisible();
+            layer.layer.on('change:visible', this.updateVisible.bind(this));
+            return layer;
         }
     },
     toggleVisible: function () {
