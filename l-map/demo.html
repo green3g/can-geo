@@ -1,0 +1,16 @@
+<script type="text/stache" id="demo-html">
+  <l-map style="height:300px;display:block" {(x)}="x" {(y)}="y" {(zoom)}="zoom" />
+  {{x}}, {{y}}, {{zoom}}
+</script>
+
+<script src="../node_modules/steal/steal.js" id="demo-source" main="@loader">
+  import 'can-geo/l-map/';
+  import stache from 'can-stache';
+  import route from 'can-route';
+
+  route('{x}/{y}/{zoom}');
+  route.ready();
+
+
+  document.body.appendChild(stache.from('demo-html')(route.data));
+</script>
