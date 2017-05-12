@@ -168,18 +168,10 @@ export const ViewModel = DefineMap.extend('SearchWidget', {
     navigateMap: function (location) {
         var coords = ol.proj.transform([location.x, location.y],
             'EPSG:4326', this.map.getView().getProjection());
-        var duration = 750;
-        var pan = ol.animation.pan({
-            duration: duration,
-            source: this.map.getView().getCenter()
+        this.map.getView().animate({
+            zoom: this.zoomLevel,
+            center: coords
         });
-        var zoom = ol.animation.zoom({
-            duration: duration,
-            resolution: this.map.getView().getResolution()
-        });
-        this.map.beforeRender(pan, zoom);
-        this.map.getView().setCenter(coords);
-        this.map.getView().setZoom(this.zoomLevel);
         this.vectorLayer.getSource().addFeature(new ol.Feature({
             geometry: new ol.geom.Point(coords)
         }));
