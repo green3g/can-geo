@@ -90,9 +90,8 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
         value: 0,
         type: 'number'
     },
-    hasErrors: {
-        type: 'boolean',
-        value: false
+    errors: {
+        Value: DefineList
     },
     /**
      * A virtual property that returns an object consisting of the formatted fields, values, and layer properties.
@@ -230,17 +229,19 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
             coordinate = event;
         }
         this.clearFeatures();
-        this.hasErrors = false;
+        this.errors.replace([]);
         const layers = this.map.getLayers();
         const promises = [];
         this.getQueryURLsRecursive(layers, coordinate).forEach((url) => {
-            promises.push(this.getFeatureInfo(url));
+            const promise = this.getFeatureInfo(url);
+            promise.catch((e) => {
+                this.error(e, url);
+            });
+            promises.push(promise);
         });
         promises.forEach((promise) => {
             promise.then((json) => {
                 this.addFeatures(json, coordinate);
-            }).catch((e) => {
-                this.error(e);
             });
         });
         this.promises = promises;
@@ -401,17 +402,9 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
     animateZoomToExtent (extent) {
         const map = this.map;
         const duration = 750;
-        const pan = ol.animation.pan({
-            duration: duration,
-            source: map.getView().getCenter()
+        map.getView().fit(extent, {
+            duration: duration
         });
-        const zoom = ol.animation.zoom({
-            duration: duration,
-            resolution: map.getView().getResolution()
-        });
-        map.beforeRender(pan, zoom);
-        map.getView().fit(
-            extent, map.getSize(), [50, 50, 50, 50]);
     },
     /**
      * An error logging function for failed ajax requests
@@ -419,8 +412,11 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      * @signature
      * @param  {Error} e The error
      */
-    error (e) {
-        this.hasErrors = true;
+    error (e, url) {
+        this.errors.push({
+            message: 'Identify failed on layer',
+            url: url
+        });
         dev.warn('Could not perform ajax request: ', e);
     },
     /**
@@ -428,7 +424,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      * @function getClosestFeatureIndex
      * @signature
      * @param  {ol.feature[]} features The array of features to search through
-     * @param {Array<Number>} coord The coordinate to start searching from 
+     * @param {Array<Number>} coord The coordinate to start searching from
      * @return {Number}          The index value of the closest feature
      */
     getClosestFeatureIndex (features, coord) {

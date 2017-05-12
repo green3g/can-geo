@@ -1,22 +1,22 @@
 <div class="identify-results">
     {{#if features.length}}
-      {{^is features.length 1}}
+        {{^is features.length 1}}
         <paginate-widget class="float-left" {(active-page-index)}="activeFeatureIndex" {pages}="features.length" hide-first hide-last hide-pages />
         {{/is}}
-        {{#activeFeature }}
-            <button type="button" class="zoom-btn btn btn-primary float-right" href="#" ($click)="zoomToFeature"><i class="fa fa-search-plus"></i> {{title}}: {{index}}</a></li>
-        {{/activeFeature}}
+        {{#if activeFeature}}
+            <button type="button" class="zoom-btn btn btn-primary float-right" href="#" ($click)="zoomToFeature"><i class="fa fa-search-plus"></i> {{title}}: {{index}}</button>
+        {{/if}}
         {{#if loading.isPending }}
             <p><a href="#"><i class="fa fa-refresh fa-spin"></i></a></p>
         {{/if}}
 
         <div class="identify-scroller">
-            {{#activeFeature}} {{>featureTemplate}} {{/activeFeature}}
+            {{#if activeFeature}} {{>featureTemplate}} {{/if}}
         </div>
     {{/if}}
 
     <div class="popup-alerts">
-        {{#if loading.isResolved}}
+        {{#unless loading.isPending}}
             {{#if hasError}}
                 <div class="alert alert-warning" role="alert">
                     Warning, some of the layers did not load correctly.
@@ -25,8 +25,6 @@
             {{^features}}
             <div class="alert alert-warning" role="alert">No features were identified</div>
             {{/features}}
-          {{else}}
-            <!-- loading element -->
-            <div class="loading"><br /></div>
-        {{/if}}
+        {{/unless}}
     </div>
+</div>
