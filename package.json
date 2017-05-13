@@ -1,6 +1,6 @@
 {
   "name": "can-geo",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Web mapping web components built using CanJS",
   "repository": "https://github.com/roemhildtg/can-geo",
   "main": "index.js",
