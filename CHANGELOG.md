@@ -1,3 +1,26 @@
+0.3.9 / 2017-05-13
+==================
+
+  * 0.3.9
+  * FIX: build
+  * 0.3.8
+  * FIX: lint
+  * updates to steal-stache
+  * fix ol-popup ol4 updates
+  * fix search-widget ol4 updates
+  * fix up identify widget ol4 updates
+  * FIX: upgrade to ol 4
+  * FIX: layer typo
+  * Merge remote-tracking branch 'origin/greenkeeper/initial'
+  * ENH: load control templates in the layer factory
+  * ENH: add a simple leaflet map component
+  * ENH: clean up layer control
+  * ENH: when layer is set, initialize the property listeners
+  * docs(readme): add Greenkeeper badge
+  * chore(package): update dependencies
+  * renames locator-widget to search-widget and updates search-widget to new spectre.css
+  * changelog
+
 0.3.7 / 2017-01-31
 ==================
 
@@ -152,41 +175,3 @@
     https://greenkeeper.io/
   * Merge pull request [#51](https://github.com/roemhildtg/can-geo/issues/51) from roemhildtg/greenkeeper-can-stache-3.0.13
     can-stache@3.0.13 breaks build ⚠️
-  * chore(package): update can-stache to version 3.0.13
-    https://greenkeeper.io/
-  * Merge pull request [#50](https://github.com/roemhildtg/can-geo/issues/50) from roemhildtg/greenkeeper-steal-stache-3.0.3
-    steal-stache@3.0.3 breaks build ⚠️
-  * chore(package): update steal-stache to version 3.0.3
-    https://greenkeeper.io/
-  * Merge pull request [#49](https://github.com/roemhildtg/can-geo/issues/49) from roemhildtg/greenkeeper-spectre-canjs-0.14.1
-    spectre-canjs@0.14.1 breaks build ⚠️
-  * chore(package): update spectre-canjs to version 0.14.1
-    https://greenkeeper.io/
-  * Merge pull request [#48](https://github.com/roemhildtg/can-geo/issues/48) from roemhildtg/greenkeeper-can-stache-3.0.12
-    can-stache@3.0.12 breaks build ⚠️
-  * chore(package): update can-stache to version 3.0.12
-    https://greenkeeper.io/
-  * Merge pull request [#47](https://github.com/roemhildtg/can-geo/issues/47) from roemhildtg/greenkeeper-can-component-3.0.3
-    can-component@3.0.3 breaks build ⚠️
-  * chore(package): update can-component to version 3.0.3
-    https://greenkeeper.io/
-  * Merge pull request [#45](https://github.com/roemhildtg/can-geo/issues/45) from roemhildtg/greenkeeper-can-route-3.0.5
-    can-route@3.0.5 breaks build ⚠️
-  * Merge pull request [#46](https://github.com/roemhildtg/can-geo/issues/46) from roemhildtg/greenkeeper-spectre-canjs-0.14.0
-    Update spectre-canjs to version 0.14.0 🚀
-  * chore(package): update spectre-canjs to version 0.14.0
-    https://greenkeeper.io/
-  * chore(package): update can-route to version 3.0.5
-    https://greenkeeper.io/
-  * Merge pull request [#44](https://github.com/roemhildtg/can-geo/issues/44) from roemhildtg/greenkeeper-steal-stache-3.0.2
-    steal-stache@3.0.2 breaks build ⚠️
-  * Merge pull request [#43](https://github.com/roemhildtg/can-geo/issues/43) from roemhildtg/greenkeeper-can-stache-3.0.11
-    can-stache@3.0.11 breaks build ⚠️
-  * chore(package): update steal-stache to version 3.0.2
-    https://greenkeeper.io/
-  * chore(package): update can-stache to version 3.0.11
-    https://greenkeeper.io/
-  * Merge pull request [#42](https://github.com/roemhildtg/can-geo/issues/42) from roemhildtg/greenkeeper-can-view-model-3.1.2
-    can-view-model@3.1.2 breaks build ⚠️
-  * chore(package): update can-view-model to version 3.1.2
-    https://greenkeeper.io/
