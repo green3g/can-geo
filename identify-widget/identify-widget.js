@@ -411,6 +411,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
      * @function error
      * @signature
      * @param  {Error} e The error
+     * @param {String} url The url that the error failed on
      */
     error (e, url) {
         this.errors.push({
