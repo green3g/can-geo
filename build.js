@@ -11,12 +11,7 @@ stealTools.export({
         },
         '+cjs': {
             ignore: false
-        },
-        '+global-js': {
-            modules: ['index'],
-            ignore: false
-        },
-        '+global-css': {}
+        }
     }
 }).catch(function (e) {
 
