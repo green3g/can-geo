@@ -1,3 +1,12 @@
+0.3.12 / 2017-05-14
+===================
+
+  * 0.3.12
+  * ENH: modular tile-wms layer
+  * ENH: cleanup layer adding and removing
+  * ENH: menu layout for layer-controls
+  * changelog
+
 0.3.11 / 2017-05-14
 ===================
 
@@ -164,13 +173,3 @@
     https://greenkeeper.io/
   * Merge pull request [#60](https://github.com/roemhildtg/can-geo/issues/60) from roemhildtg/greenkeeper-eslint-3.12.0
     eslint@3.12.0 breaks build ⚠️
-  * chore(package): update eslint to version 3.12.0
-    https://greenkeeper.io/
-  * Merge pull request [#59](https://github.com/roemhildtg/can-geo/issues/59) from roemhildtg/greenkeeper-testee-0.3.0
-    Update testee to version 0.3.0 🚀
-  * chore(package): update testee to version 0.3.0
-    https://greenkeeper.io/
-  * Merge pull request [#58](https://github.com/roemhildtg/can-geo/issues/58) from roemhildtg/greenkeeper-spectre-canjs-0.15.1
-    Update spectre-canjs to version 0.15.1 🚀
-  * chore(package): update spectre-canjs to version 0.15.1
-    https://greenkeeper.io/
