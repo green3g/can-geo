@@ -466,7 +466,7 @@ export const ViewModel = DefineMap.extend('IdentifyWidget', {
 export const IdentifyWidget = Component.extend({
     tag: 'identify-widget',
     view: template,
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     events: {
         inserted () {},
         removed () {

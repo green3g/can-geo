@@ -181,7 +181,7 @@ export const ViewModel = DefineMap.extend('SearchWidget', {
 assign(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     view: template,
     tag: 'search-widget',
     events: {}

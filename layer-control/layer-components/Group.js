@@ -68,6 +68,6 @@ export const ViewModel = baseViewModel.extend({
 
 Component.extend({
     tag: 'layer-control-group',
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     view: template
 });

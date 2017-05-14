@@ -43,6 +43,6 @@ export const ViewModel = Popup.extend('IdentifyPopup', {
  */
 export const IdentifyPopup = OlPopup.extend({
     tag: 'identify-popup',
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     view: template
 });

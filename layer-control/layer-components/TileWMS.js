@@ -79,6 +79,6 @@ const ViewModel = baseViewModel.extend({
 
 Component.extend({
     tag: 'layer-control-tilewms',
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     view: template
 });

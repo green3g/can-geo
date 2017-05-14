@@ -23,7 +23,7 @@ export const DefaultViewModel = DefineMap.extend('DefaultLayer', {
 
 Component.extend({
     tag: 'layer-control-default',
-    viewModel: DefaultViewModel,
+    ViewModel: DefaultViewModel,
     view: DefaultTemplate
 });
 

@@ -137,6 +137,6 @@ export const ViewModel = DefineMap.extend({
 
 export default Component.extend({
     tag: 'print-widget',
-    viewModel: ViewModel,
-    template: template
+    ViewModel: ViewModel,
+    view: template
 });

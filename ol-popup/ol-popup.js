@@ -149,7 +149,7 @@ assign(ViewModel.prototype, CanEvent);
 export const OlPopup = Component.extend({
     tag: 'ol-popup',
     view: template,
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     leakScope: true,
     events: {
         inserted () {

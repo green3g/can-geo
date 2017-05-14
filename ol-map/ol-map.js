@@ -327,7 +327,7 @@ assign(ViewModel.prototype, CanEvent);
 
 export default Component.extend({
     tag: 'ol-map',
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     view: template,
     events: {
         '{viewModel} x': function () {

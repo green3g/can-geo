@@ -112,7 +112,7 @@ export const ViewModel = DefineMap.extend('LayerControl', {
 
 export default Component.extend({
     tag: 'layer-control',
-    viewModel: ViewModel,
+    ViewModel: ViewModel,
     view: template,
     events: {
         inserted: function () {}
