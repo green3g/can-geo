@@ -2,7 +2,7 @@ import color from '../../util/color';
 import DefineMap from 'can-define/map/map';
 import ajax from 'can-util/dom/ajax/ajax';
 import assign from 'can-util/js/assign/assign';
-import param from 'can-util/js/param/param';
+import param from 'can-param';
 import ol from 'openlayers';
 import dev from 'can-util/js/dev/dev';
 
