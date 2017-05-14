@@ -1,12 +1,14 @@
-
+<li class="list-group-item menu-item">
+  <a href="#">
 <i class="fa {{#if collapsed}}fa-plus-square-o{{else}}fa-minus-square-o{{/if}}" ($click)="toggleCollapsed(.)"></i>
 <i class="fa {{#if visible}}fa-check-square-o{{else}}fa-square-o{{/if}}" ($click)="toggleVisible()"></i> {{layer.title}}
+</a>
 {{#unless collapsed}}
 <ul class="list-group layer-control menu">
   {{#each layers}}
     <li class="list-group-item menu-item">
       {{#if radioGroup}}
-        <i class="fa {{#if visible}}fa-check-circle-o{{else}}fa-circle-o{{/if}}" ($click)="setRadioVisible(.)"></i> {{title}}
+        <a href="#"><i class="fa {{#if visible}}fa-check-circle-o{{else}}fa-circle-o{{/if}}" ($click)="setRadioVisible(.)"></i> {{title}}</a>
         {{else}}
       {{>template}}
       {{/if}}
@@ -14,3 +16,4 @@
   {{/each}}
 </ul>
 {{/unless}}
+</li>

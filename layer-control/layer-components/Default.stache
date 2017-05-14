@@ -1,3 +1,6 @@
-
-  <i class="fa {{#if visible}}fa-check-square-o{{else}}fa-square-o{{/if}}"
-    ($click)="toggleVisible()"></i> {{layer.title}}
+<li class="list-group-item menu-item">
+  <a href="#">
+    <i class="fa {{#if visible}}fa-check-square-o{{else}}fa-square-o{{/if}}" ($click)="toggleVisible()"></i>
+    {{layer.title}}
+  </a>
+</li>

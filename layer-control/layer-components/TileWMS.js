@@ -2,6 +2,7 @@ import Component from 'can-component';
 import baseViewModel from './Default';
 import template from './TileWMS.stache!';
 import DefineList from 'can-define/list/list';
+import './TileWMS.less';
 
 import dev from 'can-util/js/dev/dev';
 

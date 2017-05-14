@@ -23,7 +23,7 @@ export const ViewModel = baseViewModel.extend({
                 collapsed: !(layer.layer.get('collapsed') === false),
                 radioGroup: layer.layer.get('radioGroup')
             });
-            this.initLayers(layer.layer.getLayers());
+            this.layers.replace(layer.layer.getLayers().getArray());
 
             // set radio group 'basemap' visibility
             if (this.radioGroup) {
