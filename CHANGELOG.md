@@ -1,3 +1,13 @@
+0.3.11 / 2017-05-14
+===================
+
+  * 0.3.11
+  * FIX: hide popup when modal set to true
+  * FIX: switch to using can-param
+  * FIX: mismatched end tags
+  * FIX: identify-widget bug from earlier commit
+  * changelog
+
 0.3.10 / 2017-05-14
 ===================
 
@@ -163,16 +173,4 @@
   * Merge pull request [#58](https://github.com/roemhildtg/can-geo/issues/58) from roemhildtg/greenkeeper-spectre-canjs-0.15.1
     Update spectre-canjs to version 0.15.1 🚀
   * chore(package): update spectre-canjs to version 0.15.1
-    https://greenkeeper.io/
-  * Merge pull request [#56](https://github.com/roemhildtg/can-geo/issues/56) from roemhildtg/greenkeeper-can-define-1.0.5
-    can-define@1.0.5 breaks build ⚠️
-  * chore(package): update can-define to version 1.0.5
-    https://greenkeeper.io/
-  * Merge pull request [#55](https://github.com/roemhildtg/can-geo/issues/55) from roemhildtg/greenkeeper-spectre-canjs-0.14.4
-    spectre-canjs@0.14.4 breaks build ⚠️
-  * chore(package): update spectre-canjs to version 0.14.4
-    https://greenkeeper.io/
-  * Merge pull request [#54](https://github.com/roemhildtg/can-geo/issues/54) from roemhildtg/greenkeeper-spectre-canjs-0.14.3
-    spectre-canjs@0.14.3 breaks build ⚠️
-  * chore(package): update spectre-canjs to version 0.14.3
     https://greenkeeper.io/
