@@ -27,7 +27,14 @@ export const ViewModel = DefineMap.extend({
      */
     modal: {
         type: 'htmlbool',
-        value: false
+        value: false,
+        set (modal) {
+            if (modal) {
+                this.hidePopup(); 
+            }
+            return modal;
+        }
+
     },
     modalActive: 'boolean',
     x: {
