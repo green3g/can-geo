@@ -5,8 +5,6 @@
     </span>
   </li>
   {{#each layers}}
-    <li class="list-group-item menu-item">
       {{>template}}
-    </li>
   {{/each}}
 </ul>
