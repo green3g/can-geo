@@ -1,3 +1,10 @@
+0.3.10 / 2017-05-14
+===================
+
+  * 0.3.10
+  * FIX: consistency
+  * changelog
+
 0.3.9 / 2017-05-13
 ==================
 
@@ -169,9 +176,3 @@
     spectre-canjs@0.14.3 breaks build ⚠️
   * chore(package): update spectre-canjs to version 0.14.3
     https://greenkeeper.io/
-  * Merge pull request [#52](https://github.com/roemhildtg/can-geo/issues/52) from roemhildtg/greenkeeper-spectre.css-0.1.29
-    spectre.css@0.1.29 breaks build ⚠️
-  * chore(package): update spectre.css to version 0.1.29
-    https://greenkeeper.io/
-  * Merge pull request [#51](https://github.com/roemhildtg/can-geo/issues/51) from roemhildtg/greenkeeper-can-stache-3.0.13
-    can-stache@3.0.13 breaks build ⚠️
