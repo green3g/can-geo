@@ -87,7 +87,7 @@ export const ViewModel = DefineMap.extend('LayerControl', {
                 title: layer.get('title') || 'Layer',
                 visible: layer.getVisible(),
                 layer: layer,
-                template: this.getLayerTemplate(layer)
+                template: layer.get('controlTemplate')
             };
             this.layers.splice(index, 0, props);
         }
