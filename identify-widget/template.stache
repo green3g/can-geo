@@ -3,15 +3,15 @@
         {{^is features.length 1}}
         <paginate-widget class="float-left" {(active-page-index)}="activeFeatureIndex" {pages}="features.length" hide-first hide-last hide-pages />
         {{/is}}
-        {{#if activeFeature}}
+        {{#activeFeature}}
             <button type="button" class="zoom-btn btn btn-primary float-right" href="#" ($click)="zoomToFeature"><i class="fa fa-search-plus"></i> {{title}}: {{index}}</button>
-        {{/if}}
+        {{/activeFeature}}
         {{#if loading.isPending }}
             <p><a href="#"><i class="fa fa-refresh fa-spin"></i></a></p>
         {{/if}}
 
         <div class="identify-scroller">
-            {{#if activeFeature}} {{>featureTemplate}} {{/if}}
+            {{#activeFeature}} {{>featureTemplate}} {{/activeFeature}}
         </div>
     {{/if}}
 
