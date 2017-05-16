@@ -12,12 +12,6 @@ const layerClass = {
     Vector: 'Vector'
 };
 
-const controlTemplates = {
-    'default': '<layer-control-default {layer}="." />',
-    'Group': '<layer-control-group {layer}="." />',
-    'TileWMS': '<layer-control-tilewms {layer}="." />'
-};
-
 let currentId = 0;
 
 function convertToObject (obj) {
@@ -44,10 +38,6 @@ export default {
 
         //the required parameters for the layer
         const requiredOptions = this[options.type](options);
-
-        // template for layer control
-        userOptions.controlTemplate = userOptions.excludeControl ? null
-            : userOptions.controlTemplate || stache(controlTemplates[options.type] || controlTemplates.default);
 
         //make sure the layer has a unique id
         if (!userOptions.id) {

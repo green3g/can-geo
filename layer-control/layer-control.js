@@ -3,8 +3,32 @@ import DefineMap from 'can-define/map/map';
 import DefineList from 'can-define/list/list';
 import Component from 'can-component';
 import template from './layercontrol.stache!';
+import stache from 'can-stache';
 import ol from 'openlayers';
 import './layercontrol.less!';
+
+export const TEMPLATES = {
+    'default': '<layer-control-default {layer}="." />',
+    'Group': '<layer-control-group {layer}="." />',
+    'TileWMS': '<layer-control-tilewms {layer}="." />'
+};
+
+var templ;
+// precompile templates
+for (templ in TEMPLATES) {
+    if (TEMPLATES.hasOwnProperty(templ)) {
+        TEMPLATES[templ] = stache(TEMPLATES[templ]);
+    }
+}
+
+function getControlTemplate (layer) {
+    for (templ in TEMPLATES) {
+        if (TEMPLATES.hasOwnProperty(templ) && layer instanceof ol.layers[templ]) {
+            return TEMPLATES[templ];
+        }
+    }
+    return TEMPLATES.default;
+}
 
 export const LayerMap = DefineMap.extend({
     exclude: 'boolean',
@@ -18,7 +42,7 @@ export const LayerMap = DefineMap.extend({
             title: layer.get('title') || 'Layer',
             visible: layer.getVisible(),
             layer: layer,
-            template: layer.get('controlTemplate')
+            template: getControlTemplate(layer)
         });
     }
 });
