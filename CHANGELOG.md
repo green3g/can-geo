@@ -1,3 +1,12 @@
+0.3.13 / 2017-05-16
+===================
+
+  * 0.3.13
+  * FIX: lint
+  * DOCS
+  * FIX: move layer control templates to layer control file
+  * changelog
+
 0.3.12 / 2017-05-14
 ===================
 
@@ -163,13 +172,3 @@
     spectre-canjs@0.15.3 breaks build ⚠️
   * Merge pull request [#63](https://github.com/roemhildtg/can-geo/issues/63) from roemhildtg/greenkeeper-eslint-3.12.1
     eslint@3.12.1 breaks build ⚠️
-  * chore(package): update eslint to version 3.12.1
-    https://greenkeeper.io/
-  * chore(package): update spectre-canjs to version 0.15.3
-    https://greenkeeper.io/
-  * Merge pull request [#61](https://github.com/roemhildtg/can-geo/issues/61) from roemhildtg/greenkeeper-openlayers-3.20.0
-    openlayers@3.20.0 breaks build ⚠️
-  * chore(package): update openlayers to version 3.20.0
-    https://greenkeeper.io/
-  * Merge pull request [#60](https://github.com/roemhildtg/can-geo/issues/60) from roemhildtg/greenkeeper-eslint-3.12.0
-    eslint@3.12.0 breaks build ⚠️
