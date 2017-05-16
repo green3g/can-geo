@@ -23,7 +23,9 @@ for (templ in TEMPLATES) {
 
 function getControlTemplate (layer) {
     for (templ in TEMPLATES) {
-        if (TEMPLATES.hasOwnProperty(templ) && layer instanceof ol.layers[templ]) {
+        if (TEMPLATES.hasOwnProperty(templ) &&
+      ol.layer.hasOwnProperty(templ) &&
+      layer instanceof ol.layer[templ]) {
             return TEMPLATES[templ];
         }
     }
@@ -84,12 +86,12 @@ export const ViewModel = DefineMap.extend('LayerControl', {
                 const collection = map.getLayers();
                 this.layers.replace(collection.getArray().reverse());
 
-                //bind listeners for collection changes
+        //bind listeners for collection changes
                 this._layerAddKey = collection.on('add', (event) => {
-                  //find the index of the added layer
+          //find the index of the added layer
                     collection.forEach((layer, index) => {
                         if (event.element === layer) {
-                          //we're creating a reversed array from that of the ol.collection
+              //we're creating a reversed array from that of the ol.collection
                             var newIndex = collection.getLength() - index - 1;
                             this.layers.splice(newIndex, 0, layer);
                         }
