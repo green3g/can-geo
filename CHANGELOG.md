@@ -1,3 +1,10 @@
+0.3.14 / 2017-05-16
+===================
+
+  * 0.3.14
+  * FIX: bug
+  * changelog
+
 0.3.13 / 2017-05-16
 ===================
 
@@ -166,9 +173,3 @@
     https://greenkeeper.io/
   * Merge pull request [#64](https://github.com/roemhildtg/can-geo/issues/64) from roemhildtg/greenkeeper-steal-stache-3.0.4
     steal-stache@3.0.4 breaks build ⚠️
-  * chore(package): update steal-stache to version 3.0.4
-    https://greenkeeper.io/
-  * Merge pull request [#62](https://github.com/roemhildtg/can-geo/issues/62) from roemhildtg/greenkeeper-spectre-canjs-0.15.3
-    spectre-canjs@0.15.3 breaks build ⚠️
-  * Merge pull request [#63](https://github.com/roemhildtg/can-geo/issues/63) from roemhildtg/greenkeeper-eslint-3.12.1
-    eslint@3.12.1 breaks build ⚠️
