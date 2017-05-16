@@ -5,7 +5,7 @@ import template from './identify-popup.stache';
 
 /**
  * @constructor identify-popup.ViewModel ViewModel
- * @extends ol-popup.ViewModel
+ * @inherits ol-popup.ViewModel
  * @parent identify-popup
  * @group identify-popup.ViewModel.props Properties
  *
@@ -39,7 +39,7 @@ export const ViewModel = Popup.extend('IdentifyPopup', {
 /**
  * @module {can.Component} identify-popup
  * @parent geo.components
- * @extends ol-popup
+ * @inherits ol-popup
  */
 export const IdentifyPopup = OlPopup.extend({
     tag: 'identify-popup',
