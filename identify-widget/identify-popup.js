@@ -25,6 +25,7 @@ export const ViewModel = Popup.extend('IdentifyPopup', {
                 return feature;
             }
             if (!feature) {
+
                 this.showPopup(undefined);
             } else {
                 const extent = feature.feature.getGeometry().getExtent();

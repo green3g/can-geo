@@ -23,10 +23,14 @@ for (templ in TEMPLATES) {
 
 function getControlTemplate (layer) {
     for (templ in TEMPLATES) {
-        if (TEMPLATES.hasOwnProperty(templ) &&
-      ol.layer.hasOwnProperty(templ) &&
-      layer instanceof ol.layer[templ]) {
-            return TEMPLATES[templ];
+        if (TEMPLATES.hasOwnProperty(templ)) {
+
+            if ((layer.getSource && ol.source.hasOwnProperty(templ) &&
+          layer.getSource() instanceof ol.source[templ]) ||
+        (ol.layer.hasOwnProperty(templ) &&
+          layer instanceof ol.layer[templ])) {
+                return TEMPLATES[templ];
+            }
         }
     }
     return TEMPLATES.default;
