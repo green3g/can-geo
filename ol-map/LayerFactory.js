@@ -1,7 +1,6 @@
 import ol from 'openlayers';
 import assign from 'can-util/js/assign/assign';
 import DefineList from 'can-define/list/list';
-import stache from 'can-stache';
 
 const layerClass = {
     TileWMS: 'Tile',
