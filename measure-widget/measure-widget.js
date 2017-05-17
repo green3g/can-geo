@@ -366,5 +366,10 @@ export const ViewModel = DefineMap.extend('MeasureWidget', {
 export default Component.extend({
     tag: 'measure-widget',
     view: template,
-    ViewModel: ViewModel
+    ViewModel: ViewModel,
+    events: {
+        removed () {
+            this.viewModel.active = false;
+        }
+    }
 });
