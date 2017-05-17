@@ -1,3 +1,12 @@
+0.3.15 / 2017-05-16
+===================
+
+  * 0.3.15
+  * FIX: measure-widget remove/add bug
+  * FIX: don't reverse the ol.map layer array in layer-control
+  * bug fixes
+  * changelog
+
 0.3.14 / 2017-05-16
 ===================
 
@@ -163,13 +172,3 @@
   * update package reqs
   * remove uneeded packages
   * update gitignore
-  * Merge pull request [#66](https://github.com/roemhildtg/can-geo/issues/66) from roemhildtg/greenkeeper-spectre-canjs-0.15.5
-    spectre-canjs@0.15.5 breaks build ⚠️
-  * chore(package): update spectre-canjs to version 0.15.5
-    https://greenkeeper.io/
-  * Merge pull request [#65](https://github.com/roemhildtg/can-geo/issues/65) from roemhildtg/greenkeeper-can-define-1.0.8
-    can-define@1.0.8 breaks build ⚠️
-  * chore(package): update can-define to version 1.0.8
-    https://greenkeeper.io/
-  * Merge pull request [#64](https://github.com/roemhildtg/can-geo/issues/64) from roemhildtg/greenkeeper-steal-stache-3.0.4
-    steal-stache@3.0.4 breaks build ⚠️
