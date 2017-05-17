@@ -88,7 +88,10 @@ export const ViewModel = DefineMap.extend('LayerControl', {
         set (map) {
             if (map) {
                 const collection = map.getLayers();
-                this.layers.replace(collection.getArray().reverse());
+                this.layers.replace(collection.getArray());
+
+                // reverse the order so layers are ordered top to bottom
+                this.layers.reverse();
 
         //bind listeners for collection changes
                 this._layerAddKey = collection.on('add', (event) => {
