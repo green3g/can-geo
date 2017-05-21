@@ -14,3 +14,7 @@
 [![Build Status](https://travis-ci.org/roemhildtg/can-geo.svg?branch=master)](https://travis-ci.org/roemhildtg/can-geo)
 
 Web mapping web components built using CanJS
+
+## Issues: 
+
+Issues are tracked on the [geocola project](https://github.com/roemhildtg/geocola)
